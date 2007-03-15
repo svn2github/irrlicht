@@ -149,7 +149,7 @@
  * the Irrlicht Engine. If you are looking for a tutorial on how to start, you'll
  * find some on the homepage of the Irrlicht Engine at 
  * <A HREF="http://irrlicht.sourceforge.net" >irrlicht.sourceforge.net</A> 
- * or inside the SDK in the directory \examples.
+ * or inside the SDK in the examples directory.
  *
  * The Irrlicht Engine is intended to be an easy-to-use 3d engine, so
  * this documentation is an important part of it. If you have any questions or

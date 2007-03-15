@@ -59,8 +59,7 @@ public:
 	//! returns if this vector equals the other one, taking floating point rounding errors into account
 	bool equals(const vector2d<T>& other) const
 	{
-		return core::equals(X, other.X) &&
-			   core::equals(Y, other.Y);
+		return core::equals(X, other.X) && core::equals(Y, other.Y);
 	}
 
 	void set(T nx, T ny) {X=nx; Y=ny; }
@@ -70,7 +69,7 @@ public:
 	//! \return Returns the length of the vector.
 	f64 getLength() const { return sqrt(X*X + Y*Y); }
 
-	//! Returns the squared lenth of this vector
+	//! Returns the squared length of this vector
 	/** This is useful because it is much faster than getLength(). */
 	T getLengthSQ() const { return X*X + Y*Y; }
 
@@ -80,15 +79,15 @@ public:
 		return X*other.X + Y*other.Y;
 	}
 
-	//! Returns distance from another point. Here, the vector is interpreted as
-	//! point in 2 dimensional space.
+	//! Returns distance from another point. Here, the vector is interpreted
+	//! as a point in 2 dimensional space.
 	f64 getDistanceFrom(const vector2d<T>& other) const
 	{
 		return vector2d<T>(X - other.X, Y - other.Y).getLength();
 	}
 
-	//! Returns squared distance from another point. Here, the vector is interpreted as
-	//! point in 2 dimensional space.
+	//! Returns squared distance from another point. Here, the vector is
+	//! interpreted as a point in 2 dimensional space.
 	T getDistanceFromSQ(const vector2d<T>& other) const
 	{
 		return vector2d<T>(X - other.X, Y - other.Y).getLengthSQ();
@@ -212,10 +211,10 @@ public:
 		return vector2d<T>(other.X*inv + X*d, other.Y*inv + Y*d);
 	}
 
-	//! Returns interpolated vector. ( quadratic )
-	/** \param other0: other vector to interpolate between
-		\param other1: other vector to interpolate between
-	\param factor: value between 0.0f and 1.0f. */
+	//! Returns (quadratically) interpolated vector between this and the two given ones.
+	/** \param v2: second vector to interpolate with
+	\param v3: third vector to interpolate with
+	\param d: value between 0.0f and 1.0f. */
 	vector2d<T> getInterpolated_quadratic(const vector2d<T>& v2, const vector2d<T>& v3, const T d) const
 	{
 		// this*(1-d)*(1-d) + 2 * v2 * (1-d) + v3 * d * d;
@@ -225,11 +224,13 @@ public:
 		const T mul2 = d * d;
 
 		return vector2d<T> ( X * mul0 + v2.X * mul1 + v3.X * mul2,
-							 Y * mul0 + v2.Y * mul1 + v3.Y * mul2
-							);
+					Y * mul0 + v2.Y * mul1 + v3.Y * mul2);
 	}
 
-	//! sets this vector to the interpolated vector between a and b. 
+	//! sets this vector to the linearly interpolated vector between a and b.
+	/** \param a: first vector to interpolate with
+	\param b: second vector to interpolate with
+	\param t: value between 0.0f and 1.0f. */
 	void interpolate(const vector2d<T>& a, const vector2d<T>& b, const f32 t)
 	{
 		X = b.X + ( ( a.X - b.X ) * t );
