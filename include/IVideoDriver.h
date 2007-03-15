@@ -150,11 +150,12 @@ namespace video
 
 		//! Applications must call this method before performing any rendering.
 		/** \param backBuffer: Specifies if the back buffer should be cleared, which
-		means that the screen is filled with a color specified with the parameter color.
+		means that the screen is filled with the color specified.
 		If this parameter is false, the back buffer will not be cleared and the color
 		parameter is ignored.
 		\param zBuffer: Specifies if the depth or z buffer should be cleared. It is
-		not nesesarry to do so, if only 2d drawing is used.
+		not nesesarry to do so if only 2d drawing is used.
+		\param color: The color used for back buffer clearing
 		\return Returns false if failed. Begin Scene can clear the back- and the z-buffer. */
 		virtual bool beginScene(bool backBuffer, bool zBuffer, SColor color) = 0;
 
@@ -343,6 +344,7 @@ namespace video
 		\param clearZBuffer: Clears the zBuffer of the rendertarget. Note that, because the frame
 		buffer shares the zbuffer with the rendertarget, its zbuffer will be partially cleared
 		too with this.
+		\param color: The background color for the render target.
 		\return Returns true if sucessful and false if not. */
 		virtual bool setRenderTarget(video::ITexture* texture,
 			bool clearBackBuffer=true, bool clearZBuffer=true,
@@ -350,7 +352,7 @@ namespace video
 
 		//! Sets a new viewport.
 		/** Every rendering operation is done into this	new area.
-		\param Rectangle defining the new area of rendering operations. */
+		\param area: Rectangle defining the new area of rendering operations. */
 		virtual void setViewPort(const core::rect<s32>& area) = 0;
 
 		//! Gets the area of the current viewport.
@@ -714,7 +716,7 @@ namespace video
 		enable the ETCM_ALWAYS_16_BIT mode, but the driver creates 32 bit
 		textures.
 		\param flag: Texture creation flag.
-		\param enbabled: Specifies if the given flag should be enabled or disabled.*/
+		\param enabled: Specifies if the given flag should be enabled or disabled.*/
 		virtual void setTextureCreationFlag(E_TEXTURE_CREATION_FLAG flag, bool enabled) = 0;
 
 		//! Returns if a texture creation flag is enabled or disabled.
@@ -757,12 +759,12 @@ namespace video
 		be created for this image. This method is useful for example if
 		you want to read a heightmap for a terrain renderer.
 		\param format: Desired color format of the texture
-		\param size: Desired the size of the image
-		\param data: a byte array with pixelcolor information
-		\param useForeignMemory: If true, the image will use the data pointer
-		directly and own it from now on, which means it will also try to delete [] the
-		data when the image will be destructed.
-		If false, the memory will by copied internally.
+		\param size: Desired size of the image
+		\param data: A byte array with pixel color information
+		\param ownForeignMemory: If true, the image will use the data pointer
+		directly and own it afterwards.
+		If false the memory will by copied internally.
+		\param deleteMemory: Whether the memory is deallocated upon destruction
 		\return Returns the created image.
 		If you no longer need the image, you should call IImage::drop().
 		See IUnknown::drop() for more information. */
@@ -782,13 +784,14 @@ namespace video
 		Derive a class from IMaterialRenderer and override the methods you need. For
 		setting the right renderstates, you can try to get a pointer to the real rendering device
 		using IVideoDriver::getExposedVideoData(). Add your class with
-		IVideoDriver::addMaterialRenderer() and if you want an object in the engine to be displayed
-		with your new material, set the MaterialType member of the SMaterial struct to the
+		IVideoDriver::addMaterialRenderer(). To use an object being displayed
+		with your new material set the MaterialType member of the SMaterial struct to the
 		value returned by this method.
-		If you simply want to create a new material using vertex and/or pixel shaders, it would
+		If you simply want to create a new material using vertex and/or pixel shaders it would
 		be easier to use the video::IGPUProgrammingServices interface which you can get using
 		the getGPUProgrammingServices() method.
-		\param name: name for this registered material renderer entry.
+		\param renderer: A pointer to the new renderer.
+		\param name: Optional name for this registered material renderer entry.
 		\return Returns the number of the
 		material type which can be set in SMaterial::MaterialType to use the renderer.
 		-1 is returned if an error occured. (For example if you tried to add
@@ -815,7 +818,8 @@ namespace video
 		//! Sets the name of a material renderer.
 		/** Will have no effect on built-in material renderers.
 		\param idx: Id of the material renderer. Can be a value of the E_MATERIAL_TYPE enum or a
-		value which was returned by addMaterialRenderer(). */
+		value which was returned by addMaterialRenderer().
+		\param name: New name of the material renderer. */
 		virtual void setMaterialRendererName(s32 idx, const c8* name) = 0;
 
 		//! Creates material attributes list from a material, usable for serialization and more.

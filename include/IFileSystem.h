@@ -105,8 +105,8 @@ public:
 	//! Returns the string of the current working directory.
 	virtual const c8* getWorkingDirectory() = 0;
 
-	//! Changes the current Working Directory to the overgiven string.
-	/** \param ewDirectory is a string specifiing the new working directory.
+	//! Changes the current Working Directory.
+	/** \param newDirectory: A string specifying the new working directory.
 	The string is operating system dependent. Under Windows it has
 	the form "<drive>:\<directory>\<sudirectory>\<..>". An example would be: "C:\Windows\"
 	\return Returns true if successful, otherwise false. */
@@ -177,7 +177,7 @@ public:
 	virtual IXMLWriter* createXMLWriter(IWriteFile* file) = 0;
 
 	//! Creates a new empty collection of attributes, usable for serialization and more.
-	/** \param: driver: Video driver to be used to load textures when specified as attribute values.
+	/** \param driver: Video driver to be used to load textures when specified as attribute values.
 	Can be null to prevent automatic texture loading by attributes.
 	\return Returns a pointer to the created object.
 	If you no longer need the object, you should call IAttributes::drop().

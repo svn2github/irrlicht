@@ -437,9 +437,8 @@ namespace scene
 		/** Automatic culling is enabled by default. Note that not
 		all SceneNodes support culling (the billboard scene node for example)
 		and that some nodes always cull their geometry because it is their
-		only reason for existance, for example the OctreeSceneNode.
-		\param enabled: If true, automatic culling is enabled.
-		If false, it is disabled. */
+		only reason for existence, for example the OctreeSceneNode.
+		\param state: The culling state to be used. */
 		void setAutomaticCulling( E_CULLING_TYPE state)
 		{
 			AutomaticCullingState = state;

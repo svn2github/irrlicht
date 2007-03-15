@@ -47,11 +47,13 @@ namespace scene
 		virtual void setVertexColors(IMesh* mesh, video::SColor color) const = 0;
 
 		//! Recalculates all normals of the mesh.
-		/** \param mesh: Mesh on which the operation is performed. */
+		/** \param mesh: Mesh on which the operation is performed.
+		    \param smooth: If the normals shall be smoothed. */
 		virtual void recalculateNormals(IMesh* mesh, bool smooth = false) const = 0;
 
 		//! Recalculates all normals of the mesh buffer.
-		/** \param buffer: Mesh buffer on which the operation is performed. */
+		/** \param buffer: Mesh buffer on which the operation is performed.
+		    \param smooth: If the normals shall be smoothed. */
 		virtual void recalculateNormals(IMeshBuffer* buffer, bool smooth = false) const = 0;
 
 		//! Scales the whole mesh.
