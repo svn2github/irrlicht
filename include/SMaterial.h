@@ -193,17 +193,17 @@ namespace video
 	//! BlendFunc = source * sourceFactor + dest * destFactor
 	enum E_BLEND_FACTOR
 	{
-		EBF_ZERO	= 0,			// src & dest	(0, 0, 0, 0)
-		EBF_ONE,					// src & dest	(1, 1, 1, 1)
-		EBF_DST_COLOR, 				// src			(destR, destG, destB, destA)
-		EBF_ONE_MINUS_DST_COLOR, 	// src			(1-destR, 1-destG, 1-destB, 1-destA)
-		EBF_SRC_COLOR,				// dest			(srcR, srcG, srcB, srcA)
-		EBF_ONE_MINUS_SRC_COLOR, 	// dest			(1-srcR, 1-srcG, 1-srcB, 1-srcA)
-		EBF_SRC_ALPHA,				// src & dest	(srcA, srcA, srcA, srcA)
+		EBF_ZERO	= 0,		// src & dest	(0, 0, 0, 0)
+		EBF_ONE,			// src & dest	(1, 1, 1, 1)
+		EBF_DST_COLOR, 			// src		(destR, destG, destB, destA)
+		EBF_ONE_MINUS_DST_COLOR, 	// src		(1-destR, 1-destG, 1-destB, 1-destA)
+		EBF_SRC_COLOR,			// dest		(srcR, srcG, srcB, srcA)
+		EBF_ONE_MINUS_SRC_COLOR, 	// dest		(1-srcR, 1-srcG, 1-srcB, 1-srcA)
+		EBF_SRC_ALPHA,			// src & dest	(srcA, srcA, srcA, srcA)
 		EBF_ONE_MINUS_SRC_ALPHA,	// src & dest	(1-srcA, 1-srcA, 1-srcA, 1-srcA)
-		EBF_DST_ALPHA,				// src & dest	(destA, destA, destA, destA)
+		EBF_DST_ALPHA,			// src & dest	(destA, destA, destA, destA)
 		EBF_ONE_MINUS_DST_ALPHA,	// src & dest	(1-destA, 1-destA, 1-destA, 1-destA)
-		EBF_SRC_ALPHA_SATURATE		// src			(min(srcA, 1-destA), idem, ...)
+		EBF_SRC_ALPHA_SATURATE		// src		(min(srcA, 1-destA), idem, ...)
 	};
 
 	//! Texture coord clamp mode
@@ -233,14 +233,13 @@ namespace video
 	//! EMT_ONETEXTURE_BLEND: pack srcFact & dstFact and Modulo to MaterialTypeParam
 	inline f32 pack_texureBlendFunc ( const E_BLEND_FACTOR srcFact, const E_BLEND_FACTOR dstFact, const E_MODULATE_FUNC modulate )
 	{
-		u32 state = modulate << 16 | srcFact << 8 | dstFact;
-		return (f32&) state;
+		return (f32)(modulate << 16 | srcFact << 8 | dstFact);
 	}
 
 	//! EMT_ONETEXTURE_BLEND: unpack srcFact & dstFact and Modulo to MaterialTypeParam
 	inline void unpack_texureBlendFunc ( E_BLEND_FACTOR &srcFact, E_BLEND_FACTOR &dstFact, E_MODULATE_FUNC &modulo, const f32 param )
 	{
-		u32 state = (u32&)(param);
+		const u32 state = (u32)param;
 		modulo	= E_MODULATE_FUNC  ( ( state & 0x00FF0000 ) >> 16 );
 		srcFact = E_BLEND_FACTOR   ( ( state & 0x0000FF00 ) >> 8  );
 		dstFact = E_BLEND_FACTOR   ( ( state & 0x000000FF )       );
@@ -470,58 +469,54 @@ namespace video
 		//! Texture Address Mode
 		E_TEXTURE_CLAMP TextureWrap[MATERIAL_MAX_TEXTURES];
 
-		//! material flag union.
-		/** This enables the user to access the
-		material flag using e.g: material.Wireframe = true or
-		material.setFlag(EMF_WIREFRAME, true); */
-		struct
-		{
-			//! Draw as wireframe or filled triangles? Default: false
-			bool Wireframe;
+		//! material flags
+		/** The user can access the material flag using 
+		material.Wireframe = true or material.setFlag(EMF_WIREFRAME, true); */
+		//! Draw as wireframe or filled triangles? Default: false
+		bool Wireframe;
 
-			//! Draw as point cloud or filled triangles? Default: false
-			bool PointCloud;
+		//! Draw as point cloud or filled triangles? Default: false
+		bool PointCloud;
 
-			//! Flat or Gouraud shading? Default: true
-			bool GouraudShading;
+		//! Flat or Gouraud shading? Default: true
+		bool GouraudShading;
 
-			//! Will this material be lighted? Default: true
-			bool Lighting;
+		//! Will this material be lighted? Default: true
+		bool Lighting;
 
-			//! Is the ZBuffer enabled? Default: true
-			//! Changed from Bool to Integer
-			// ( 0 == ZBuffer Off, 1 == ZBuffer LessEqual, 2 == ZBuffer Equal )
-			u32 ZBuffer;
+		//! Is the ZBuffer enabled? Default: true
+		//! Changed from Bool to Integer
+		// ( 0 == ZBuffer Off, 1 == ZBuffer LessEqual, 2 == ZBuffer Equal )
+		u32 ZBuffer;
 
-			//! May be written to the zbuffer or is it readonly.
-			/** Default: 1 This flag is ignored, if the MaterialType
-			is a transparent type. */
-			bool ZWriteEnable;
+		//! May be written to the zbuffer or is it readonly.
+		/** Default: 1 This flag is ignored, if the MaterialType
+		is a transparent type. */
+		bool ZWriteEnable;
 
-			//! Is backfaceculling enabled? Default: true
-			bool BackfaceCulling;
+		//! Is backfaceculling enabled? Default: true
+		bool BackfaceCulling;
 
-			//! Is bilinear filtering enabled? Default: true
-			bool BilinearFilter;
+		//! Is bilinear filtering enabled? Default: true
+		bool BilinearFilter;
 
-			//! Is trilinear filtering enabled? Default: false
-			/** If the trilinear filter flag is enabled,
-			the bilinear filtering flag is ignored. */
-			bool TrilinearFilter;
+		//! Is trilinear filtering enabled? Default: false
+		/** If the trilinear filter flag is enabled,
+		the bilinear filtering flag is ignored. */
+		bool TrilinearFilter;
 
-			//! Is anisotropic filtering enabled? Default: false
-			/** In Irrlicht you can use anisotropic texture filtering
-			    in conjunction with bilinear or trilinear texture
-			    filtering to improve rendering results. Primitives
-			    will look less blurry with this flag switched on. */
-			bool AnisotropicFilter;
+		//! Is anisotropic filtering enabled? Default: false
+		/** In Irrlicht you can use anisotropic texture filtering
+		    in conjunction with bilinear or trilinear texture
+		    filtering to improve rendering results. Primitives
+		    will look less blurry with this flag switched on. */
+		bool AnisotropicFilter;
 
-			//! Is fog enabled? Default: false
-			bool FogEnable;
+		//! Is fog enabled? Default: false
+		bool FogEnable;
 
-			//! Should normals be normalized? Default: false
-			bool NormalizeNormals;
-		};
+		//! Should normals be normalized? Default: false
+		bool NormalizeNormals;
 
 		core::matrix4& getTextureMatrix(u32 i)
 		{
@@ -659,6 +654,7 @@ namespace video
 				TextureMatrix[2] != b.TextureMatrix[2] ||
 				TextureMatrix[3] != b.TextureMatrix[3];
 		}
+
 		inline bool operator==(const SMaterial& b) const
 		{ return !(b!=*this); }
 	};
