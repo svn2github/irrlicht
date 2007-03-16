@@ -355,7 +355,7 @@ namespace scene
 		virtual ISceneManager* createNewSceneManager();
 
 		//! Returns type of the scene node
-		virtual ESCENE_NODE_TYPE getType() { return ESNT_UNKNOWN; }
+		virtual ESCENE_NODE_TYPE getType() const { return ESNT_UNKNOWN; }
 
 		//! Returns the default scene node factory which can create all built in scene nodes
 		virtual ISceneNodeFactory* getDefaultSceneNodeFactory();

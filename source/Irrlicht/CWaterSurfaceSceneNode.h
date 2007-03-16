@@ -30,7 +30,7 @@ namespace scene
 		virtual void OnRegisterSceneNode();
 
 		//! Returns type of the scene node
-		virtual ESCENE_NODE_TYPE getType() { return ESNT_WATER_SURFACE; }
+		virtual ESCENE_NODE_TYPE getType() const { return ESNT_WATER_SURFACE; }
 
 		virtual void serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options);
 		virtual void deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options);

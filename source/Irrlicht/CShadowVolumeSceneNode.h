@@ -43,7 +43,7 @@ namespace scene
 		virtual u32 getMaterialCount();
 
 		//! Returns type of the scene node
-		virtual ESCENE_NODE_TYPE getType() { return ESNT_SHADOW_VOLUME; }
+		virtual ESCENE_NODE_TYPE getType() const { return ESNT_SHADOW_VOLUME; }
 
 	private:
 

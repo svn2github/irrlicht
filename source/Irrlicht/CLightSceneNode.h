@@ -40,7 +40,7 @@ public:
 	virtual const core::aabbox3d<f32>& getBoundingBox() const;
 
 	//! Returns type of the scene node
-	virtual ESCENE_NODE_TYPE getType() { return ESNT_LIGHT; }
+	virtual ESCENE_NODE_TYPE getType() const { return ESNT_LIGHT; }
 
 	//! Writes attributes of the scene node.
 	virtual void serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options=0);

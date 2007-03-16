@@ -46,7 +46,7 @@ namespace scene
 		virtual void setTarget(const core::vector3df& pos);
 
 		//! Returns type of the scene node
-		virtual ESCENE_NODE_TYPE getType() { return ESNT_CAMERA_FPS; }
+		virtual ESCENE_NODE_TYPE getType() const { return ESNT_CAMERA_FPS; }
 
 		//! Disables or enables the camera to get key or mouse inputs.
 		//! If this is set to true, the camera will respond to key inputs

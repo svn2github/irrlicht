@@ -44,7 +44,7 @@ namespace scene
 		virtual u32 getMaterialCount();
 
 		//! Returns type of the scene node
-		virtual ESCENE_NODE_TYPE getType() { return ESNT_SPHERE; }
+		virtual ESCENE_NODE_TYPE getType() const { return ESNT_SPHERE; }
 
 		//! Writes attributes of the scene node.
 		virtual void serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options=0);

@@ -116,7 +116,7 @@ namespace scene
 		virtual void deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options=0);
 
 		//! Returns type of the scene node
-		virtual ESCENE_NODE_TYPE getType() { return ESNT_CAMERA; }
+		virtual ESCENE_NODE_TYPE getType() const { return ESNT_CAMERA; }
 
 		virtual core::vector3df getAbsolutePosition() const;
 

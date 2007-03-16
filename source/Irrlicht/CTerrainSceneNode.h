@@ -204,7 +204,7 @@ namespace scene
 		virtual void scaleTexture(f32 scale = 1.0f, f32 scale2=0.0f );
 
 		//! Returns type of the scene node
-		virtual ESCENE_NODE_TYPE getType() { return ESNT_TERRAIN; }
+		virtual ESCENE_NODE_TYPE getType() const { return ESNT_TERRAIN; }
 
 	private:
 
