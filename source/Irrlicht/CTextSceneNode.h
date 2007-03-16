@@ -97,7 +97,7 @@ namespace scene
 		virtual u32 getMaterialCount();
 
 		//! Returns type of the scene node
-		virtual ESCENE_NODE_TYPE getType() { return ESNT_TEXT; }
+		virtual ESCENE_NODE_TYPE getType() const { return ESNT_TEXT; }
 
 	private:
 
