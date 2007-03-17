@@ -3,9 +3,9 @@
 
 using namespace irr;
 
-int fontsizes[] = {4,6,8,9,10,11,12,14,16,18,20,22,24,26,28,36,48,56,68,72,0};
+const int fontsizes[] = {4,6,8,9,10,11,12,14,16,18,20,22,24,26,28,36,48,56,68,72,0};
 
-inline int getTextureSizeFromSurfaceSize(int size)
+inline u32 getTextureSizeFromSurfaceSize(u32 size)
 {
 	int ts = 0x01;
 	while(ts < size)
@@ -28,8 +28,8 @@ inline int getTextureSizeFromSurfaceSize(int size)
 								L"Arabic", L"Hebrew", L"Thai", 0};
 
 	// callback for adding font names
-	int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, 
-									DWORD FontType, LPARAM lParam)
+	int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme,
+					DWORD FontType, LPARAM lParam)
 	{
 		CFontTool* t = (CFontTool*) lParam;
 		t->FontNames.push_back( core::stringw(lpelfe->elfFullName));
@@ -40,11 +40,10 @@ inline int getTextureSizeFromSurfaceSize(int size)
 	// Constructor
 	//
 
-	CFontTool::CFontTool(IrrlichtDevice* device) : 
-		FontNames(), CharSets(), CharMap(), Areas(), currentTextures(0), currentImages(0),
+	CFontTool::CFontTool(IrrlichtDevice* device) : FontSizes(fontsizes),
 			Device(device), UseAlphaChannel(false),
-		// win specific
-		dc(0)
+			// win specific
+			dc(0)
 	{
 		// init display context
 		dc = CreateDC(L"DISPLAY", L"DISPLAY", 0 ,0 );
@@ -54,24 +53,6 @@ inline int getTextureSizeFromSurfaceSize(int size)
 			CharSets.push_back( core::stringw(setnames[i]));
 
 		selectCharSet(0);
-
-		FontSizes = &fontsizes[0];
-	}
-	CFontTool::~CFontTool()
-	{
-		// destroy display context
-		if (dc)
-			DeleteDC(dc);
-		// drop textures+images
-
-		for (u32 i=0; i<currentTextures.size(); ++i)
-			currentTextures[i]->drop();
-		currentTextures.clear();
-
-		for (u32 i=0; i<currentImages.size(); ++i)
-			currentImages[i]->drop();
-		currentImages.clear();
-
 	}
 
 	void CFontTool::selectCharSet(u32 currentCharSet)
@@ -125,7 +106,7 @@ inline int getTextureSizeFromSurfaceSize(int size)
 
 		// clear current image mappings
 		CharMap.clear();
-		// clear array 
+		// clear array
 		Areas.clear();
 
 		// get information about this font's unicode ranges.
@@ -135,7 +116,7 @@ inline int getTextureSizeFromSurfaceSize(int size)
 
 		GetFontUnicodeRanges( dc, glyphs);
 
-		s32 TotalCharCount = glyphs->cGlyphsSupported;
+//		s32 TotalCharCount = glyphs->cGlyphsSupported;
 
 		s32 currentx=0, currenty=0, maxy=0;
 
@@ -169,16 +150,14 @@ inline int getTextureSizeFromSurfaceSize(int size)
 
 					if (abc.abcB-abc.abcA+abc.abcC<1)
 						continue;	// nothing of width 0
-
 				}
 				if (size.cy < 1)
 					continue;
-				
+
 				//GetGlyphOutline(dc, currentchar, GGO_METRICS, &gm, 0, 0, 0);
 
 				//size.cx++; size.cy++;
-				
-				
+
 				// wrap around?
 				if (currentx + size.cx > (s32) textureWidth)
 				{
@@ -192,7 +171,7 @@ inline int getTextureSizeFromSurfaceSize(int size)
 					maxy = 0;
 				}
 				// add this char dimension to the current map
-				
+
 				fa.rectangle = core::rect<s32>(currentx, currenty, currentx + size.cx, currenty + size.cy);
 				fa.sourceimage = currentImage;
 
@@ -207,7 +186,7 @@ inline int getTextureSizeFromSurfaceSize(int size)
 		}
 		currenty += maxy;
 
-		s32 lastTextureHeight = getTextureSizeFromSurfaceSize(currenty);
+		u32 lastTextureHeight = getTextureSizeFromSurfaceSize(currenty);
 
 		// delete the glyph set
 		delete buf;
@@ -222,8 +201,8 @@ inline int getTextureSizeFromSurfaceSize(int size)
 			logmsg += " of ";
 			logmsg += (s32) currentImages.size();
 			Device->getLogger()->log(logmsg.c_str());
-			// no need for a huge final texture 
-			s32 texHeight = textureHeight;
+			// no need for a huge final texture
+			u32 texHeight = textureHeight;
 			if (currentImage == currentImages.size()-1 )
 				texHeight = lastTextureHeight;
 
@@ -263,7 +242,7 @@ inline int getTextureSizeFromSurfaceSize(int size)
 					// draw letter
 					s32 sx = Areas[currentArea].rectangle.UpperLeftCorner.X - Areas[currentArea].underhang;
 					TextOutW(bmpdc, sx, Areas[currentArea].rectangle.UpperLeftCorner.Y, &wch, 1);
-					
+
 					// if ascii font...
 					//SetPixel(bmpdc, Areas[currentArea].rectangle.UpperLeftCorner.X, Areas[currentArea].rectangle.UpperLeftCorner.Y, RGB(255,255,0));// left upper corner mark
 				}
@@ -272,51 +251,50 @@ inline int getTextureSizeFromSurfaceSize(int size)
 
 			// copy the font bitmap into a new irrlicht image
 			BITMAP b;
-			PBITMAPINFO pbmi; 
+			PBITMAPINFO pbmi;
 			WORD    cClrBits;
 			u32 cformat;
 
-			// Retrieve the bitmap color format, width, and height. 
+			// Retrieve the bitmap color format, width, and height.
 			GetObject(bmp, sizeof(BITMAP), (LPSTR)&b);
 
-			// Convert the color format to a count of bits. 
-			cClrBits = (WORD)(b.bmPlanes * b.bmBitsPixel); 
-			
-			
+			// Convert the color format to a count of bits.
+			cClrBits = (WORD)(b.bmPlanes * b.bmBitsPixel);
+
 			if (cClrBits <= 8) // we're not supporting these
 				cformat = -1;
 			else if (cClrBits <= 16)
 				cformat = video::ECF_A1R5G5B5;
-			else if (cClrBits <= 24) 
-				cformat = video::ECF_R8G8B8; 
+			else if (cClrBits <= 24)
+				cformat = video::ECF_R8G8B8;
 			else
 				cformat = video::ECF_A8R8G8B8;
 
-			 pbmi = (PBITMAPINFO) LocalAlloc(LPTR, 
-						sizeof(BITMAPINFOHEADER)); 
+			pbmi = (PBITMAPINFO) LocalAlloc(LPTR,
+						sizeof(BITMAPINFOHEADER));
 
-			// Initialize the fields in the BITMAPINFO structure. 
+			// Initialize the fields in the BITMAPINFO structure.
 
-			pbmi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER); 
-			pbmi->bmiHeader.biWidth = b.bmWidth; 
-			pbmi->bmiHeader.biHeight = b.bmHeight; 
-			pbmi->bmiHeader.biPlanes = b.bmPlanes; 
-			pbmi->bmiHeader.biBitCount = b.bmBitsPixel; 
+			pbmi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+			pbmi->bmiHeader.biWidth = b.bmWidth;
+			pbmi->bmiHeader.biHeight = b.bmHeight;
+			pbmi->bmiHeader.biPlanes = b.bmPlanes;
+			pbmi->bmiHeader.biBitCount = b.bmBitsPixel;
 
-			// If the bitmap is not compressed, set the BI_RGB flag. 
-			pbmi->bmiHeader.biCompression = BI_RGB; 
+			// If the bitmap is not compressed, set the BI_RGB flag.
+			pbmi->bmiHeader.biCompression = BI_RGB;
 
-			// Compute the number of bytes in the array of color 
-			// indices and store the result in biSizeImage. 
-			// For Windows NT, the width must be DWORD aligned unless 
-			// the bitmap is RLE compressed. This example shows this. 
-			// For Windows 95/98/Me, the width must be WORD aligned unless the 
+			// Compute the number of bytes in the array of color
+			// indices and store the result in biSizeImage.
+			// For Windows NT, the width must be DWORD aligned unless
+			// the bitmap is RLE compressed. This example shows this.
+			// For Windows 95/98/Me, the width must be WORD aligned unless the
 			// bitmap is RLE compressed.
 			pbmi->bmiHeader.biSizeImage = ((pbmi->bmiHeader.biWidth * cClrBits +31) & ~31) /8
-										  * pbmi->bmiHeader.biHeight; 
-			// Set biClrImportant to 0, indicating that all of the 
-			// device colors are important. 
-			pbmi->bmiHeader.biClrImportant = 0; 
+							* pbmi->bmiHeader.biHeight;
+			// Set biClrImportant to 0, indicating that all of the
+			// device colors are important.
+			pbmi->bmiHeader.biClrImportant = 0;
 
 			LPBYTE lpBits;              // memory pointer
 
@@ -329,7 +307,7 @@ inline int getTextureSizeFromSurfaceSize(int size)
 			//OpenClipboard(hWnd);
 			//EmptyClipboard();
 			//SetClipboardData(CF_BITMAP, bmp);
-			//CloseClipboard();	
+			//CloseClipboard();
 
 			// flip bitmap
 			s32 rowsize = ((pbmi->bmiHeader.biWidth * cClrBits +31) & ~31) /8;
@@ -429,34 +407,188 @@ inline int getTextureSizeFromSurfaceSize(int size)
 		If anyone makes a Linux/OSX implementation, please post a patch to the tracker for inclusion :)
 	*/
 
-	CFontTool::CFontTool(IrrlichtDevice *device) : FontNames(), CharSets(), CharMap(), Areas(), 
-		currentTextures(0), currentImages(0), Device(device), UseAlphaChannel(false)
+	CFontTool::CFontTool(IrrlichtDevice *device) : FontSizes(fontsizes),
+		Device(device), UseAlphaChannel(false)
 	{
 		device->setWindowCaption(L"Unable to create fonts, your OS is not supported :-(");
 
-		FontSizes = &fontsizes[0];
+		int fontCount = 0;
+		char **fontList = XListFonts((Display*)device->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Display, "-*", 2048, &fontCount);
 
-		// create list of available fonts
-		// create list of available character set names
+		for (int i=0; i<fontCount; ++i)
+		{
+			core::stringw tmp(fontList[i]);
+			tmp = tmp.subString(1, tmp.findNext(L'-', 1)-1);
+			if (!CharSets.size() || (tmp != CharSets.getLast()))
+				CharSets.push_back( tmp );
+		}
+		XFreeFontNames(fontList);
+
 		selectCharSet(0);
 	}
 
 	void CFontTool::selectCharSet(u32 currentCharSet)
 	{
+		if ( currentCharSet >= CharSets.size() )
+			return;
+
 		FontNames.clear();
 
-		Device->getLogger()->log("Unable to create font list");
+		int fontCount = 0;
+		char familyName[1024];
+		snprintf(familyName, 1024, "-%ls-*", CharSets[currentCharSet].c_str());
+		char **fontList = XListFonts((Display*)Device->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Display, familyName, 2048, &fontCount);
+
+		for (int i=0; i<fontCount; ++i)
+		{
+			core::stringw tmp(fontList[i]);
+			s32 pos = tmp.findNext(L'-', 1)+1;
+			tmp = tmp.subString(pos, tmp.findNext(L'-', pos)-pos);
+			if (!FontNames.size() || (tmp != FontNames.getLast()))
+				FontNames.push_back( tmp );
+		}
+		XFreeFontNames(fontList);
 	}
 
-	bool CFontTool::makeBitmapFont(	u32 fontIndex, u32 charsetIndex, 
-									s32 fontSize, u32 texturewidth, u32 textureHeight,
-									bool bold, bool italic, bool aa, bool alpha)
+	bool CFontTool::makeBitmapFont(	u32 fontIndex, u32 charsetIndex,
+					s32 fontSize, u32 texturewidth, u32 textureHeight,
+					bool bold, bool italic, bool aa, bool alpha)
 	{
+		if (fontIndex >= FontNames.size() || charsetIndex >= CharSets.size() )
+			return false;
+
+		Display* display = (Display*)Device->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Display;
+		UseAlphaChannel = alpha;
+		u32 currentImage = 0;
+
+		char familyName[1024];
+		snprintf(familyName, 1024, "-%ls-%ls-%s-%s-*", CharSets[charsetIndex].c_str(), FontNames[fontIndex].c_str(), bold?"bold":"medium", italic?"i":"r");
+		XFontStruct* fontStruct = XLoadQueryFont(display, familyName);
+		if (!fontStruct)
+			return false;
+
+		// get rid of the current textures/images
+		for (u32 i=0; i<currentTextures.size(); ++i)
+			currentTextures[i]->drop();
+		currentTextures.clear();
+
+		for (u32 i=0; i<currentImages.size(); ++i)
+			currentImages[i]->drop();
+		currentImages.clear();
+
+		// clear current image mappings
+		CharMap.clear();
+		// clear array
+		Areas.clear();
+
+		printf("dir %u minc %u maxc %u min %u max %u, all %d def %u #prop %d asc %d desc %d\n",
+			fontStruct->direction,
+			fontStruct->min_char_or_byte2,
+			fontStruct->max_char_or_byte2,
+			fontStruct->min_byte1,
+			fontStruct->max_byte1,
+			fontStruct->all_chars_exist,
+			fontStruct->default_char,
+			fontStruct->n_properties,
+			fontStruct->ascent,
+			fontStruct->descent);
+#if 0
+			XFontProp *properties;
+			XCharStruct min_bounds;  /* minimum bounds over all existing char */
+			XCharStruct max_bounds;  /* maximum bounds over all existing char */
+			XCharStruct *per_char;   /* first_char to last_char information */
+#endif
+
+#if 0
+		for (s32 ch=current->wcLow; ch< current->wcLow + current->cGlyphs; ch++)
+		{
+			wchar_t currentchar = ch;
+
+			// get the dimensions
+			SIZE size;
+			ABC abc;
+			GetTextExtentPoint32W(dc, &currentchar, 1, &size);
+			SFontArea fa;
+			fa.underhang = 0;
+			fa.overhang  = 0;
+
+			if (GetCharABCWidthsW(dc, currentchar, currentchar, &abc)) // for unicode fonts, get overhang, underhang, width
+			{
+				size.cx = abc.abcB;
+				fa.underhang  = abc.abcA;
+				fa.overhang   = abc.abcC;
+
+				if (abc.abcB-abc.abcA+abc.abcC<1)
+					continue;	// nothing of width 0
+			}
+			if (size.cy < 1)
+				continue;
+
+			// wrap around?
+			if (currentx + size.cx > (s32) textureWidth)
+			{
+				currenty += maxy;
+				currentx = 0;
+				if ((u32)(currenty + maxy) > textureHeight)
+				{
+					currentImage++; // increase Image count
+					currenty=0;
+				}
+				maxy = 0;
+			}
+			// add this char dimension to the current map
+
+			fa.rectangle = core::rect<s32>(currentx, currenty, currentx + size.cx, currenty + size.cy);
+			fa.sourceimage = currentImage;
+
+			CharMap.insert(currentchar, Areas.size());
+			Areas.push_back( fa );
+
+			currentx += size.cx +1;
+
+			if (size.cy+1 > maxy)
+				maxy = size.cy+1;
+		}
+		currenty += maxy;
+
+		u32 lastTextureHeight = getTextureSizeFromSurfaceSize(currenty);
+
+		// delete the glyph set
+		delete buf;
+
+		currentImages.set_used(currentImage+1);
+		currentTextures.set_used(currentImage+1);
+
+		for (currentImage=0; currentImage < currentImages.size(); ++currentImage)
+		{
+			core::stringc logmsg = "Creating image ";
+			logmsg += (s32) (currentImage+1);
+			logmsg += " of ";
+			logmsg += (s32) currentImages.size();
+			Device->getLogger()->log(logmsg.c_str());
+			// no need for a huge final texture
+			u32 texHeight = textureHeight;
+			if (currentImage == currentImages.size()-1 )
+				texHeight = lastTextureHeight;
+
+			// make a new bitmap
+		}
+#endif
+
+		XFreeFont(display, fontStruct);
 		Device->getLogger()->log("Your OS is unsupported! It won't work I tell you!");
 		return false;
 	}
+#endif
+
 	CFontTool::~CFontTool()
 	{
+#ifdef _IRR_WINDOWS_
+		// destroy display context
+		if (dc)
+			DeleteDC(dc);
+#endif
+
 		// drop textures+images
 		for (u32 i=0; i<currentTextures.size(); ++i)
 			currentTextures[i]->drop();
@@ -466,7 +598,6 @@ inline int getTextureSizeFromSurfaceSize(int size)
 			currentImages[i]->drop();
 		currentImages.clear();
 	}
-#endif
 
 bool CFontTool::saveBitmapFont(const c8 *filename, const c8* format)
 {
@@ -490,7 +621,7 @@ bool CFontTool::saveBitmapFont(const c8 *filename, const c8* format)
 	writer->writeElement(L"font", false, L"type", L"bitmap");
 	writer->writeLineBreak();
 	writer->writeLineBreak();
- 
+
 	// write images and link to them
 	for (u32 i=0; i<currentImages.size(); ++i)
 	{
@@ -500,10 +631,10 @@ bool CFontTool::saveBitmapFont(const c8 *filename, const c8* format)
 		imagename += format;
 		Device->getVideoDriver()->writeImageToFile(currentImages[i],imagename.c_str());
 
-		writer->writeElement(	L"Texture", true, 
-								L"index", core::stringw(i).c_str(), 
-								L"filename", core::stringw(imagename.c_str()).c_str(),
-								L"hasAlpha", UseAlphaChannel ? L"true" : L"false");
+		writer->writeElement(L"Texture", true,
+				L"index", core::stringw(i).c_str(),
+				L"filename", core::stringw(imagename.c_str()).c_str(),
+				L"hasAlpha", UseAlphaChannel ? L"true" : L"false");
 		writer->writeLineBreak();
 	}
 
@@ -557,7 +688,7 @@ bool CFontTool::saveBitmapFont(const c8 *filename, const c8* format)
 			names.push_back(core::stringw(L"o"));
 			values.push_back(over);
 		}
-		writer->writeElement(L"c", true, names, values); 
+		writer->writeElement(L"c", true, names, values);
 
 		writer->writeLineBreak();
 		it++;

@@ -20,13 +20,13 @@ using namespace gui;
 
 #pragma comment(lib, "Irrlicht.lib")
 
-s32 texturesizes[] = {128, 256, 512, 1024, 2048, 4096, 0};
+const s32 texturesizes[] = {128, 256, 512, 1024, 2048, 4096, 0};
 
-wchar_t *fileformats[]		 =  { L"bmp", L"ppm", 0 };  // bitmap font formats
-wchar_t *alphafileformats[]  =  { L"png", L"tga", 0 };  // bitmap font formats which support alpha channels
-wchar_t *vectorfileformats[] =  { L"xml", L"bin", 0 };  // file formats for vector fonts
+const wchar_t *fileformats[]		 =  { L"bmp", L"ppm", 0 };  // bitmap font formats
+const wchar_t *alphafileformats[]  =  { L"png", L"tga", 0 };  // bitmap font formats which support alpha channels
+const wchar_t *vectorfileformats[] =  { L"xml", L"bin", 0 };  // file formats for vector fonts
 
-wchar_t *warntext = L"Legal Notice\n"
+const wchar_t *warntext = L"Legal Notice\n"
 					L"------------\n\n"
 					L"When making bitmap and vector fonts, you should consider the potential legal "
 					L"issues with redistributing the fonts with your software; this tool basically "
@@ -129,7 +129,6 @@ public:
 					cbo->clear();
 					for (u32 i=0; i < FontTool->FontNames.size(); ++i)
 						cbo->addItem(FontTool->FontNames[i].c_str());
-					
 					return true;
 				}
 				break;
@@ -279,9 +278,9 @@ public:
 		return false;
 	}
 
-	CFontTool       *&FontTool;
-	CVectorFontTool *&VecTool;
-	IrrlichtDevice*	Device;
+	IrrlichtDevice*	 Device;
+	CFontTool*       FontTool;
+	CVectorFontTool* VecTool;
 
 };
 
