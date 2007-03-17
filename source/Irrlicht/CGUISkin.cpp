@@ -753,7 +753,7 @@ void CGUISkin::drawIcon(IGUIElement* element, EGUI_DEFAULT_ICON icon,
 
 }
 
-EGUI_SKIN_TYPE CGUISkin::getType()
+EGUI_SKIN_TYPE CGUISkin::getType() const
 {
 	return Type;
 }

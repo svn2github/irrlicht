@@ -558,7 +558,7 @@ void CGUIFont::draw(const wchar_t* text, const core::rect<s32>& position, video:
 */
 
 
-//! draws an text and clips it to the specified rectangle if wanted
+//! draws some text and clips it to the specified rectangle if wanted
 void CGUIFont::draw(const wchar_t* text, const core::rect<s32>& position, video::SColor color, bool hcenter, bool vcenter, const core::rect<s32>* clip)
 {
 	if (!Driver)
@@ -568,15 +568,21 @@ void CGUIFont::draw(const wchar_t* text, const core::rect<s32>& position, video:
 	core::position2d<s32> offset = position.UpperLeftCorner;
 	core::rect<s32> pos;
 
-	if (hcenter || vcenter)
-	{
+	if (hcenter || vcenter || clip)
 		textDimension = getDimension(text);
 
-		if (hcenter)
-			offset.X = ((position.getWidth() - textDimension.Width)>>1) + offset.X;
+	if (hcenter)
+		offset.X = ((position.getWidth() - textDimension.Width)>>1) + offset.X;
 
-		if (vcenter)
-			offset.Y = ((position.getHeight() - textDimension.Height)>>1) + offset.Y;
+	if (vcenter)
+		offset.Y = ((position.getHeight() - textDimension.Height)>>1) + offset.Y;
+
+	if (clip)
+	{
+		core::rect<s32> clippedRect(offset, textDimension);
+		clippedRect.clipAgainst(*clip);
+		if (!clippedRect.isValid())
+			return;
 	}
 
 	while(*text)

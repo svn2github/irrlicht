@@ -20,8 +20,7 @@ namespace gui
 			core::rect<s32> r = getAbsolutePosition();
 			core::rect<s32> r2(0, Environment->getSkin()->getFont()->getDimension(L"A").Height + 10, 
 				r.getWidth() - 5, 
-				Environment->getSkin()->getFont()->getDimension(L"A").Height + 
-				Environment->getSkin()->getSize(EGDS_CHECK_BOX_WIDTH) + 5 );
+				Environment->getSkin()->getFont()->getDimension(L"A").Height*2 + 15 );
 
 			AttribCheckBox = environment->addCheckBox(false, r2, this);
 			AttribCheckBox->setAlignment(EGUIA_UPPERLEFT, EGUIA_LOWERRIGHT, EGUIA_UPPERLEFT, EGUIA_UPPERLEFT);

@@ -132,6 +132,18 @@ namespace gui
 			return true;
 		}
 
+		virtual void serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options=0)
+		{
+			IGUIElement::serializeAttributes(out, options);
+		}
+
+		virtual void deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options=0)
+		{
+			IGUIElement::deserializeAttributes(in, options);
+			if (AttribName)
+				AttribName->setText(Text.c_str());
+		}
+
 	protected:
 		IGUIStaticText*		AttribName;
 		io::IAttributes*	Attribs;

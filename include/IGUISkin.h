@@ -441,7 +441,7 @@ namespace gui
 			bool loop=false, const core::rect<s32>* clip=0) = 0;
 
 		//! get the type of this skin
-		virtual EGUI_SKIN_TYPE getType() { return EGST_UNKNOWN; };
+		virtual EGUI_SKIN_TYPE getType() const { return EGST_UNKNOWN; };
 
 	};
 

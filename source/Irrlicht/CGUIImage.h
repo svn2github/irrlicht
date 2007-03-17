@@ -25,6 +25,12 @@ namespace gui
 		//! sets an image
 		virtual void setImage(video::ITexture* image);
 
+		//! sets the color of the image
+		virtual void setColor(video::SColor color);
+
+		//! sets if the image should scale to fit the element
+		virtual void setScaleImage(bool scale);
+
 		//! draws the element and its children
 		virtual void draw();
 
@@ -39,9 +45,10 @@ namespace gui
 
 
 	private:
-
+		video::SColor Color;
 		video::ITexture* Texture;
 		bool UseAlphaChannel;
+		bool ScaleImage;
 
 	};
 

@@ -304,9 +304,6 @@ void CGUIListBox::draw()
 
 	// draw background
 	core::rect<s32> frameRect(AbsoluteRect);
-
-	skin->draw3DSunkenPane(this, skin->getColor(EGDC_3D_HIGH_LIGHT), true,
-		DrawBack, frameRect, clipRect);
 	
 	// draw items
 
@@ -316,6 +313,9 @@ void CGUIListBox::draw()
 	clientClip.LowerRightCorner.X = AbsoluteRect.LowerRightCorner.X - skin->getSize(EGDS_SCROLLBAR_SIZE);
 	clientClip.LowerRightCorner.Y -= 1;
 	clientClip.clipAgainst(AbsoluteClippingRect);
+
+	skin->draw3DSunkenPane(this, skin->getColor(EGDC_3D_HIGH_LIGHT), true,
+		DrawBack, frameRect, &clientClip);
 
 	if (clipRect)
 		clientClip.clipAgainst(*clipRect);

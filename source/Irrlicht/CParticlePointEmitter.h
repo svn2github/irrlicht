@@ -40,7 +40,7 @@ public:
 	virtual s32 deserializeAttributes(s32 startIndex, io::IAttributes* in, io::SAttributeReadWriteOptions* options);
 
 	//! Get emitter type
-	virtual E_PARTICLE_EMITTER_TYPE getType() { return EPET_POINT; }
+	virtual E_PARTICLE_EMITTER_TYPE getType() const { return EPET_POINT; }
 
 private:
 

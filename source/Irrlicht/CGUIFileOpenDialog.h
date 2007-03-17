@@ -53,6 +53,7 @@ namespace gui
 		IGUIButton* CancelButton;
 		IGUIListBox* FileBox;
 		IGUIElement* FileNameText;
+		IGUIElement* EventParent;
 		io::IFileSystem* FileSystem;
 
 		io::IFileList* FileList;

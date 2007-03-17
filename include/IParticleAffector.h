@@ -64,7 +64,7 @@ public:
 	virtual s32 deserializeAttributes(s32 startIndex, io::IAttributes* in, io::SAttributeReadWriteOptions* options=0) { return 0; }
 
 	//! Get emitter type
-	virtual E_PARTICLE_AFFECTOR_TYPE getType() = 0;
+	virtual E_PARTICLE_AFFECTOR_TYPE getType() const = 0;
 
 protected:
 	bool Enabled;

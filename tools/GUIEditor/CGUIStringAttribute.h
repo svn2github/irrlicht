@@ -44,14 +44,17 @@ namespace gui
 		//! save the attribute and possibly post the event to its parent
 		virtual bool updateAttrib(bool sendEvent=true)
 		{
-			Attribs->setAttribute(Index, AttribEditBox->getText());
-			AttribEditBox->setText(Attribs->getAttributeAsStringW(Index).c_str());
+			if (Attribs)
+			{
+				Attribs->setAttribute(Index, AttribEditBox->getText());
+				AttribEditBox->setText(Attribs->getAttributeAsStringW(Index).c_str());
+			}
 
 			return CGUIAttribute::updateAttrib(sendEvent);
 		}
 
 		//! this shoudln't be serialized, but this is included as it's an example
-		virtual const c8* getTypeName() { return "string_attribute"; }
+		virtual const c8* getTypeName() const { return "string_attribute"; }
 
 	private:
 		IGUIEditBox*		AttribEditBox;

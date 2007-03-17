@@ -582,7 +582,7 @@ public:
 	later for serializing and deserializing.
 	If you wrote your own GUIElements, you need to set the type for your element as first parameter
 	in the constructor of IGUIElement. For own (=unknown) elements, simply use EGUIET_ELEMENT as type */
-	EGUI_ELEMENT_TYPE getType()
+	EGUI_ELEMENT_TYPE getType() const
 	{
 		return Type;
 	}
@@ -590,7 +590,7 @@ public:
 	//! Returns the type name of the gui element. 
 	/** This is needed serializing elements. For serializing your own elements, override this function 
 	and return your own type name which is created by your IGUIElementFactory */
-	virtual const c8* getTypeName()
+	virtual const c8* getTypeName() const
 	{
 		return GUIElementTypeNames[Type];
 	}

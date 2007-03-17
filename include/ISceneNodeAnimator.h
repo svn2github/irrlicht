@@ -40,7 +40,7 @@ namespace scene
 		virtual void animateNode(ISceneNode* node, u32 timeMs) = 0;
 
 		//! Returns type of the scene node animator
-		virtual ESCENE_NODE_ANIMATOR_TYPE getType()
+		virtual ESCENE_NODE_ANIMATOR_TYPE getType() const
 		{
 			return ESNAT_UNKNOWN;
 		}

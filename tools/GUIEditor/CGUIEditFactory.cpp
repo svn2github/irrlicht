@@ -9,6 +9,7 @@
 #include "CGUIBoolAttribute.h"
 #include "CGUIEnumAttribute.h"
 #include "CGUIColorAttribute.h"
+#include "CGUITextureAttribute.h"
 
 namespace irr
 {
@@ -25,6 +26,7 @@ enum EGUIEDIT_ELEMENT_TYPES
 	EGUIEDIT_ENUMATTRIBUTE,
 	EGUIEDIT_COLORATTRIBUTE,
 	EGUIEDIT_COLORFATTRIBUTE,
+	EGUIEDIT_TEXTUREATTRIBUTE,
 	EGUIEDIT_COUNT
 };
 
@@ -38,6 +40,7 @@ const c8* const GUIEditElementTypeNames[] =
 	"enum_attribute",
 	"color_attribute",
 	"colorf_attribute",
+	"texture_attribute",
 	0
 };
 
@@ -93,6 +96,8 @@ IGUIElement* CGUIEditFactory::addGUIElement(const c8* typeName, IGUIElement* par
 		ret = new CGUIColorAttribute(Environment, parent);
 	else if (elementType == core::stringc(GUIEditElementTypeNames[EGUIEDIT_COLORFATTRIBUTE]))
 		ret = new CGUIColorAttribute(Environment, parent);
+	else if (elementType == core::stringc(GUIEditElementTypeNames[EGUIEDIT_TEXTUREATTRIBUTE]))
+		ret = new CGUITextureAttribute(Environment, parent);
 
 
 	// the environment now has the reference, so we can drop the element

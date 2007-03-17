@@ -24,7 +24,7 @@ namespace gui
 	// custom events
 	enum EGUIEDIT_CUSTOM_EVENTS 
 	{
-		EGUIEDCE_ATTRIB_EDITOR=35123, // some number hopefully nobody else is using
+		EGUIEDCE_ATTRIB_EDITOR=0xED17, // some number hopefully nobody else is using
 		EGUIEDCE_OPTION_EDITOR,
 		EGUIEDCE_ENV_EDITOR,
 		EGUIEDCE_COUNT
@@ -53,7 +53,7 @@ namespace gui
 		virtual void updateAbsolutePosition();
 
 		//! Sets the menu command id's
-		/** The GUI editor defaults to command ID's from 15639 (0x3D17) to 15639+EGUIEDMC_COUNT
+		/** The GUI editor defaults to command ID's from 0xED17 to 0xED17+EGUIEDMC_COUNT
 		In the rare case that these are already in use and you wish to use menus 
 		while the editor is present you can set a new offset here.
 		*/
@@ -75,11 +75,16 @@ namespace gui
 		//! returns the selected element
 		virtual IGUIElement* getSelectedElement();
 
+		//! copies the xml of the selected element and all children to the clipboard
+		virtual void CopySelectedElementXML();
+
+		//! copies the xml of the selected element and all children to the clipboard
+		virtual void PasteXMLToSelectedElement();
+
 		//! this shoudln't be serialized, but this is included as it's an example
-		virtual const c8* getTypeName() { return "GUIEditor"; }
+		virtual const c8* getTypeName() const { return "GUIEditor"; }
 
 		virtual void serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options=0);
-
 		virtual void deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options=0);
 
 	private:
@@ -144,8 +149,6 @@ namespace gui
 		IGUIElement			*MouseOverElement, 
 							*SelectedElement;
 		CGUIEditWindow		*EditorWindow;
-
-		core::stringw		CopyBuffer;
 
 		core::rect<s32> TLRect;
 		core::rect<s32> TRRect;

@@ -11,7 +11,31 @@ using namespace gui;
 
 int main()
 {
-	IrrlichtDevice *device =createDevice(video::EDT_OPENGL, core::dimension2d<s32>(800, 600));
+	// ask user for driver
+
+	video::E_DRIVER_TYPE driverType;
+
+	printf("Please select the driver you want for this example:\n"\
+		" (a) Direct3D 9.0c\n (b) Direct3D 8.1\n (c) OpenGL 1.5\n"\
+		" (d) Software Renderer\n (e) Burning's Software Renderer\n"\
+		" (f) NullDevice\n (otherKey) exit\n\n");
+
+	char i='a';
+	std::cin >> i;
+
+	switch(i)
+	{
+		case 'a': driverType = video::EDT_DIRECT3D9;break;
+		case 'b': driverType = video::EDT_DIRECT3D8;break;
+		case 'c': driverType = video::EDT_OPENGL;   break;
+		case 'd': driverType = video::EDT_SOFTWARE; break;
+		case 'e': driverType = video::EDT_BURNINGSVIDEO;break;
+		case 'f': driverType = video::EDT_NULL;     break;
+		default: return 1;
+	}	
+
+
+	IrrlichtDevice *device =createDevice(driverType, core::dimension2d<s32>(800, 600));
 	video::IVideoDriver* driver = device->getVideoDriver();
 	scene::ISceneManager* smgr = device->getSceneManager();
 	gui::IGUIEnvironment *env = device->getGUIEnvironment();

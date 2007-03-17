@@ -19,17 +19,19 @@ namespace gui
 //! constructor
 CGUIEditBox::CGUIEditBox(const wchar_t* text, bool border, IGUIEnvironment* environment,
 			IGUIElement* parent, s32 id,
-			const core::rect<s32>& rectangle, IOSOperator* op)
+			const core::rect<s32>& rectangle)
 : IGUIEditBox(environment, parent, id, rectangle), MouseMarking(false),
 	Border(border), OverrideColorEnabled(false), MarkBegin(0), MarkEnd(0),
 	OverrideColor(video::SColor(101,255,255,255)),
-	OverrideFont(0), Operator(op), CursorPos(0), ScrollPos(0), Max(0)
+	OverrideFont(0), CursorPos(0), ScrollPos(0), Max(0)
 {
 	#ifdef _DEBUG
 	setDebugName("CGUIEditBox");
 	#endif
 
 	Text = text;
+
+	Operator = environment->getOSOperator();
 
 	if (Operator)
 		Operator->grab();

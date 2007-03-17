@@ -238,7 +238,23 @@
 					RelativePath=".\CGUIStringAttribute.h"
 					>
 				</File>
+				<File
+					RelativePath=".\CGUITextureAttribute.h"
+					>
+				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="io"
+			>
+			<File
+				RelativePath=".\CMemoryReadWriteFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CMemoryReadWriteFile.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\main.cpp"

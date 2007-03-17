@@ -19,8 +19,7 @@ namespace gui
 
 		//! constructor
 		CGUIEditBox(const wchar_t* text, bool border, IGUIEnvironment* environment,
-			IGUIElement* parent, s32 id, const core::rect<s32>& rectangle,
-			IOSOperator* op);
+			IGUIElement* parent, s32 id, const core::rect<s32>& rectangle);
 
 		//! destructor
 		~CGUIEditBox();

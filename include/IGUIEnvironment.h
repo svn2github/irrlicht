@@ -14,7 +14,9 @@
 
 namespace irr
 {
+	class IOSOperator;
 	class IEventReceiver;
+
 	namespace io
 	{
 		class IXMLWriter;
@@ -78,6 +80,9 @@ public:
 
 	//! Returns the file system.
 	virtual io::IFileSystem* getFileSystem() = 0;
+
+	//! returns a pointer to the OS operator
+	virtual IOSOperator* getOSOperator() = 0;
 
 	//! removes all elements from the environment.
 	virtual void clear() = 0;
@@ -361,17 +366,17 @@ public:
 
 	//! Saves the current gui into a file.
 	//! \param filename: Name of the file.
-	virtual bool saveGUI(const c8* filename)=0;
+	virtual bool saveGUI(const c8* filename, IGUIElement* start=0) = 0;
 
 	//! Saves the current gui into a file.
-	virtual bool saveGUI(io::IWriteFile* file)=0;
+	virtual bool saveGUI(io::IWriteFile* file, IGUIElement* start=0) = 0;
 
 	//! Loads the gui. Note that the current gui is not cleared before.
 	//! \param filename: Name of the file .
-	virtual bool loadGUI(const c8* filename)=0;
+	virtual bool loadGUI(const c8* filename, IGUIElement* parent=0) = 0;
 
 	//! Loads the gui. Note that the current gui is not cleared before.
-	virtual bool loadGUI(io::IReadFile* file)=0;	
+	virtual bool loadGUI(io::IReadFile* file, IGUIElement* parent=0) = 0;	
 
 	//! Writes attributes of the gui environment
 	virtual void serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options=0)=0;

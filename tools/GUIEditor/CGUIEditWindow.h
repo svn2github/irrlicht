@@ -40,7 +40,7 @@ namespace gui
 		CGUIAttributeEditor* getEnvironmentEditor();
 
 		//! this shoudln't be serialized, but this is included as it's an example
-		virtual const c8* getTypeName() { return "GUIEditWindow"; }
+		virtual const c8* getTypeName() const { return "GUIEditWindow"; }
 
 	private:
 

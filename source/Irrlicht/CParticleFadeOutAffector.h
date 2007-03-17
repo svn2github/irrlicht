@@ -36,7 +36,7 @@ public:
 	virtual s32 deserializeAttributes(s32 startIndex, io::IAttributes* in, io::SAttributeReadWriteOptions* options);
 
 	//! Get emitter type
-	virtual E_PARTICLE_AFFECTOR_TYPE getType() { return EPAT_FADE_OUT; }
+	virtual E_PARTICLE_AFFECTOR_TYPE getType() const { return EPAT_FADE_OUT; }
 
 private:
 

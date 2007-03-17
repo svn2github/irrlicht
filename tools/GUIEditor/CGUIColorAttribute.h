@@ -136,7 +136,7 @@ namespace gui
 		}
 
 		//! this shoudln't be serialized, but this is included as it's an example
-		virtual const c8* getTypeName() 
+		virtual const c8* getTypeName() const
 		{ 
 			return "color_attribute"; 
 		}

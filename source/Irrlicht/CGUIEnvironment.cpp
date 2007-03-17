@@ -230,6 +230,11 @@ io::IFileSystem* CGUIEnvironment::getFileSystem()
 	return FileSystem;
 }
 
+//! returns the current file system
+IOSOperator* CGUIEnvironment::getOSOperator()
+{
+	return Operator;
+}
 
 //! clear all GUI elements
 void CGUIEnvironment::clear()
@@ -482,20 +487,20 @@ IGUIElement* CGUIEnvironment::addGUIElement(const c8* elementName, IGUIElement* 
 
 //! Saves the current gui into a file.
 //! \param filename: Name of the file .
-bool CGUIEnvironment::saveGUI(const c8* filename)
+bool CGUIEnvironment::saveGUI(const c8* filename, IGUIElement* start)
 {
 	io::IWriteFile* file = FileSystem->createAndWriteFile(filename);
 	if (!file)
 		return false;
 
-	bool ret = saveGUI(file);
+	bool ret = saveGUI(file, start);
 	file->drop();
 	return ret;
 }
 
 
 //! Saves the current gui into a file.
-bool CGUIEnvironment::saveGUI(io::IWriteFile* file)
+bool CGUIEnvironment::saveGUI(io::IWriteFile* file, IGUIElement* start)
 {
 	if (!file)
 		return false;
@@ -505,7 +510,7 @@ bool CGUIEnvironment::saveGUI(io::IWriteFile* file)
 		return false;
 
 	writer->writeXMLHeader();
-	writeGUIElement(writer, this);
+	writeGUIElement(writer, start ? start : this);
 	writer->drop();
 
 	return true;
@@ -513,8 +518,8 @@ bool CGUIEnvironment::saveGUI(io::IWriteFile* file)
 
 
 //! Loads the gui. Note that the current gui is not cleared before.
-//! \param filename: Name of the file .
-bool CGUIEnvironment::loadGUI(const c8* filename)
+//! \param filename: Name of the file.
+bool CGUIEnvironment::loadGUI(const c8* filename, IGUIElement* parent)
 {
 	io::IReadFile* read = FileSystem->createAndOpenFile(filename);
 	if (!read)
@@ -523,7 +528,7 @@ bool CGUIEnvironment::loadGUI(const c8* filename)
 		return false;
 	}
 
-	bool ret = loadGUI(read);
+	bool ret = loadGUI(read, parent);
 	read->drop();
 
 	return ret;
@@ -531,7 +536,7 @@ bool CGUIEnvironment::loadGUI(const c8* filename)
 
 
 //! Loads the gui. Note that the current gui is not cleared before.
-bool CGUIEnvironment::loadGUI(io::IReadFile* file)
+bool CGUIEnvironment::loadGUI(io::IReadFile* file, IGUIElement* parent)
 {
 	
 	if (!file)
@@ -550,7 +555,7 @@ bool CGUIEnvironment::loadGUI(io::IReadFile* file)
 	// read file
 	while(reader->read())
 	{
-		readGUIElement(reader, 0);
+		readGUIElement(reader, parent);
 	}
 
 	// finish up
@@ -570,21 +575,25 @@ void CGUIEnvironment::readGUIElement(io::IXMLReader* reader, IGUIElement* parent
 
 	gui::IGUIElement* node = 0;
 
-	if ((!parent && !wcscmp(IRR_XML_FORMAT_GUI_ENV, reader->getNodeName())) ||
-		( parent && !wcscmp(IRR_XML_FORMAT_GUI_ELEMENT, reader->getNodeName())))
+	if (reader->getNodeType() == io::EXN_NONE)
+		reader->read();
+
+	if (reader->getNodeType() == io::EXN_UNKNOWN)
+		reader->read();
+
+	if (!parent && !wcscmp(IRR_XML_FORMAT_GUI_ENV, reader->getNodeName()))
 	{
-		if (parent)
-		{
-			// find node type and create it
-			core::stringc attrName = reader->getAttributeValue(IRR_XML_FORMAT_GUI_ELEMENT_ATTR_TYPE);
+		node = this; // root
+	}
+	else if	(!wcscmp(IRR_XML_FORMAT_GUI_ELEMENT, reader->getNodeName()))
+	{
+		// find node type and create it
+		core::stringc attrName = reader->getAttributeValue(IRR_XML_FORMAT_GUI_ELEMENT_ATTR_TYPE);
 
-			node = addGUIElement(attrName.c_str(), parent);
+		node = addGUIElement(attrName.c_str(), parent);
 
-			if (!node)
-				os::Printer::log("Could not create GUI element of unknown type", attrName.c_str());
-		}
-		else
-			node = this; // root
+		if (!node)
+			os::Printer::log("Could not create GUI element of unknown type", attrName.c_str());
 	}
 
 	// read attributes
@@ -701,7 +710,7 @@ void CGUIEnvironment::serializeAttributes(io::IAttributes* out, io::SAttributeRe
 
 	if (skin)
 	{
-		out->addEnum("Skin",getSkin()->getType(),GUISkinTypeNames);
+		out->addEnum("Skin", getSkin()->getType(), GUISkinTypeNames);
 		skin->serializeAttributes(out, options);
 	}
 }
@@ -984,7 +993,7 @@ IGUIEditBox* CGUIEnvironment::addEditBox(const wchar_t* text,
 										 s32 id)
 {
 	IGUIEditBox* d = new CGUIEditBox(text, border, this,
-			parent ? parent : this, id, rectangle, Operator);
+			parent ? parent : this, id, rectangle);
 
 	d->drop();
 	return d;
@@ -1155,6 +1164,7 @@ IGUIFont* CGUIEnvironment::getFont(const c8* filename)
 		else if (t==EGFT_VECTOR)
 		{
 			// todo: vector fonts
+			os::Printer::log("Unable to load font, XML vector fonts are not supported yet", f.Filename.c_str(), ELL_ERROR);
 
 			//CGUIFontVector* font = new CGUIFontVector(Driver);
 			//ifont = (IGUIFont*)font;

@@ -22,7 +22,7 @@ public:
 	virtual ~IGUIFontBitmap() {};
 
 	//! Returns the type of this font
-	virtual EGUI_FONT_TYPE getType() { return EGFT_BITMAP; }
+	virtual EGUI_FONT_TYPE getType() const { return EGFT_BITMAP; }
 
 	//! returns the parsed Symbol Information
 	virtual IGUISpriteBank* getSpriteBank() = 0;

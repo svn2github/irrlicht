@@ -173,7 +173,7 @@ namespace core
 			T xd = LowerRightCorner.X - UpperLeftCorner.X;
 			T yd = LowerRightCorner.Y - UpperLeftCorner.Y;
 
-			return !(xd < 0 || yd < 0 || (xd == 0 && yd == 0));
+			return !(xd <= 0 || yd <= 0 || (xd == 0 && yd == 0));
 		}
 
 		//! Returns the center of the rectangle
