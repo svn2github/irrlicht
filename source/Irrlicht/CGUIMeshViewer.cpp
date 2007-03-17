@@ -6,6 +6,7 @@
 #include "IGUIEnvironment.h"
 #include "IVideoDriver.h"
 #include "IAnimatedMesh.h"
+#include "IMesh.h"
 #include "irrMath.h"
 #include "os.h"
 #include "IGUISkin.h"

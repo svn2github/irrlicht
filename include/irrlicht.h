@@ -128,6 +128,7 @@
 #include "rect.h"
 #include "S3DVertex.h"
 #include "SAnimatedMesh.h"
+#include "SExposedVideoData.h"
 #include "SKeyMap.h"
 #include "SMaterial.h"
 #include "SMesh.h"

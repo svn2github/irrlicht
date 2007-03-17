@@ -1376,7 +1376,7 @@ void CNullDriver::fillMaterialStructureFromAttributes(video::SMaterial& outMater
 
 
 //! Returns driver and operating system specific data about the IVideoDriver.
-SExposedVideoData CNullDriver::getExposedVideoData()
+const SExposedVideoData& CNullDriver::getExposedVideoData()
 {
 	return ExposedData;
 }

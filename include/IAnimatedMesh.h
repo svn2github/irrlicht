@@ -6,13 +6,14 @@
 #define __I_ANIMATED_MESH_H_INCLUDED__
 
 #include "IUnknown.h"
-#include "IMesh.h"
-#include "matrix4.h"
+#include "aabbox3d.h"
 
 namespace irr
 {
 namespace scene
 {
+	class IMesh;
+
 	enum E_ANIMATED_MESH_TYPE
 	{
 		//! Unknown animated mesh type.

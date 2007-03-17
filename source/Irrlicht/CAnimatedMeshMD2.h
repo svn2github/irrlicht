@@ -6,6 +6,7 @@
 #define __C_ANIMATED_MESH_MD2_H_INCLUDED__
 
 #include "IAnimatedMeshMD2.h"
+#include "IMesh.h"
 #include "IReadFile.h"
 #include "S3DVertex.h"
 #include "irrArray.h"

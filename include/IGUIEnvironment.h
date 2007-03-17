@@ -7,7 +7,6 @@
 
 #include "rect.h"
 #include "IUnknown.h"
-#include "IEventReceiver.h"
 #include "irrTypes.h"
 #include "IGUIWindow.h"
 #include "IGUISkin.h"
@@ -15,6 +14,7 @@
 
 namespace irr
 {
+	class IEventReceiver;
 	namespace io
 	{
 		class IXMLWriter;

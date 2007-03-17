@@ -10,6 +10,7 @@
 #include "IWriteFile.h"
 #include "IXMLWriter.h"
 #include "ISceneUserDataSerializer.h"
+#include "IGUIEnvironment.h"
 
 #include "os.h"
 
@@ -100,7 +101,7 @@ CSceneManager::CSceneManager(video::IVideoDriver* driver, io::IFileSystem* fs,
 		CursorControl->grab();
 
 	if ( GUIEnvironment )
-		GUIEnvironment->grab ();
+		GUIEnvironment->grab();
 
 	// create mesh cache if not there already
 	if (!MeshCache)

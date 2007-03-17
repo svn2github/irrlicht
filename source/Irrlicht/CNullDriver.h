@@ -17,6 +17,7 @@
 #include "CFPSCounter.h"
 #include "S3DVertex.h"
 #include "SLight.h"
+#include "SExposedVideoData.h"
 
 namespace irr
 {
@@ -284,7 +285,7 @@ namespace video
 		virtual s32 addMaterialRenderer(IMaterialRenderer* renderer, const char* name = 0);
 
 		//! Returns driver and operating system specific data about the IVideoDriver.
-		virtual SExposedVideoData getExposedVideoData();
+		virtual const SExposedVideoData& getExposedVideoData();
 
 		//! Returns type of video driver
 		virtual E_DRIVER_TYPE getDriverType();

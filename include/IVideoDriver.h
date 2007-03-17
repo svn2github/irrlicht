@@ -18,7 +18,6 @@
 #include "IImageWriter.h"
 #include "IMeshBuffer.h"
 #include "triangle3d.h"
-#include "SExposedVideoData.h"
 #include "IMaterialRenderer.h"
 #include "EDriverTypes.h"
 #include "IGPUProgrammingServices.h"
@@ -40,6 +39,7 @@ namespace video
 	struct S3DVertex2TCoords;
 	struct S3DVertexTangents;
 	struct SLight;
+	struct SExposedVideoData;
 
 	//! enumeration for querying features of the video driver.
 	enum E_VIDEO_DRIVER_FEATURE
@@ -836,7 +836,7 @@ namespace video
 		//! Returns driver and operating system specific data about the IVideoDriver.
 		/** This method should only be used if the engine should be extended without having
 		to modify the source of the engine. */
-		virtual SExposedVideoData getExposedVideoData() = 0;
+		virtual const SExposedVideoData& getExposedVideoData() = 0;
 
 		//! Returns type of video driver
 		virtual E_DRIVER_TYPE getDriverType() = 0;

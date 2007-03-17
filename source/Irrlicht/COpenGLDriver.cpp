@@ -267,7 +267,8 @@ COpenGLDriver::COpenGLDriver(const core::dimension2d<s32>& screenSize, bool full
 	#endif
 	XWindow = glXGetCurrentDrawable();
 	XDisplay = glXGetCurrentDisplay();
-	ExposedData.OpenGLLinux.Window = XWindow;
+	ExposedData.OpenGLLinux.X11Display = XDisplay;
+	ExposedData.OpenGLLinux.X11Window = XWindow;
 	genericDriverInit(screenSize);
 
 	// set vsync

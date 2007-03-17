@@ -6,10 +6,10 @@
 #define __C_ANIMATED_MESH_MS3D_H_INCLUDED__
 
 #include "IAnimatedMeshMS3D.h"
+#include "IMesh.h"
 #include "IReadFile.h"
 #include "S3DVertex.h"
 #include "irrString.h"
-#include "matrix4.h"
 #include "SMeshBuffer.h"
 
 namespace irr

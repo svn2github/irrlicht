@@ -5,21 +5,19 @@
 #ifndef __I_SCENE_MANAGER_H_INCLUDED__
 #define __I_SCENE_MANAGER_H_INCLUDED__
 
-#include "irrArray.h"
 #include "IUnknown.h"
+#include "irrArray.h"
 #include "vector3d.h"
 #include "dimension2d.h"
 #include "SColor.h"
-#include "SMaterial.h"
-#include "IEventReceiver.h"
 #include "ETerrainElements.h"
 #include "ESceneNodeTypes.h"
 #include "SceneParameters.h"
-#include "IGUIEnvironment.h"
 
 namespace irr
 {
 	struct SKeyMap;
+	struct SEvent;
 
 namespace io
 {
@@ -33,11 +31,15 @@ namespace gui
 {
 	class IGUIFont;
 	class IGUIFontBitmap;
+	class IGUIEnvironment;
 } // end namespace gui
 
 namespace video
 {
 	class IVideoDriver;
+	class SMaterial;
+	class IImage;
+	class ITexture;
 } // end namespace video
 
 namespace scene

@@ -12,16 +12,17 @@
 #include "IVideoDriver.h"
 #include "EDriverTypes.h"
 #include "IGUIEnvironment.h"
-#include "IEventReceiver.h"
 #include "ISceneManager.h"
 #include "ICursorControl.h"
 #include "IVideoModeList.h"
 #include "ITimer.h"
-#include "ILogger.h"
 #include "IOSOperator.h"
 
 namespace irr
 {
+	class ILogger;
+	class IEventReceiver;
+
 	//! The Irrlicht device. You can create it with createDevice() or createDeviceEx(). 
 	/** This is the most important class of the Irrlicht Engine. You can access everything
 	in the engine if you have a pointer to an instance of this class. 
