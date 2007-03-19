@@ -548,7 +548,7 @@ void CNullDriver::draw3DTriangle(const core::triangle3df& triangle, SColor color
 
 
 //! Draws a 3d axis aligned box.
-void CNullDriver::draw3DBox(const core::aabbox3d<f32> box&, SColor color)
+void CNullDriver::draw3DBox(const core::aabbox3d<f32>& box, SColor color)
 {
 	core::vector3df edges[8];
 	box.getEdges(edges);
