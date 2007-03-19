@@ -473,7 +473,7 @@ namespace video
 		hence is not very fast but it might be useful for further development.
 		\param box: The axis aligned box to draw
 		\param color: Color to use while drawing the box. */
-		virtual void draw3DBox(const core::aabbox3d<f32> box,
+		virtual void draw3DBox(const core::aabbox3d<f32>& box,
 			SColor color = SColor(255,255,255,255)) = 0;
 
 		//! Simply draws a 2d image without any special effects
@@ -520,9 +520,10 @@ namespace video
 				const core::position2d<s32>& pos,
 				const core::array<core::rect<s32> >& sourceRects,
 				const core::array<s32>& indices,
-				s32 kerningWidth,
-				const core::rect<s32>* clipRect, SColor color,
-				bool useAlphaChannelOfTexture) = 0;
+				s32 kerningWidth=0,
+				const core::rect<s32>* clipRect=0,
+				SColor color=SColor(255,255,255,255),
+				bool useAlphaChannelOfTexture=false) = 0;
 
 		//! Draws a part of the texture into the rectangle.
 		/** Suggested and first implemented by zola.

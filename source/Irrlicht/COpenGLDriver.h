@@ -124,8 +124,9 @@ namespace video
 				const core::position2d<s32>& pos,
 				const core::array<core::rect<s32> >& sourceRects,
 				const core::array<s32>& indices,
-				const core::rect<s32>* clipRect, SColor color,
-				bool useAlphaChannelOfTexture);
+				const core::rect<s32>* clipRect=0,
+				SColor color=SColor(255,255,255,255),
+				bool useAlphaChannelOfTexture=false);
 
 		//! Draws a part of the texture into the rectangle.
 		virtual void draw2DImage(video::ITexture* texture, const core::rect<s32>& destRect,

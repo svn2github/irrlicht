@@ -105,7 +105,7 @@ namespace video
 			SColor color = SColor(255,255,255,255));
 
 		//! Draws a 3d axis aligned box.
-		virtual void draw3DBox(const core::aabbox3d<f32> box,
+		virtual void draw3DBox(const core::aabbox3d<f32>& box,
 			SColor color = SColor(255,255,255,255));
 
 		//! draws an 2d image
@@ -132,9 +132,10 @@ namespace video
 				const core::position2d<s32>& pos,
 				const core::array<core::rect<s32> >& sourceRects,
 				const core::array<s32>& indices,
-				s32 kerningWidth,
-				const core::rect<s32>* clipRect, SColor color,
-				bool useAlphaChannelOfTexture);
+				s32 kerningWidth = 0,
+				const core::rect<s32>* clipRect = 0,
+				SColor color=SColor(255,255,255,255),
+				bool useAlphaChannelOfTexture=false);
 
 		//! draws an 2d image, using a color (if color is other then Color(255,255,255,255)) and the alpha channel of the texture if wanted.
 		virtual void draw2DImage(video::ITexture* texture, const core::position2d<s32>& destPos, 
@@ -156,8 +157,8 @@ namespace video
 
 		//! Draws a 2d line. 
 		virtual void draw2DLine(const core::position2d<s32>& start,
-								const core::position2d<s32>& end, 
-								SColor color=SColor(255,255,255,255));
+					const core::position2d<s32>& end,
+					SColor color=SColor(255,255,255,255));
 
 		//! Draws a non filled concyclic reqular 2d polyon.
 		virtual void draw2DPolygon(core::position2d<s32> center, 
@@ -282,7 +283,8 @@ namespace video
 		virtual void OnResize(const core::dimension2d<s32>& size);
 
 		//! Adds a new material renderer to the video device.
-		virtual s32 addMaterialRenderer(IMaterialRenderer* renderer, const char* name = 0);
+		virtual s32 addMaterialRenderer(IMaterialRenderer* renderer,
+				const char* name = 0);
 
 		//! Returns driver and operating system specific data about the IVideoDriver.
 		virtual const SExposedVideoData& getExposedVideoData();
