@@ -455,16 +455,40 @@ void CGUIFont::readPositions16bit(video::IImage* image, s32& lowerRightPositions
 core::dimension2d<s32> CGUIFont::getDimension(const wchar_t* text)
 {
 	core::dimension2d<s32> dim(0, 0);
+	core::dimension2d<s32> thisLine(0, MaxHeight);
 
 	for (const wchar_t* p = text; *p; ++p)
 	{
+		bool lineBreak=false;
+		if (*p == L'\r') // Mac or Windows breaks
+		{
+			lineBreak = true;
+			if (p[1] == L'\n') // Windows breaks
+				++p;
+		}
+		else if (*p == L'\n') // Unix breaks
+		{
+			lineBreak = true;
+		}
+		if (lineBreak)
+		{
+			dim.Height += thisLine.Height;
+			if (dim.Width < thisLine.Width)
+				dim.Width = thisLine.Width;
+			thisLine.Width = 0;
+			continue;
+		}
+
 		SFontArea &area = Areas[getAreaFromCharacter(*p)];
 
-		dim.Width += area.underhang;
-		dim.Width += area.width + area.overhang + GlobalKerningWidth;
+		thisLine.Width += area.underhang;
+		thisLine.Width += area.width + area.overhang + GlobalKerningWidth;
+
 	}
 
-	dim.Height = MaxHeight;
+	dim.Height += thisLine.Height;
+	if (dim.Width < thisLine.Width)
+		dim.Width = thisLine.Width;
 
 	return dim;
 }

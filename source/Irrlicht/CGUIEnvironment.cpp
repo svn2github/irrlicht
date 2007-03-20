@@ -158,6 +158,10 @@ void CGUIEnvironment::drawAll()
 		}		
 	}
 
+	// make sure tooltip is always on top
+	if (ToolTip.Element)
+		bringToFront(ToolTip.Element);
+
 	draw();
 	OnPostRender ( os::Timer::getTime () );
 }
