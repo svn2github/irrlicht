@@ -45,7 +45,7 @@ CIrrDeviceLinux::CIrrDeviceLinux(video::E_DRIVER_TYPE driverType,
 	const char* version)
  : CIrrDeviceStub(version, receiver),
 #ifdef _IRR_COMPILE_WITH_X11_
-	display(0), screennr(0), window(0), SoftwareImage(0),
+	display(0), screennr(0), window(0), StdHints(0), SoftwareImage(0),
 #endif
 	Fullscreen(fullscreen), StencilBuffer(sbuffer), AntiAlias(antiAlias), DriverType(driverType),
 	Width(windowSize.Width), Height(windowSize.Height), Depth(24),
@@ -101,6 +101,8 @@ CIrrDeviceLinux::CIrrDeviceLinux(video::E_DRIVER_TYPE driverType,
 CIrrDeviceLinux::~CIrrDeviceLinux()
 {
 #ifdef _IRR_COMPILE_WITH_X11_
+	if (StdHints)
+		XFree(StdHints);
 	if (display)
 	{
 		//os::Printer::log("Deleting window...", ELL_INFORMATION);
@@ -574,6 +576,9 @@ bool CIrrDeviceLinux::createWindow(const core::dimension2d<s32>& windowSize,
 	int x,y;
 
 	XGetGeometry(display, window, &tmp, &x, &y, &Width, &Height, &borderWidth, &Depth);
+	StdHints = XAllocSizeHints();
+	long num;
+	XGetWMNormalHints(display, window, StdHints, &num);
 
 	// create an XImage for the software renderer 
 	//(thx to Nadav for some clues on how to do that!)
@@ -829,9 +834,10 @@ void CIrrDeviceLinux::setWindowCaption(const wchar_t* text)
 		return;
 
 #ifdef _IRR_COMPILE_WITH_X11_
-	core::stringc textc = text;
-	XSetStandardProperties(display, window, textc.c_str(), textc.c_str(),
-			       None, NULL, 0, NULL);
+	XTextProperty txt;
+	XwcTextListToTextProperty(display, const_cast<wchar_t**>(&text), 1, XStdICCTextStyle, &txt);
+	XSetWMName(display, window, &txt);
+	XSetWMIconName(display, window, &txt);
 #endif
 }
 
@@ -961,6 +967,33 @@ bool CIrrDeviceLinux::isWindowActive()
 {
 	return WindowActive;
 }
+
+
+
+//! Sets if the window should be resizeable in windowed mode.
+void CIrrDeviceLinux::setResizeAble(bool resize)
+{
+#ifdef _IRR_COMPILE_WITH_X11_
+	XUnmapWindow(display, window);
+	if ( !resize )
+	{
+		// Must be heap memory because data size depends on X Server
+		XSizeHints *hints = XAllocSizeHints();
+		hints->flags=PSize|PMinSize|PMaxSize;
+		hints->min_width=hints->max_width=hints->base_width=Width;
+		hints->min_height=hints->max_height=hints->base_height=Height;
+		XSetWMNormalHints(display, window, hints);
+		XFree(hints);
+	}
+	else
+	{
+		XSetWMNormalHints(display, window, StdHints);
+	}
+	XMapWindow(display, window);
+	XFlush(display);
+#endif // #ifdef _IRR_COMPILE_WITH_X11_
+}
+
 
 
 void CIrrDeviceLinux::createKeyMap()

@@ -88,6 +88,9 @@ namespace irr
 
 		void createKeyMap();
 
+		//! Sets if the window should be resizeable in windowed mode.
+		virtual void setResizeAble(bool resize=false);
+
 		//! Implementation of the linux cursor control
 		class CCursorControl : public gui::ICursorControl
 		{
@@ -251,6 +254,7 @@ namespace irr
 		int screennr;
 		Window window;
 		XSetWindowAttributes attributes;
+		XSizeHints* StdHints;
 		XEvent event;
 		XImage* SoftwareImage;
 		#ifdef _IRR_LINUX_X11_VIDMODE_
