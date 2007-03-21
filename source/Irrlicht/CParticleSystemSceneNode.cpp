@@ -288,14 +288,12 @@ void CParticleSystemSceneNode::doParticleSystem(u32 time)
 			if (newParticles > 16250-j)
 				newParticles=16250-j;
 			Particles.set_used(j+newParticles);
-			for (s32 i=0; i<newParticles; ++i)
+			for (s32 i=j; i<j+newParticles; ++i)
 			{
-				AbsoluteTransformation.rotateVect(array[i].startVector);
-
+				Particles[i]=array[i-j];
+				AbsoluteTransformation.rotateVect(Particles[i].startVector);
 				if (ParticlesAreGlobal)
-					AbsoluteTransformation.transformVect(array[i].pos);
-
-				Particles[j+i]=array[i];
+					AbsoluteTransformation.transformVect(Particles[i].pos);
 			}
 		}
 	}
