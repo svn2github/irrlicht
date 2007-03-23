@@ -98,7 +98,7 @@ namespace core
 			vector3d<T> bminusa = b - a;
 			vector3d<T> cp1 = bminusa.crossProduct(p1 - a);
 			vector3d<T> cp2 = bminusa.crossProduct(p2 - a);
-			return (cp1.dotProduct(cp2) >= core::ROUNDING_ERROR_32);
+			return (cp1.dotProduct(cp2) >= 0.0f);
 		}
 
 
