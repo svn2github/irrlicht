@@ -707,7 +707,7 @@ s32 CNullDriver::getFPS()
 //! very useful method for statistics.
 u32 CNullDriver::getPrimitiveCountDrawn( u32 param )
 {
-	return 0 == param ? FPSCounter.getPrimitive() : FPSCounter.getPrimitiveAverage();
+	return (0 == param) ? FPSCounter.getPrimitive() : (1 == param) ? FPSCounter.getPrimitiveAverage() : FPSCounter.getPrimitiveTotal();
 }
 
 

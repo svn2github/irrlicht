@@ -13,11 +13,10 @@ namespace video
 
 CFPSCounter::CFPSCounter()
 :	FPS(60), Primitive(0), StartTime(0), FramesCounted(0),
-	PrimitivesCounted(0), PrimitiveAverage(0)
+	PrimitivesCounted(0), PrimitiveAverage(0), PrimitiveTotal(0)
 {
 
 }
-
 
 
 //! returns current fps
@@ -26,6 +25,7 @@ s32 CFPSCounter::getFPS()
 	return FPS;
 }
 
+
 //! returns current primitive count
 u32 CFPSCounter::getPrimitive()
 {
@@ -33,9 +33,17 @@ u32 CFPSCounter::getPrimitive()
 }
 
 
+//! returns average primitive count of last period
 u32 CFPSCounter::getPrimitiveAverage()
 {
 	return PrimitiveAverage;
+}
+
+
+//! returns accumulated primitive count since start
+u32 CFPSCounter::getPrimitiveTotal()
+{
+	return PrimitiveTotal;
 }
 
 
@@ -43,14 +51,15 @@ u32 CFPSCounter::getPrimitiveAverage()
 void CFPSCounter::registerFrame(u32 now, u32 primitivesDrawn )
 {
 	++FramesCounted;
-	Primitive += primitivesDrawn;
+	PrimitiveTotal += primitivesDrawn;
 	PrimitivesCounted += primitivesDrawn;
+	Primitive = primitivesDrawn;
 
-	u32 milliseconds = now - StartTime;
+	const u32 milliseconds = now - StartTime;
 
 	if (milliseconds >= 1500 )
 	{
-		f32 invMilli = core::reciprocal ( (f32) milliseconds );
+		const f32 invMilli = core::reciprocal ( (f32) milliseconds );
 		
 		FPS = core::ceil32 ( ( 1000 * FramesCounted ) * invMilli );
 		PrimitiveAverage = core::ceil32 ( ( 1000 * PrimitivesCounted ) * invMilli );

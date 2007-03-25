@@ -24,8 +24,11 @@ public:
 	//! returns primitive count
 	u32 getPrimitive();
 
-	//! returns average primitive count
+	//! returns average primitive count of last period
 	u32 getPrimitiveAverage();
+
+	//! returns accumulated primitive count since start
+	u32 getPrimitiveTotal();
 
 	//! to be called every frame
 	void registerFrame(u32 now, u32 primitive);
@@ -39,6 +42,7 @@ private:
 	u32 FramesCounted;
 	u32 PrimitivesCounted;
 	u32 PrimitiveAverage;
+	u32 PrimitiveTotal;
 };
 
 
