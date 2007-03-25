@@ -1214,50 +1214,43 @@ namespace scene
 	}
 
 
-	//! Gets the height 
-	f32 CTerrainSceneNode::getHeight( f32 x, f32 z ) 
-	{ 
-		f32 height = -999999.9f; 
- 
-		core::matrix4 rotMatrix; 
-		rotMatrix.setRotationDegrees( TerrainData.Rotation ); 
-		core::vector3df pos( x, 0.0f, z ); 
-		rotMatrix.rotateVect( pos ); 
-		pos -= TerrainData.Position; 
-		pos /= TerrainData.Scale; 
+	//! Gets the height
+	f32 CTerrainSceneNode::getHeight( f32 x, f32 z )
+	{
+		f32 height = -999999.9f;
 
-		s32 X(core::floor32( pos.X )); 
-		s32 Z(core::floor32( pos.Z )); 
- 
-		if( X >= 0 && X < TerrainData.Size && Z >= 0 && Z <= TerrainData.Size ) 
-		{ 
-			video::S3DVertex2TCoords* Vertices = (video::S3DVertex2TCoords*)Mesh.getMeshBuffer( 0 )->getVertices();
-			core::vector3df a = Vertices[ X * TerrainData.Size + Z ].Pos; 
-			core::vector3df b = Vertices[ (X + 1) * TerrainData.Size + Z ].Pos; 
-			core::vector3df c = Vertices[ X * TerrainData.Size + ( Z + 1 ) ].Pos; 
-			core::vector3df d = Vertices[ (X + 1) * TerrainData.Size + ( Z + 1 ) ].Pos; 
- 
-			f32 dx = pos.X - X; 
-			f32 dz = pos.Z - Z; 
-			f32 invDX = 1.0f - dx; 
- 
-			if( dz < invDX ) 
-			{ 
-				f32 uy = a.Y - c.Y; 
-				f32 vy = d.Y - c.Y; 
-				height = c.Y + core::lerp( 0.0f, uy, dx ) + core::lerp( 0.0f, vy, dz ); 
-			} 
-			else 
-			{ 
-				f32 uy = a.Y - b.Y; 
-				f32 vy = d.Y - b.Y; 
-				height = b.Y + core::lerp( 0.0f, uy, invDX ) + core::lerp( 0.0f, vy, 1.0f - dz ); 
-			} 
-			height *= TerrainData.Scale.Y; 
-			height += TerrainData.Position.Y; 
-		} 
- 
-		return height; 
+		core::matrix4 rotMatrix;
+		rotMatrix.setRotationDegrees( TerrainData.Rotation );
+		core::vector3df pos( x, 0.0f, z );
+		rotMatrix.rotateVect( pos );
+		pos -= TerrainData.Position;
+		pos /= TerrainData.Scale;
+
+		s32 X(core::floor32( pos.X ));
+		s32 Z(core::floor32( pos.Z ));
+
+		if( X >= 0 && X < TerrainData.Size && Z >= 0 && Z <= TerrainData.Size )
+		{
+			const video::S3DVertex2TCoords* Vertices = (const video::S3DVertex2TCoords*)Mesh.getMeshBuffer( 0 )->getVertices();
+			const core::vector3df& a = Vertices[ X * TerrainData.Size + Z ].Pos;
+			const core::vector3df& b = Vertices[ (X + 1) * TerrainData.Size + Z ].Pos;
+			const core::vector3df& c = Vertices[ X * TerrainData.Size + ( Z + 1 ) ].Pos;
+			const core::vector3df& d = Vertices[ (X + 1) * TerrainData.Size + ( Z + 1 ) ].Pos;
+
+			// offset from integer position
+			const f32 dx = pos.X - X;
+			const f32 dz = pos.Z - Z;
+
+			if( dx > dz )
+				height = a.Y + (d.Y - b.Y)*dz + (b.Y - a.Y)*dx;
+			else
+				height = a.Y + (d.Y - c.Y)*dx + (c.Y - a.Y)*dz;
+
+			height *= TerrainData.Scale.Y;
+			height += TerrainData.Position.Y;
+		}
+
+		return height;
 	}
 
 } // end namespace scene
