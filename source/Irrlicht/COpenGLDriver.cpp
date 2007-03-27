@@ -1038,10 +1038,6 @@ void COpenGLDriver::draw2DImage(video::ITexture* texture,
 	if (!sourceRect.isValid())
 		return;
 
-	disableTextures(1);
-	if (!setTexture(0, texture))
-		return;
-
 	core::position2d<s32> targetPos(pos);
 	core::position2d<s32> sourcePos(sourceRect.UpperLeftCorner);
 	core::dimension2d<s32> sourceSize(sourceRect.getSize());
@@ -1141,6 +1137,9 @@ void COpenGLDriver::draw2DImage(video::ITexture* texture,
 	npos.LowerRightCorner.Y = 1.0f - ( poss.LowerRightCorner.Y * yFact );
 
 	setRenderStates2DMode(color.getAlpha()<255, true, useAlphaChannelOfTexture);
+	disableTextures(1);
+	if (!setTexture(0, texture))
+		return;
 
 	glColor4ub(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	glBegin(GL_QUADS);
@@ -1177,12 +1176,12 @@ void COpenGLDriver::draw2DImage(video::ITexture* texture,
 	if (!texture)
 		return;
 
+	const core::dimension2d<s32>& renderTargetSize = getCurrentRenderTargetSize();
+	setRenderStates2DMode(color.getAlpha()<255, true, useAlphaChannelOfTexture);
 	disableTextures(1);
 	if (!setTexture(0, texture))
 		return;
 
-	const core::dimension2d<s32>& renderTargetSize = getCurrentRenderTargetSize();
-	setRenderStates2DMode(color.getAlpha()<255, true, useAlphaChannelOfTexture);
 	glColor4ub(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	if (clipRect)
 	{

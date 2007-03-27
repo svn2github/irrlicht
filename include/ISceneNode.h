@@ -580,7 +580,7 @@ namespace scene
 			out->addVector3d("Scale", RelativeScale );
 			out->addBool	("Visible", IsVisible );
 			out->addEnum	("AutomaticCulling", AutomaticCullingState, AutomaticCullingNames);
-			out->addInt		("DebugDataVisible", DebugDataVisible );
+			out->addInt	("DebugDataVisible", DebugDataVisible );
 			out->addBool	("IsDebugObject", IsDebugObject );
 		}
 

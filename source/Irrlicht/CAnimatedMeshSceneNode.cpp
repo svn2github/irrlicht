@@ -24,7 +24,6 @@ namespace scene
 {
 
 
-
 //! constructor
 CAnimatedMeshSceneNode::CAnimatedMeshSceneNode(IAnimatedMesh* mesh, ISceneNode* parent, ISceneManager* mgr, s32 id,
 			const core::vector3df& position, const core::vector3df& rotation,	const core::vector3df& scale)
@@ -53,7 +52,7 @@ CAnimatedMeshSceneNode::~CAnimatedMeshSceneNode()
 	if (Shadow)
 		Shadow->drop();
 
-	for (s32 i=0; i<(s32)JointChildSceneNodes.size(); ++i)
+	for (u32 i=0; i<JointChildSceneNodes.size(); ++i)
 		if (JointChildSceneNodes[i])
 			JointChildSceneNodes[i]->drop();
 
@@ -74,29 +73,26 @@ void CAnimatedMeshSceneNode::setCurrentFrame(s32 frame)
 
 
 //! Returns the current displayed frame number.
-s32 CAnimatedMeshSceneNode::getFrameNr()
+s32 CAnimatedMeshSceneNode::getFrameNr() const
 {
 	return CurrentFrameNr;
 }
 
 
-u32 CAnimatedMeshSceneNode::buildFrameNr( u32 timeMs)
+u32 CAnimatedMeshSceneNode::buildFrameNr(u32 timeMs)
 {
-	s32 len = EndFrame - StartFrame + 1;
+	const s32 deltaFrame = core::floor32 ( f32 ( timeMs - BeginFrameTime ) * FramesPerSecond );
 
-
-	s32 deltaFrame = core::floor32 ( f32 ( timeMs - BeginFrameTime ) * FramesPerSecond );
-
-	s32 frame;
 	if (Looping)
 	{
+		const s32 len = EndFrame - StartFrame + 1;
 		// play animation looped
-		frame = StartFrame + ( deltaFrame % len );
+		return StartFrame + ( deltaFrame % len );
 	}
 	else
 	{
 		// play animation non looped
-		frame = StartFrame + deltaFrame;
+		s32 frame = StartFrame + deltaFrame;
 
 		if (frame > EndFrame)
 		{
@@ -104,9 +100,8 @@ u32 CAnimatedMeshSceneNode::buildFrameNr( u32 timeMs)
 			if (LoopCallBack)
 				LoopCallBack->OnAnimationEnd(this);
 		}
+		return frame;
 	}
-
-	return frame;
 }
 
 //! frame
@@ -150,7 +145,7 @@ void CAnimatedMeshSceneNode::OnRegisterSceneNode()
 
 		ISceneNode::OnRegisterSceneNode();
 
-		for (s32 j=0; j<(s32)JointChildSceneNodes.size(); ++j)
+		for (u32 j=0; j<JointChildSceneNodes.size(); ++j)
 			if (JointChildSceneNodes[j])
 				JointChildSceneNodes[j]->OnRegisterSceneNode();
 	}
@@ -171,7 +166,6 @@ void CAnimatedMeshSceneNode::OnAnimate(u32 timeMs)
 			Box = m->getBoundingBox();
 		}
 	}
-
 
 	IAnimatedMeshSceneNode::OnAnimate ( timeMs );
 }
@@ -203,9 +197,6 @@ void CAnimatedMeshSceneNode::render()
 
 	++PassCount;
 
-	u32 i,g;
-	video::SMaterial mat;
-
 	s32 frame = getFrameNr();
 	scene::IMesh* m = Mesh->getMesh(frame, 255, StartFrame, EndFrame);
 
@@ -219,19 +210,21 @@ void CAnimatedMeshSceneNode::render()
 	driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
 
 
+	u32 i,g;
+
 	// update all dummy transformation nodes
 	if (!JointChildSceneNodes.empty() && Mesh &&
 		(Mesh->getMeshType() == EAMT_MS3D || Mesh->getMeshType() == EAMT_X  || Mesh->getMeshType() == EAMT_B3D ))
 	{
 		IAnimatedMeshMS3D* amm = (IAnimatedMeshMS3D*)Mesh;
-		core::matrix4* mat;
+		core::matrix4* m;
 
 		for ( i=0; i< JointChildSceneNodes.size(); ++i)
 			if (JointChildSceneNodes[i])
 			{
-				mat = amm->getMatrixOfJoint(i, frame);
-				if (mat)
-					JointChildSceneNodes[i]->getRelativeTransformationMatrix() = *mat;
+				m = amm->getMatrixOfJoint(i, frame);
+				if (m)
+					JointChildSceneNodes[i]->getRelativeTransformationMatrix() = *m;
 			}
 	}
 
@@ -241,6 +234,7 @@ void CAnimatedMeshSceneNode::render()
 	// for debug purposes only:
 
 	u32 renderMeshes = 1;
+	video::SMaterial mat;
 	if (DebugDataVisible && PassCount==1)
 	{
 		// overwrite half transparency
@@ -324,9 +318,9 @@ void CAnimatedMeshSceneNode::render()
 				}
 				IMesh *arrowMesh = arrow->getMesh ( 0 );
 
-				video::SMaterial mat;
-				mat.Lighting = false;
-				driver->setMaterial(mat);
+				video::SMaterial material;
+				material.Lighting = false;
+				driver->setMaterial(material);
 
 				core::matrix4 m;
 
@@ -409,13 +403,13 @@ void CAnimatedMeshSceneNode::render()
 
 
 //! Returns the current start frame number.
-s32 CAnimatedMeshSceneNode::getStartFrame()
+s32 CAnimatedMeshSceneNode::getStartFrame() const
 {
 	return StartFrame;
 }
 
 //! Returns the current start frame number.
-s32 CAnimatedMeshSceneNode::getEndFrame()
+s32 CAnimatedMeshSceneNode::getEndFrame() const
 {
 	return EndFrame;
 }
@@ -462,7 +456,7 @@ const core::aabbox3d<f32>& CAnimatedMeshSceneNode::getBoundingBox() const
 //! This function is needed for inserting the node into the scene hirachy on a
 //! optimal position for minimizing renderstate changes, but can also be used
 //! to directly modify the material of a scene node.
-video::SMaterial& CAnimatedMeshSceneNode::getMaterial(u32  i)
+video::SMaterial& CAnimatedMeshSceneNode::getMaterial(u32 i)
 {
 	if ( i >= Materials.size() )
 		return ISceneNode::getMaterial(i);
@@ -482,8 +476,7 @@ u32 CAnimatedMeshSceneNode::getMaterialCount()
 //! Creates shadow volume scene node as child of this node
 //! and returns a pointer to it.
 IShadowVolumeSceneNode* CAnimatedMeshSceneNode::addShadowVolumeSceneNode(s32 id,
-																		 bool zfailmethod,
-																		 f32 infinity)
+						 bool zfailmethod, f32 infinity)
 {
 	if (!SceneManager->getVideoDriver()->queryFeature(video::EVDF_STENCIL_BUFFER))
 		return 0;
@@ -665,7 +658,7 @@ bool CAnimatedMeshSceneNode::setMD2Animation(const c8* animationName)
 	if (!m->getFrameLoop(animationName, begin, end, speed))
 		return false;
 
-	setAnimationSpeed( f32(speed) );
+	setAnimationSpeed( (f32)speed );
 	setFrameLoop(begin, end);
 	return true;
 }
@@ -819,8 +812,7 @@ void CAnimatedMeshSceneNode::updateAbsolutePosition()
 	if ( taglist )
 	{
 		MD3Special.AbsoluteTagList.Container.set_used ( taglist->size () );
-		u32 i;
-		for ( i = 0; i!= taglist->size (); ++i )
+		for ( u32 i = 0; i!= taglist->size (); ++i )
 		{
 			MD3Special.AbsoluteTagList[i].position = parent.position + (*taglist)[i].position + relative.position;
 			MD3Special.AbsoluteTagList[i].rotation = parent.rotation * (*taglist)[i].rotation * relative.rotation;

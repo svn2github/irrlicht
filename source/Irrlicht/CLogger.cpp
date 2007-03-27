@@ -30,7 +30,7 @@ namespace irr
 		if (ll < LogLevel)
 			return;
 
-        if (Receiver)
+		if (Receiver)
 		{
 			SEvent event;
 			event.EventType = EET_LOG_TEXT_EVENT;

@@ -165,11 +165,11 @@ namespace scene
 		virtual bool setMD2Animation(const c8* animationName) = 0;
 
 		//! Returns the current displayed frame number.
-		virtual s32 getFrameNr() = 0;
+		virtual s32 getFrameNr() const = 0;
 		//! Returns the current start frame number.
-		virtual s32 getStartFrame() = 0;
+		virtual s32 getStartFrame() const = 0;
 		//! Returns the current end frame number.
-		virtual s32 getEndFrame() = 0;
+		virtual s32 getEndFrame() const = 0;
 
 		//! Sets looping mode which is on by default. If set to false,
 		//! animations will not be played looped.

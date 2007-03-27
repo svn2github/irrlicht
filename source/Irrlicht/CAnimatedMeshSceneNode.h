@@ -96,11 +96,11 @@ namespace scene
 		virtual bool setMD2Animation(const c8* animationName);
 
 		//! Returns the current displayed frame number.
-		virtual s32 getFrameNr();
+		virtual s32 getFrameNr() const;
 		//! Returns the current start frame number.
-		virtual s32 getStartFrame();
+		virtual s32 getStartFrame() const;
 		//! Returns the current end frame number.
-		virtual s32 getEndFrame();
+		virtual s32 getEndFrame() const;
 
 		//! Sets if the scene node should not copy the materials of the mesh but use them in a read only style.
 		/* In this way it is possible to change the materials a mesh causing all mesh scene nodes
@@ -145,7 +145,7 @@ namespace scene
 		s32 EndFrame;
 		f32 FramesPerSecond;
 
-		u32 CurrentFrameNr;
+		s32 CurrentFrameNr;
 
 		bool Looping;
 		bool ReadOnlyMaterials;

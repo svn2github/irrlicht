@@ -179,7 +179,7 @@ public:
 			pID3DDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 			pID3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP,  D3DTOP_DISABLE);
 
-			pID3DDevice->SetTextureStageState( 1, D3DTSS_TEXCOORDINDEX, 0);
+			pID3DDevice->SetTextureStageState(1, D3DTSS_TEXCOORDINDEX, 0);
 			pID3DDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_BLENDDIFFUSEALPHA);
 
 			pID3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);		
