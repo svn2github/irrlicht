@@ -852,7 +852,6 @@ bool CSceneManager::isCulled(ISceneNode* node)
 			}
 
 			return !visible;
-
 		}
 		break;
 		case scene::EAC_OFF:

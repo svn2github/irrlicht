@@ -86,18 +86,18 @@ void CDMFLoader::GetFaceNormal(	f32 a[3], //First point
  See IUnknown::drop() for more information.*/
 IAnimatedMesh* CDMFLoader::createMesh(io::IReadFile* file)
 {
+	if (!file)
+		return 0;
+
+	//Load stringlist
+	StringList dmfRawFile(file);
+
+	if (dmfRawFile.size()==0)
+		return 0;
+
 	SMesh * Mesh = new SMesh();
 
 	u32 i;
-
-	if (!file)
-		return false;
-
-    //Load stringlist
-    StringList dmfRawFile(file);
-
-    if (dmfRawFile.size()==0)
-		return false;
 
     //begin logging with
     //fprintf(flog,"DMF Loader version %1.1f log file\nTrying to load: %s\n",DMFloader_vers,file->getFileName());

@@ -54,7 +54,7 @@ const unsigned long MY_PIXEL_FORMAT_24 = 0x5f32345f; // was: #define MY_PIXEL_FO
 const unsigned long MY_PIXEL_FORMAT_16 = 0x5f31365f; // was: #define MY_PIXEL_FORMAT_16 '_16_'
 //--------------------------------------------------------------------
 // byte-align structures
-#ifdef _MSC_VER
+#if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__) 
 #   pragma pack( push, packing )
 #   pragma pack( 1 )
 #   define PACK_STRUCT
@@ -171,13 +171,13 @@ struct SMyPixelColor16
 
 // RLE Header
 struct SMyRLEHeader
-{   SMyRLEHeader() {;}        
+{   SMyRLEHeader() {}
     u32 nEncodedBytes;
     u32 nDecodedBytes;
 } PACK_STRUCT;
 
 // Default alignment
-#ifdef _MSC_VER
+#if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__) 
 #   pragma pack( pop, packing )
 #endif
 

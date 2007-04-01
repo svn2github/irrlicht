@@ -355,9 +355,6 @@ namespace core
 		M[15]+=other[15];
 
 		return *this;
-		matrix4 temp ( *this );
-		setbyproduct ( temp, other );
-		return *this;
 	}
 
 	//! Subtract another matrix.

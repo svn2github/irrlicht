@@ -83,7 +83,7 @@ class quaternion
 		void makeInverse();
 
 		//! set this quaternion to the result of the inpolation between two quaternions based
-		void slerp( quaternion q1, const quaternion q2, f32 interpolate );
+		void slerp( quaternion q1, quaternion q2, f32 interpolate );
 
 		//! axis must be unit length
 		//! The quaternion representing the rotation is
@@ -429,7 +429,7 @@ inline void quaternion::slerp( quaternion q1, quaternion q2, f32 time)
 	}
 	else
 	{
-		q2 = quaternion(-q1.Y, q1.X, -q1.W, q1.Z);
+		q2.set(-q1.Y, q1.X, -q1.W, q1.Z);
 		scale = (f32)sin(PI * (0.5f - time));
 		invscale = (f32)sin(PI * time);
 	}

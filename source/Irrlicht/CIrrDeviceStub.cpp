@@ -10,7 +10,6 @@
 #include "CTimer.h"
 #include "CLogger.h"
 #include "irrString.h"
-#include "irrlicht.h"
 
 namespace irr
 {

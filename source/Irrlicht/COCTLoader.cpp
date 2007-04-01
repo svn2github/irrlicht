@@ -108,11 +108,8 @@ void COCTLoader::GetFaceNormal(f32 a[3], f32 b[3], f32 c[3], f32 out[3]) {
 //! See IUnknown::drop() for more information.
 IAnimatedMesh* COCTLoader::createMesh(irr::io::IReadFile* file) 
 {
-	SMesh * Mesh = new SMesh();
-
-	u32 i;
-
-	if (!file) return false;
+	if (!file)
+		return 0;
 
 	octHeader header;
 	file->read(&header, sizeof(octHeader));
@@ -126,6 +123,8 @@ IAnimatedMesh* COCTLoader::createMesh(irr::io::IReadFile* file)
 	file->read(verts, sizeof(octVert) * header.numVerts);
 	file->read(faces, sizeof(octFace) * header.numFaces);
 	//TODO: Make sure id is in the legal range for Textures and Lightmaps
+
+	u32 i;
 	for (i = 0; i < header.numTextures; i++) {
 		octTexture t;
 		file->read(&t, sizeof(octTexture));
@@ -145,6 +144,8 @@ IAnimatedMesh* COCTLoader::createMesh(irr::io::IReadFile* file)
 	// meshbuffer for every possible combination of lightmap and texture including
 	// a "null" texture and "null" lightmap.  Ones that end up with nothing in them
 	// will be removed later.
+
+	SMesh * Mesh = new SMesh();
 	for (i=0; i<(header.numTextures+1) * (header.numLightmaps+1); ++i)
 	{
 		scene::SMeshBufferLightMap* buffer = new scene::SMeshBufferLightMap();

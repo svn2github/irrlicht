@@ -584,29 +584,29 @@ namespace video
 			switch (flag)
 			{
 				case EMF_WIREFRAME:
-					return Wireframe; break;
+					return Wireframe;
 				case EMF_POINTCLOUD:
-					return PointCloud; break;
+					return PointCloud;
 				case EMF_GOURAUD_SHADING:
-					return GouraudShading; break;
+					return GouraudShading;
 				case EMF_LIGHTING:
-					return Lighting; break;
+					return Lighting;
 				case EMF_ZBUFFER:
-					return ZBuffer!=0; break;
+					return ZBuffer!=0;
 				case EMF_ZWRITE_ENABLE:
-					return ZWriteEnable; break;
+					return ZWriteEnable;
 				case EMF_BACK_FACE_CULLING:
-					return BackfaceCulling; break;
+					return BackfaceCulling;
 				case EMF_BILINEAR_FILTER:
-					return BilinearFilter; break;
+					return BilinearFilter;
 				case EMF_TRILINEAR_FILTER:
-					return TrilinearFilter; break;
+					return TrilinearFilter;
 				case EMF_ANISOTROPIC_FILTER:
-					return AnisotropicFilter; break;
+					return AnisotropicFilter;
 				case EMF_FOG_ENABLE:
-					return FogEnable; break;
+					return FogEnable;
 				case EMF_NORMALIZE_NORMALS:
-					return NormalizeNormals; break;
+					return NormalizeNormals;
 				case EMF_TEXTURE_WRAP:
 					return !(TextureWrap[0] || TextureWrap[1] || TextureWrap[2] || TextureWrap[3]);
 				case EMF_MATERIAL_FLAG_COUNT:

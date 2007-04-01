@@ -156,7 +156,7 @@ IAnimatedMesh* C3DSMeshFileLoader::createMesh(io::IReadFile* file)
 	readChunkData(file, data);
 
 	if (data.header.id != C3DS_MAIN3DS )
-		return false;
+		return 0;
 
 	CurrentMaterial.clear();
 	Materials.clear();

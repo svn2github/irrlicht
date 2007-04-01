@@ -4,7 +4,7 @@
 
 /*
 	History:
-	- changed behaviour for log2 textures ( replaced multiplys by shift )
+	- changed behaviour for log2 textures ( replaced multiplies by shift )
 */
 
 #ifndef __S_VIDEO_2_SOFTWARE_HELPER_H_INCLUDED__
@@ -71,7 +71,7 @@ inline void memset32 ( void * dest, const u32 value, u32 bytesize )
 	u32 * d = (u32*) dest;
 
 	u32 i;
-	
+
 	i = bytesize >> ( 2 + 3 );
 	while( i )
 	{

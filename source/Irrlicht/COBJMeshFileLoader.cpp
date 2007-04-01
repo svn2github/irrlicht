@@ -57,6 +57,10 @@ bool COBJMeshFileLoader::isALoadableFileExtension(const c8* filename)
 //! See IUnknown::drop() for more information.
 IAnimatedMesh* COBJMeshFileLoader::createMesh(io::IReadFile* file)
 {
+	const u32 filesize = file->getSize();
+	if (!filesize)
+		return 0;
+
 	const u32 WORD_BUFFER_LENGTH = 512;
 	c8 wordBuffer[WORD_BUFFER_LENGTH];
 
@@ -71,10 +75,6 @@ IAnimatedMesh* COBJMeshFileLoader::createMesh(io::IReadFile* file)
 	SObjMtl * pCurrMtl = new SObjMtl();
 	pCurrMtl->name="";
 	materials.push_back(pCurrMtl);
-
-	u32 filesize = file->getSize();
-	if (!filesize)
-		return false;
 
 	// ********************************************************************
 	// Patch to locate the file in the same folder as the .obj.
@@ -102,7 +102,6 @@ IAnimatedMesh* COBJMeshFileLoader::createMesh(io::IReadFile* file)
 
 	// Process obj information
 	const c8* pBufPtr = pBuf;
-	SObjMtl *pUseMtl=0;
 	while(pBufPtr != pBufEnd)
 	{
 		switch(pBufPtr[0])
@@ -166,7 +165,7 @@ IAnimatedMesh* COBJMeshFileLoader::createMesh(io::IReadFile* file)
 				c8 matName[WORD_BUFFER_LENGTH];
 				pBufPtr = goAndCopyNextWord(matName, pBufPtr, WORD_BUFFER_LENGTH, pBufEnd);
 				// retrieve the material
-				pUseMtl = findMtl(matName);
+				SObjMtl *pUseMtl = findMtl(matName);
 				// only change material if we found it
 				if (pUseMtl)
 					pCurrMtl = pUseMtl;
@@ -289,7 +288,7 @@ void COBJMeshFileLoader::readMTL(const c8* pFileName, core::stringc relPath)
 	if (!pMtlReader)	// fail to open and read file
 		return;
 
-	u32 filesize = pMtlReader->getSize();
+	const u32 filesize = pMtlReader->getSize();
 	if (!filesize)
 		return;
 
@@ -446,7 +445,7 @@ void COBJMeshFileLoader::readMTL(const c8* pFileName, core::stringc relPath)
 					pBufPtr = goAndCopyNextWord(textureNameBuf, pBufPtr, WORD_BUFFER_LENGTH, pBufEnd);
 				}
 
-				video::ITexture * pTexture = 0;
+				video::ITexture * pTexture;
 				if (FileSystem->existFile(textureNameBuf))
 					pTexture = Driver->getTexture( textureNameBuf );
 				else

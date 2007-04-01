@@ -192,45 +192,43 @@ namespace video
 
 		//! Returns a pointer to a texture.
 		/** Loads the texture if it is not
-		already loaded, and generates mipmap levels if wished.
+		already loaded, and generates mipmap levels if desired.
 		You can influence how the texture is loaded using the setTextureCreationFlag()
 		method.
-		The texture can be in BMP, JPG, TGA, PCX, PNG and PSD format.
-		For loading BMP, TGA, PCX, and PSD files, the engine uses its own methods.
-		PCX loading is based on some code by Dean P. Macri, who sent
-		it in for free use by the engine, PGN loading is done using a loader
-		by rt who allowed it to be used by Irrlicht.
+		The texture can be in BMP, JPG, TGA, PCX, PNG, and PSD format.
+		For loading BMP, TGA, PCX, and PSD files the engine uses its own methods.
+		PCX loading is based on some code by Dean P. Macri, PNG loading
+		is done using a loader by rt.
 		For loading JPG-Files the JPEG LIB 6b, written by
-		The Independent JPEG Group is used by the engine. For PNG loading,
+		The Independent JPEG Group is used. For PNG loading,
 		libPNG is used. Thanx for such great libraries!
 		\param filename: Filename of the texture to be loaded.
-		\return Returns a pointer to the texture and NULL if the texture
+		\return Returns a pointer to the texture and 0 if the texture
 		could not be loaded.
 		This pointer should not be dropped. See IUnknown::drop() for more information.*/
 		virtual ITexture* getTexture(const c8* filename) = 0;
 
 		//! Returns a pointer to a texture.
 		/** Loads the texture if it is not
-		already loaded, and generates mipmap levels if wished.
+		already loaded, and generates mipmap levels if desired.
 		You can influence how the texture is loaded using the setTextureCreationFlag()
 		method.
-		The texture can be in BMP, JPG, TGA, PCX, PNG and PSD format.
-		For loading BMP, TGA, PCX, and PSD files, the engine uses its own methods.
-		PCX loading is based on some code by Dean P. Macri, who sent
-		it in for free use by the engine, PGN loading is done using a loader
-		by rt who allowed it to be used by Irrlicht.
+		The texture can be in BMP, JPG, TGA, PCX, PNG, and PSD format.
+		For loading BMP, TGA, PCX, and PSD files the engine uses its own methods.
+		PCX loading is based on some code by Dean P. Macri, PNG loading
+		is done using a loader by rt.
 		For loading JPG-Files the JPEG LIB 6b, written by
-		The Independent JPEG Group is used by the engine. For PNG loading,
+		The Independent JPEG Group is used. For PNG loading,
 		libPNG is used. Thanx for such great libraries!
 		\param file: Pointer to an already opened file.
-		\return Returns a pointer to the texture and NULL if the texture
+		\return Returns a pointer to the texture and 0 if the texture
 		could not be loaded.
 		This pointer should not be dropped. See IUnknown::drop() for more information.*/
 		virtual ITexture* getTexture(io::IReadFile* file) = 0;
 
 		//! Returns a texture by index
 		/** \param index: Index of the texture, must be smaller than getTextureCount()
-		Please note that this index would change when adding or removing textures
+		Please note that this index might change when adding or removing textures
 		*/
 		virtual ITexture* getTextureByIndex(u32 index) = 0;
 
@@ -239,23 +237,21 @@ namespace video
 
 		//! Creates an empty Texture of specified size.
 		/** \param size: Size of the texture.
-		\param name: A name for the texture. Later calls of getTexture() with this name
+		\param name: A name for the texture. Later calls to getTexture() with this name
 		will return this texture
 		\param format: Desired color format of the texture. Please note that
 		the driver may choose to create the texture in another color format.
 		\return Returns a pointer to the new created Texture.
-		This pointer should not be dropped. See IUnknown::drop() for more information.
-		The format of the new texture will be chosen by the driver. */
+		This pointer should not be dropped. See IUnknown::drop() for more information. */
 		virtual ITexture* addTexture(const core::dimension2d<s32>& size,
 			const c8* name, ECOLOR_FORMAT format = ECF_A8R8G8B8) = 0;
 
 		//! Creates a texture from a loaded IImage.
 		/** \param name: A name for the texture. Later calls of getTexture() with this name
 		 will return this texture
-		\param image: Image from which the texture is created from.
-		\return Returns a pointer to the new created Texture.
-		This pointer should not be dropped. See IUnknown::drop() for more information.
-		The format of the new texture will be chosen by the driver. */
+		\param image: Image the texture is created from.
+		\return Returns a pointer to the newly created Texture.
+		This pointer should not be dropped. See IUnknown::drop() for more information. */
 		virtual ITexture* addTexture(const c8* name, IImage* image) = 0;
 
 		//! Creates a render target texture.

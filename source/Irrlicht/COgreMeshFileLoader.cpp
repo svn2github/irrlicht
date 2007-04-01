@@ -94,11 +94,11 @@ IAnimatedMesh* COgreMeshFileLoader::createMesh(io::IReadFile* file)
 	else if (id == 0x0010)
 		SwapEndian=true;
 	else
-		return false;
+		return 0;
 	ChunkData data;
 	readString(file, data, Version);
 	if (Version != "[MeshSerializer_v1.30]")
-		return false;
+		return 0;
 
 	clearMeshes();
 	if (Mesh)
@@ -129,7 +129,7 @@ IAnimatedMesh* COgreMeshFileLoader::createMesh(io::IReadFile* file)
 	Mesh->drop();
 	Mesh = 0;
 
-    return 0;
+	return 0;
 }
 
 

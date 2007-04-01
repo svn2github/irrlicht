@@ -8,13 +8,13 @@
 #include "irrMath.h"
 
 #ifdef _IRR_WINDOWS_
-	#if defined(__GNUC__) || (defined(_MSC_VER) && (_MSC_VER < 1299))
-		#define bswap_16(X) ((((X)&0xFF) << 8) | (((X)&=0xFF00) >> 8))
-		#define bswap_32(X) ( (((X)&0x000000FF)<<24) | (((X)&0xFF000000) >> 24) | (((X)&0x0000FF00) << 8) | (((X) &0x00FF0000) >> 8))
-	#else
+	#if (defined(_MSC_VER) && (_MSC_VER > 1298))
 		#include <stdlib.h>
 		#define bswap_16(X) _byteswap_ushort(X)
 		#define bswap_32(X) _byteswap_ulong(X)
+	#else
+		#define bswap_16(X) ((((X)&0xFF) << 8) | (((X)&=0xFF00) >> 8))
+		#define bswap_32(X) ( (((X)&0x000000FF)<<24) | (((X)&0xFF000000) >> 24) | (((X)&0x0000FF00) << 8) | (((X) &0x00FF0000) >> 8))
 	#endif
 #else
 	#ifdef MACOSX

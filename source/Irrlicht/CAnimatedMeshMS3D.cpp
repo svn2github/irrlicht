@@ -13,7 +13,7 @@ namespace scene
 
 
 // byte-align structures
-#ifdef _MSC_VER
+#if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__) 
 #	pragma pack( push, packing )
 #	pragma pack( 1 )
 #	define PACK_STRUCT
@@ -65,7 +65,7 @@ struct MS3DMaterial
     s8 Alphamap[128];
 } PACK_STRUCT;
 
-//	Joint information
+// Joint information
 struct MS3DJoint
 {
 	u8 Flags;
@@ -85,7 +85,7 @@ struct MS3DKeyframe
 } PACK_STRUCT;
 
 // Default alignment
-#ifdef _MSC_VER
+#if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__) 
 #	pragma pack( pop, packing )
 #endif
 

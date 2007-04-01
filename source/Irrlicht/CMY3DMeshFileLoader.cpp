@@ -336,7 +336,7 @@ for (u32 p=0; p<nToRead; p++)
                 GetLightMap = true;
             }
 
-			core::stringc Name = name;
+		core::stringc Name = name;
             int pos2 = Name.findLast('.');
             core::stringc  LightingMapStr = "LightingMap";
             int ls = LightingMapStr.size();
@@ -350,7 +350,7 @@ for (u32 p=0; p<nToRead; p++)
 				bool oldMipMapState = Driver->getTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS);
 				Driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
-				texFName = texturePath.size() ? texturePath : WorkDir;
+				texFName = texturePath.size() ? texturePath : core::stringc(WorkDir);
                 texFName.append("Lightmaps/"); 
 				texFName.append(Name);
 				me.Texture2FileName = texFName;
@@ -370,7 +370,7 @@ for (u32 p=0; p<nToRead; p++)
 			else 
 			if (!GetLightMap&&GetMainMap)
 			{
-				texFName = texturePath.size() ? texturePath : WorkDir;
+				texFName = texturePath.size() ? texturePath : core::stringc(WorkDir);
 				texFName.append(Name);
 				me.Texture2FileName = texFName;
 

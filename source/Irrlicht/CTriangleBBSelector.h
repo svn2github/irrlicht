@@ -23,7 +23,7 @@ public:
 	virtual ~CTriangleBBSelector() {};
 
 	//! Gets all triangles.
-	void getTriangles(core::triangle3df* triangles, s32 arraySize, s32& outTriangleCount, 
+	virtual void getTriangles(core::triangle3df* triangles, s32 arraySize, s32& outTriangleCount, 
 		const core::matrix4* transform=0);
 };
 
