@@ -54,8 +54,11 @@ namespace scene
 		//! Default Constructor
 		SViewFrustum() {};
 
-		//! This constructor creates a view frustum based on a projection and/or
-		//! view matrix.
+		//! Copy Constructor
+		SViewFrustum(const SViewFrustum& other);
+
+		//! This constructor creates a view frustum based on a
+		//! projection and/or view matrix.
 		SViewFrustum(const core::matrix4& mat);
 
 		//! This constructor creates a view frustum based on a projection
@@ -104,11 +107,33 @@ namespace scene
 	};
 
 
+	//! Construct from another view frustum
+	inline SViewFrustum::SViewFrustum(const SViewFrustum& other)
+	{
+		cameraPosition=other.cameraPosition;
+		boundingBox=other.boundingBox;
+
+		u32 i;
+		for (i=0; i<VF_PLANE_COUNT; ++i)
+			planes[i]=other.planes[i];
+
+		for (i=0; i<VF_PLANE_COUNT; ++i)
+			Matrices[i]=other.Matrices[i];
+	}
+
+	//! This constructor creates a view frustum based on a projection
+	//! and/or view matrix.
+	inline SViewFrustum::SViewFrustum(const core::matrix4& mat)
+	{
+		setFrom ( mat );
+	}
+
+
 	//! transforms the frustum by the matrix
 	//! \param Matrix by which the view frustum is transformed.
-	inline void SViewFrustum::transform(const core::matrix4 &mat)
+	inline void SViewFrustum::transform(const core::matrix4& mat)
 	{
-		for (int i=0; i<VF_PLANE_COUNT; ++i)
+		for (u32 i=0; i<VF_PLANE_COUNT; ++i)
 			mat.transformPlane(planes[i]);
 
 		mat.transformVect(cameraPosition);
@@ -179,13 +204,6 @@ namespace scene
 		boundingBox.addInternalPoint(getFarRightUp());
 		boundingBox.addInternalPoint(getFarLeftDown());
 		boundingBox.addInternalPoint(getFarRightDown());
-	}
-
-	//! This constructor creates a view frustum based on a projection
-	//! and/or view matrix.
-	inline SViewFrustum::SViewFrustum(const core::matrix4& mat)
-	{
-		setFrom ( mat );
 	}
 
 /*
@@ -282,10 +300,9 @@ namespace scene
 		planes[VF_NEAR_PLANE].Normal.Z = mat[10];
 		planes[VF_NEAR_PLANE].D =        mat[14];
 
-		
 		// normalize normals
 		u32 i;
-		for ( i=0; i != 6; ++i)
+		for ( i=0; i != VF_PLANE_COUNT; ++i)
 		{
 			const f32 len = - core::reciprocal_squareroot ( planes[i].Normal.getLengthSQ() );
 			planes[i].Normal *= len;
