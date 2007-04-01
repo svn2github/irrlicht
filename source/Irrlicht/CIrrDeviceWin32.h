@@ -24,7 +24,7 @@ namespace irr
 
 		//! constructor
 		CIrrDeviceWin32(video::E_DRIVER_TYPE deviceType, 
-			const core::dimension2d<s32> windowSize, u32 bits,
+			core::dimension2d<s32> windowSize, u32 bits,
 			bool fullscreen, bool stencilbuffer, bool vsync, 
 			bool antiAlias, bool highPrecisionFPU,
 			IEventReceiver* receiver,
