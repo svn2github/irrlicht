@@ -7,7 +7,6 @@
 #include "ISceneManager.h"
 #include "os.h"
 #include "Keycodes.h"
-#include "quaternion.h"
 
 namespace irr
 {

@@ -5,6 +5,7 @@
 #include "CAnimatedMeshMS3D.h"
 #include "os.h"
 #include "IVideoDriver.h"
+#include "quaternion.h"
 
 namespace irr
 {
@@ -528,9 +529,8 @@ IMesh* CAnimatedMeshMS3D::getMesh(s32 frame, s32 detailLevel, s32 startFrameLoop
 
 
 
-void CAnimatedMeshMS3D::getKeyframeData(core::array<SKeyframe>& keys, f32 time, core::vector3df& outdata)
+void CAnimatedMeshMS3D::getKeyframeData(const core::array<SKeyframe>& keys, f32 time, core::vector3df& outdata) const
 {
-
 	if (keys.size())
 	{
 		if (time < keys[0].timeindex)
@@ -538,18 +538,50 @@ void CAnimatedMeshMS3D::getKeyframeData(core::array<SKeyframe>& keys, f32 time, 
 			outdata = keys[0].data;
 			return;
 		}
-		if (time > keys[keys.size()-1].timeindex)
+		if (time > keys.getLast().timeindex)
 		{
-			outdata = keys[keys.size()-1].data;
+			outdata = keys.getLast().data;
 			return;
 		}
 
-		for (s32 i=0; i<(s32)keys.size()-1; ++i)
+		for (u32 i=0; i<keys.size()-1; ++i)
 		{
 			if (keys[i].timeindex <= time && keys[i+1].timeindex >= time)
 			{
 				f32 interpolate = (time - keys[i].timeindex)/(keys[i+1].timeindex - keys[i].timeindex);
 				outdata = keys[i].data + ((keys[i+1].data - keys[i].data) * interpolate);
+				return;
+			}
+		}
+	}
+}
+
+
+void CAnimatedMeshMS3D::getKeyframeRotation(const core::array<SKeyframe>& keys, f32 time, core::vector3df& outdata) const
+{
+	if (keys.size())
+	{
+		if (time < keys[0].timeindex)
+		{
+			outdata = keys[0].data;
+			return;
+		}
+		if (time > keys.getLast().timeindex)
+		{
+			outdata = keys.getLast().data;
+			return;
+		}
+
+		for (u32 i=0; i<keys.size()-1; ++i)
+		{
+			if (keys[i].timeindex <= time && keys[i+1].timeindex >= time)
+			{
+//				core::quaternion q1(keys[i].data);
+//				core::quaternion q2(keys[i+1].data);
+				f32 interpolate = (time - keys[i].timeindex)/(keys[i+1].timeindex - keys[i].timeindex);
+				core::quaternion q;
+				q.slerp(keys[i].data, keys[i+1].data, interpolate);
+				q.toEuler(outdata);
 				return;
 			}
 		}
@@ -611,9 +643,9 @@ void CAnimatedMeshMS3D::animate(s32 frame)
 		core::vector3df translation = Joints[i].Translation;
 		core::vector3df rotation = Joints[i].Rotation;
 		
-		// find keyframe translation and roation
+		// find keyframe translation and rotation
 		getKeyframeData(Joints[i].TranslationKeys, time, translation);
-		getKeyframeData(Joints[i].RotationKeys, time, rotation);
+		getKeyframeRotation(Joints[i].RotationKeys, time, rotation);
 
 		transform.makeIdentity();
 		transform.setRotationRadians(rotation);

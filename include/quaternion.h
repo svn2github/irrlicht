@@ -28,6 +28,9 @@ class quaternion
 		//! Constructor which converts euler angles to a quaternion
 		quaternion(f32 x, f32 y, f32 z);
 
+		//! Constructor which converts euler angles to a quaternion
+		quaternion(const vector3df& vec);
+
 		//! Constructor which converts a matrix to a quaternion
 		quaternion(const matrix4& mat);
 
@@ -82,7 +85,7 @@ class quaternion
 		//! Inverts this quaternion
 		void makeInverse();
 
-		//! set this quaternion to the result of the inpolation between two quaternions based
+		//! set this quaternion to the result of the interpolation between two quaternions
 		void slerp( quaternion q1, quaternion q2, f32 interpolate );
 
 		//! axis must be unit length
@@ -115,6 +118,13 @@ inline quaternion::quaternion(f32 x, f32 y, f32 z, f32 w)
 inline quaternion::quaternion(f32 x, f32 y, f32 z)
 {
 	set(x,y,z);
+}
+
+
+//! Constructor which converts euler angles to a quaternion
+inline quaternion::quaternion(const vector3df& vec)
+{
+	set(vec.X,vec.Y,vec.Z);
 }
 
 
@@ -398,7 +408,7 @@ inline quaternion& quaternion::normalize()
 }
 
 
-// set this quaternion to the result of the inpolation between two quaternions based
+// set this quaternion to the result of the interpolation between two quaternions
 inline void quaternion::slerp( quaternion q1, quaternion q2, f32 time)
 {
 	f32 angle = q1.getDotProduct(q2);

@@ -187,12 +187,10 @@ CSceneManager::~CSceneManager()
 //! gets an animateable mesh. loads it if needed. returned pointer must not be dropped.
 IAnimatedMesh* CSceneManager::getMesh(const c8* filename)
 {
-	IAnimatedMesh* msh = 0;
-
 	core::stringc name = filename;
 	name.make_lower();
 
-	msh = MeshCache->findMesh(name.c_str());
+	IAnimatedMesh* msh = MeshCache->findMesh(name.c_str());
 	if (msh)
 		return msh;
 
@@ -1770,8 +1768,6 @@ void CSceneManager::readMaterials(io::IXMLReader* reader, ISceneNode* node)
 //! reads animators of a node
 void CSceneManager::readAnimators(io::IXMLReader* reader, ISceneNode* node)
 {
-	s32 cnt = 0;
-
 	while(reader->read())
 	{
 		const wchar_t* name = reader->getNodeName();
@@ -1805,7 +1801,6 @@ void CSceneManager::readAnimators(io::IXMLReader* reader, ISceneNode* node)
 				}
 
 				attr->drop();
-				++cnt;
 			}
 			break;
 		default:
@@ -1856,7 +1851,7 @@ void CSceneManager::writeSceneNode(io::IXMLWriter* writer, ISceneNode* node, ISc
 	if (!writer || !node || node->isDebugObject())
 		return;
 
-	const wchar_t* name = 0;
+	const wchar_t* name;
 
 	if (node == this)
 	{
@@ -1997,9 +1992,9 @@ void CSceneManager::serializeAttributes(io::IAttributes* out, io::SAttributeRead
 //! Reads attributes of the scene node.
 void CSceneManager::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options)
 {
-	Name =			in->getAttributeAsString("Name");
-	ID =			in->getAttributeAsInt("Id");
-	AmbientLight =	in->getAttributeAsColorf("AmbientLight");
+	Name = in->getAttributeAsString("Name");
+	ID = in->getAttributeAsInt("Id");
+	AmbientLight = in->getAttributeAsColorf("AmbientLight");
 
 	RelativeTranslation.set(0,0,0);
 	RelativeRotation.set(0,0,0);

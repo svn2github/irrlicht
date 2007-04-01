@@ -165,7 +165,8 @@ namespace scene
 		}; 
 
 		void animate(s32 frame);
-		void getKeyframeData(core::array<SKeyframe>& keys, f32 time, core::vector3df& outdata);
+		void getKeyframeData(const core::array<SKeyframe>& keys, f32 time, core::vector3df& outdata) const;
+		void getKeyframeRotation(const core::array<SKeyframe>& keys, f32 time, core::vector3df& outdata) const;
 
 		core::aabbox3d<f32> BoundingBox;
 
