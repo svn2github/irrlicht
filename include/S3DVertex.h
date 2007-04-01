@@ -104,7 +104,7 @@ struct S3DVertex2TCoords
 
 	//! constructor from S3DVertex
 	S3DVertex2TCoords(S3DVertex& o)
-		: Pos(o.Pos), Color(o.Color), TCoords(o.TCoords), Normal(o.Normal) {}
+		: Pos(o.Pos), Normal(o.Normal), Color(o.Color), TCoords(o.TCoords) {}
 
 	//! Position
 	core::vector3df Pos;
