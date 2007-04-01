@@ -102,6 +102,10 @@ struct S3DVertex2TCoords
 		SColor color, const core::vector2d<f32>& tcoords)
 		: Pos(pos), Normal(normal), Color(color), TCoords(tcoords), TCoords2(tcoords) {}
 
+	//! constructor from S3DVertex
+	S3DVertex2TCoords(S3DVertex& o)
+		: Pos(o.Pos), Color(o.Color), TCoords(o.TCoords), Normal(o.Normal) {}
+
 	//! Position
 	core::vector3df Pos;
 

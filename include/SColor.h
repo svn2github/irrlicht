@@ -276,6 +276,28 @@ namespace video
 		//! \return Returns true if the colors are different, and false if they are the same.
 		inline bool operator!=(const SColor& other) const { return other.color != color; }
 
+		//! Adds two lights
+		inline SColor operator+(const SColor& other) const
+		{
+			s32 a = getAlpha() + other.getAlpha();
+			if (a > 255) 
+				a = 255;
+
+			s32 r = getRed() + other.getRed();
+			if (r > 255) 
+				r = 255;
+
+			s32 g = getGreen() + other.getGreen();
+			if (g > 255) 
+				g = 255;
+
+			s32 b = getBlue() + other.getBlue();
+			if (b > 255) 
+				b = 255;
+
+			return SColor(a,r,g,b);
+		}
+
 		//! Interpolates the color with a f32 value to another color
 		//! \param other: Other color
 		//! \param d: value between 0.0f and 1.0f

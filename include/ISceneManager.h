@@ -830,6 +830,20 @@ namespace scene
 		 and null if no scene node could be found. */
 		virtual ISceneNode* getSceneNodeFromName(const c8* name, ISceneNode* start=0) = 0;
 
+		//! Returns the first scene node with the specified type.
+		/** \param type: The type to search for
+		 \param start: Scene node to start from. All children of this scene
+		 node are searched. If null is specified, the root scene node is
+		 taken.
+		 \return Returns pointer to the first scene node with this type,
+		 and null if no scene node could be found. */
+		virtual ISceneNode* getSceneNodeFromType(scene::ESCENE_NODE_TYPE type, ISceneNode* start=0) = 0;
+
+		//! returns scene nodes by type.
+		/** \param type: Type of scene node to find.
+		\param array: array to be filled with results. */
+		virtual void getSceneNodesFromType(ESCENE_NODE_TYPE type, core::array<scene::ISceneNode*>& outNodes, ISceneNode* start=0) = 0;
+
 		//! Returns the current active camera.
 		/** \return The active camera is returned. Note that this can be NULL, if there
 		 was no camera created yet. */
@@ -1137,7 +1151,7 @@ namespace scene
 		doesn't get the event. Otherwise, all input will go automaticly to the main scene manager.
 		If you no longer need the new scene manager, you should call ISceneManager::drop().
 		See IUnknown::drop() for more information. */
-		virtual ISceneManager* createNewSceneManager() = 0;
+		virtual ISceneManager* createNewSceneManager(bool cloneContent=false) = 0;
 
 		//! Saves the current scene into a file.
 		/** Scene nodes with the option isDebugObject set to true are not being saved.

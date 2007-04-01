@@ -1381,6 +1381,48 @@ ISceneNode* CSceneManager::getSceneNodeFromId(s32 id, ISceneNode* start)
 }
 
 
+//! Returns the first scene node with the specified type.
+ISceneNode* CSceneManager::getSceneNodeFromType(scene::ESCENE_NODE_TYPE type, ISceneNode* start)
+{
+	if (start == 0)
+		start = getRootSceneNode();
+
+	if (start->getType() == type)
+		return start;
+
+	ISceneNode* node = 0;
+
+	const core::list<ISceneNode*>& list = start->getChildren();
+	core::list<ISceneNode*>::Iterator it = list.begin();
+	for (; it!=list.end(); ++it)
+	{
+		node = getSceneNodeFromType(type, *it);
+		if (node)
+			return node;
+	}
+
+	return 0;
+}
+
+//! returns scene nodes by type.
+void CSceneManager::getSceneNodesFromType(ESCENE_NODE_TYPE type, core::array<scene::ISceneNode*>& outNodes, ISceneNode* start)
+{
+	if (start == 0)
+		start = getRootSceneNode();
+
+	if (start->getType() == type)
+		outNodes.push_back(start);
+
+	const core::list<ISceneNode*>& list = start->getChildren();
+	core::list<ISceneNode*>::Iterator it = list.begin();
+
+	for (; it!=list.end(); ++it)
+	{
+		getSceneNodesFromType(type, outNodes, *it);
+	}
+}
+
+
 //! Posts an input event to the environment. Usually you do not have to
 //! use this method, it is used by the internal engine.
 bool CSceneManager::postEventFromUser(SEvent event)
@@ -1433,9 +1475,14 @@ IMeshCache* CSceneManager::getMeshCache()
 
 
 //! Creates a new scene manager.
-ISceneManager* CSceneManager::createNewSceneManager()
+ISceneManager* CSceneManager::createNewSceneManager(bool cloneContent)
 {
-	return new CSceneManager(Driver, FileSystem, CursorControl, MeshCache);
+	CSceneManager* manager = new CSceneManager(Driver, FileSystem, CursorControl, MeshCache);
+
+	if (cloneContent)
+		manager->cloneMembers(this, manager);
+
+	return manager;
 }
 
 

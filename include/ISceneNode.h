@@ -603,7 +603,53 @@ namespace scene
 			updateAbsolutePosition();
 		}
 
+		//! Creates a clone of this scene node and its children.
+		virtual ISceneNode* clone(ISceneNode* newParent=0, ISceneManager* newManager=0) 
+		{ 
+			return 0; // to be implemented by derived classes
+		}
+
 	protected:
+
+		//! this method can be used by clone() implementations of derived classes
+		void cloneMembers(ISceneNode* toCopyFrom, ISceneManager* newManager)
+		{
+			Name = toCopyFrom->Name;
+			AbsoluteTransformation = toCopyFrom->AbsoluteTransformation;
+			RelativeTranslation = toCopyFrom->RelativeTranslation;
+			RelativeRotation = toCopyFrom->RelativeRotation;
+			RelativeScale = toCopyFrom->RelativeScale;			
+			ID = toCopyFrom->ID;
+			setTriangleSelector(toCopyFrom->TriangleSelector);
+			AutomaticCullingState = toCopyFrom->AutomaticCullingState;
+			DebugDataVisible = toCopyFrom->DebugDataVisible;
+			IsVisible = toCopyFrom->IsVisible;
+			IsDebugObject = toCopyFrom->IsDebugObject;
+
+			if (newManager)
+				SceneManager = newManager;
+			else
+				SceneManager = toCopyFrom->SceneManager;
+
+			// clone children
+
+			core::list<ISceneNode*>::Iterator it = toCopyFrom->Children.begin();
+			for (; it != toCopyFrom->Children.end(); ++it)
+				(*it)->clone(this, newManager);
+
+			// clone animators
+
+			core::list<ISceneNodeAnimator*>::Iterator ait = toCopyFrom->Animators.begin();
+			for (; ait != toCopyFrom->Animators.end(); ++ait)
+			{
+				ISceneNodeAnimator* anim = (*ait)->createClone(this, SceneManager);
+				if (anim)
+				{
+					addAnimator(anim);
+					anim->drop();
+				}
+			}
+		}
 
 		//! name of the scene node.
 		core::stringc Name;

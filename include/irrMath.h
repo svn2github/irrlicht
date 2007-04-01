@@ -60,11 +60,25 @@ namespace core
 		return a < b ? a : b;
 	}
 
+	//! returns minimum of three values. Own implementation to get rid of the STL (VS6 problems)
+	template<class T>
+	inline const T min_(const T a, const T b, const T c)
+	{
+		return a < b ? min_(a, c) : min_(b, c);
+	}
+
 	//! returns maximum of two values. Own implementation to get rid of the STL (VS6 problems)
 	template<class T>
 	inline T max_(const T a, const T b)
 	{
 		return a < b ? b : a;
+	}
+
+	//! returns minimum of three values. Own implementation to get rid of the STL (VS6 problems)
+	template<class T>
+	inline const T max_(const T a, const T b, const T c)
+	{
+		return a < b ? max_(b, c) : max_(a, c);
 	}
 
 	//! returns abs of two values. Own implementation to get rid of STL (VS6 problems)

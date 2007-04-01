@@ -39,6 +39,14 @@ namespace scene
 		/// \param timeMs: Current time in milli seconds.
 		virtual void animateNode(ISceneNode* node, u32 timeMs) = 0;
 
+		//! Creates a clone of this animator. 
+		/** Please note that you will have to drop (IUnknown::drop()) 
+		the returned pointer after calling this. */
+		virtual ISceneNodeAnimator* createClone(ISceneNode* node, ISceneManager* newManager=0) 
+		{
+			return 0; // to be implemented by derived classes.
+		}
+
 		//! Returns type of the scene node animator
 		virtual ESCENE_NODE_ANIMATOR_TYPE getType() const
 		{

@@ -335,6 +335,12 @@ namespace scene
 		//! Returns the first scene node with the specified name.
 		virtual ISceneNode* getSceneNodeFromName(const c8* name, ISceneNode* start=0);
 
+		//! Returns the first scene node with the specified type.
+		virtual ISceneNode* getSceneNodeFromType(scene::ESCENE_NODE_TYPE type, ISceneNode* start=0);
+
+		//! returns scene nodes by type.
+		virtual void getSceneNodesFromType(ESCENE_NODE_TYPE type, core::array<scene::ISceneNode*>& outNodes, ISceneNode* start=0);
+
 		//! Posts an input event to the environment. Usually you do not have to
 		//! use this method, it is used by the internal engine.
 		virtual bool postEventFromUser(SEvent event);
@@ -352,7 +358,7 @@ namespace scene
 		virtual E_SCENE_NODE_RENDER_PASS getSceneNodeRenderPass();
 
 		//! Creates a new scene manager. 
-		virtual ISceneManager* createNewSceneManager();
+		virtual ISceneManager* createNewSceneManager(bool cloneContent);
 
 		//! Returns type of the scene node
 		virtual ESCENE_NODE_TYPE getType() const { return ESNT_UNKNOWN; }

@@ -21,6 +21,9 @@ namespace core
 	{
 	public:
 
+		triangle3d() {}
+		triangle3d(vector3d<T> v1, vector3d<T> v2, vector3d<T> v3) : pointA(v1), pointB(v2), pointC(v3) {}
+
 		//! Determines if the triangle is totally inside a bounding box.
 		//! \param box: Box to check.
 		//! \return Returns true if the triangle is withing the box,

@@ -92,6 +92,18 @@ namespace core
 			return *this;
 		}
 
+		// compares size of rectangles
+		bool operator < (const rect<T>& other) const
+		{
+			return getArea() < other.getArea();
+		}
+
+		//! Returns size of rectangle
+		T getArea() const
+		{
+			return getWidth() * getHeight();
+		}
+
 		//! Returns if a 2d point is within this rectangle.
 		//! \param pos: Position to test if it lies within this rectangle.
 		//! \return Returns true if the position is within the rectangle, false if not.
