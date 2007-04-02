@@ -137,24 +137,14 @@ namespace core
 		//! Todo: 64 Bit template doesnt work.. need specialized template
 		vector3d<T>& normalize()
 		{
-			T l = (T) reciprocal_squareroot ( f32(X*X + Y*Y + Z*Z) );
-
-			X *= l;
-			Y *= l;
-			Z *= l;
-			return *this;
-
-/*
-			T l = (T)getLength();
+			T l = X*X + Y*Y + Z*Z;
 			if (l == 0)
 				return *this;
-
-			l = (T)1.0 / l;
+			l = (T) reciprocal_squareroot ( l );
 			X *= l;
 			Y *= l;
 			Z *= l;
 			return *this;
-*/
 		}
 
 		//! Sets the length of the vector to a new value
