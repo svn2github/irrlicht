@@ -1046,6 +1046,16 @@ namespace core
 
 
 
+	inline matrix4& matrix4::operator=(const f32 scalar)
+	{
+		for (s32 i = 0; i < 16; ++i)
+			M[i]=scalar;
+		definitelyIdentityMatrix=false;
+		return *this;
+	}
+
+
+
 	inline bool matrix4::operator==(const matrix4 &other) const
 	{
 		if (definitelyIdentityMatrix && other.definitelyIdentityMatrix)
