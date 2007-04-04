@@ -205,9 +205,7 @@ bool CFileSystem::changeWorkingDirectoryTo(const c8* newDirectory)
 	bool success=false;
 #ifdef _MSC_VER
 	success=(_chdir(newDirectory) == 0);
-#endif
-
-#if (defined(LINUX) || defined(MACOSX))
+#else
 	success=(chdir(newDirectory) == 0);
 #endif
 	return success;
