@@ -418,15 +418,16 @@ s32 CAnimatedMeshSceneNode::getEndFrame() const
 //! the default is 0 - MaximalFrameCount of the mesh.
 bool CAnimatedMeshSceneNode::setFrameLoop(s32 begin, s32 end)
 {
+	const s32 maxFrameCount = Mesh->getFrameCount() - 1;
 	if ( end < begin )
 	{
-		StartFrame = core::s32_max(0, end);
-		EndFrame = core::s32_clamp(begin, StartFrame, Mesh->getFrameCount() - 1);
+		StartFrame = core::s32_clamp(end, 0, maxFrameCount);
+		EndFrame = core::s32_clamp(begin, StartFrame, maxFrameCount);
 	}
 	else
 	{
-		StartFrame = core::s32_max(0, begin);
-		EndFrame = core::s32_clamp(end, StartFrame, Mesh->getFrameCount() - 1);
+		StartFrame = core::s32_clamp(begin, 0, maxFrameCount);
+		EndFrame = core::s32_clamp(end, StartFrame, maxFrameCount);
 	}
 	setCurrentFrame ( StartFrame );
 
