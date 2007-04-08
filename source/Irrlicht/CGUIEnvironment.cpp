@@ -86,22 +86,41 @@ CGUIEnvironment::CGUIEnvironment(io::IFileSystem* fs, video::IVideoDriver* drive
 CGUIEnvironment::~CGUIEnvironment()
 {
 	if (Hovered && Hovered != this)
+	{
 		Hovered->drop();
-
-	if (CurrentSkin)
-		CurrentSkin->drop();
+		Hovered = 0;
+	}
 
 	if (Driver)
+	{
 		Driver->drop();
+		Driver = 0;
+	}
 
 	if (Focus)
+	{
 		Focus->drop();
+		Focus = 0;
+	}
 
 	if (FileSystem)
+	{
 		FileSystem->drop();
+		FileSystem = 0;
+	}
 
 	if (Operator)
+	{
 		Operator->drop();
+		Operator = 0;
+	}
+
+	// drop skin
+	if (CurrentSkin)
+	{
+		CurrentSkin->drop();
+		CurrentSkin = 0;
+	}
 
 	// delete all fonts
 	u32 i;
@@ -172,6 +191,10 @@ void CGUIEnvironment::setFocus(IGUIElement* element)
 {
 	if (Focus == element)
 		return;
+
+	// GUI Environment should not get the focus
+	if (element == this)
+		element = 0;
 
 	removeFocus(Focus);
 
@@ -284,8 +307,9 @@ void CGUIEnvironment::OnPostRender( u32 time )
 				core::position2di(getSkin()->getSize(EGDS_TEXT_DISTANCE_X)*2, getSkin()->getSize(EGDS_TEXT_DISTANCE_Y)*2);
 		}
 
-		ToolTip.Element = addStaticText (	Hovered->getToolTipText().c_str(), pos, true, true, this, -1, true );
-		ToolTip.Element->setOverrideColor ( getSkin()->getColor ( EGDC_TOOLTIP ) );
+		ToolTip.Element = addStaticText(Hovered->getToolTipText().c_str(), pos, true, true, this, -1, true);
+		ToolTip.Element->setOverrideColor(getSkin()->getColor(EGDC_TOOLTIP));
+		ToolTip.Element->setSubElement(true);
 
 		s32 textHeight = ToolTip.Element->getTextHeight();
 		pos = ToolTip.Element->getRelativePosition();
