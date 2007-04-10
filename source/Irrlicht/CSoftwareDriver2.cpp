@@ -8,6 +8,7 @@
 
 #ifdef _IRR_COMPILE_WITH_BURNINGSVIDEO_
 
+#include "SoftwareDriver2_helper.h"
 #include "CSoftwareTexture2.h"
 #include "CSoftware2MaterialRenderer.h"
 #include "S3DVertex.h"

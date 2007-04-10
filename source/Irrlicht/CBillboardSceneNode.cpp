@@ -108,7 +108,7 @@ void CBillboardSceneNode::render()
 
 	// draw
 
-	if (DebugDataVisible)
+	if ( DebugDataVisible & scene::EDS_BBOX )
 	{
 		driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
 		video::SMaterial m;

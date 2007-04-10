@@ -203,17 +203,17 @@ COpenGLTexture::COpenGLTexture(const core::dimension2d<s32>& size,
 //! destructor
 COpenGLTexture::~COpenGLTexture()
 {
-    if (ColorFrameBuffer)
-        Driver->extGlDeleteFramebuffersEXT(1, &ColorFrameBuffer);
-    if (DepthRenderBuffer)
-        glDeleteTextures(1, &DepthRenderBuffer);
-    if (StencilRenderBuffer && StencilRenderBuffer != DepthRenderBuffer)
-        glDeleteTextures(1, &StencilRenderBuffer);
-    ColorFrameBuffer = 0;
-    DepthRenderBuffer = 0;
-    StencilRenderBuffer = 0;
+	if (ColorFrameBuffer)
+		Driver->extGlDeleteFramebuffersEXT(1, &ColorFrameBuffer);
+	if (DepthRenderBuffer)
+		glDeleteTextures(1, &DepthRenderBuffer);
+	if (StencilRenderBuffer && StencilRenderBuffer != DepthRenderBuffer)
+		glDeleteTextures(1, &StencilRenderBuffer);
+	ColorFrameBuffer = 0;
+	DepthRenderBuffer = 0;
+	StencilRenderBuffer = 0;
 
-    glDeleteTextures(1, &TextureName);
+	glDeleteTextures(1, &TextureName);
 	if (ImageData)
 	{
 		delete [] ImageData;

@@ -288,10 +288,7 @@ void CAnimatedMeshSceneNode::render()
 		}
 
 		if ( DebugDataVisible & scene::EDS_BBOX )
-		{
 			driver->draw3DBox(Box, video::SColor(0,255,255,255));
-		}
-
 
 		// show skeleton
 		if ( DebugDataVisible & scene::EDS_SKELETON )
@@ -344,7 +341,6 @@ void CAnimatedMeshSceneNode::render()
 			}
 		}
 
-
 		// show normals
 		if ( DebugDataVisible & scene::EDS_NORMALS )
 		{
@@ -365,9 +361,7 @@ void CAnimatedMeshSceneNode::render()
 			for ( g=0; g<m->getMeshBufferCount(); ++g)
 			{
 				scene::IMeshBuffer* mb = m->getMeshBuffer(g);
-
 				const u32 vSize = mb->getVertexPitch();
-
 				const video::S3DVertex* v = ( const video::S3DVertex*)mb->getVertices();
 				for ( i = 0; i != mb->getVertexCount(); ++i )
 				{
@@ -381,7 +375,6 @@ void CAnimatedMeshSceneNode::render()
 					v = (const video::S3DVertex*) ( (u8*) v + vSize );
 				}
 			}
-
 			driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
 		}
 
@@ -396,7 +389,6 @@ void CAnimatedMeshSceneNode::render()
 			{
 				driver->drawMeshBuffer ( m->getMeshBuffer ( g ) );
 			}
-
 		}
 	}
 }

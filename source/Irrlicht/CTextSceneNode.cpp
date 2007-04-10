@@ -341,7 +341,7 @@ void CBillboardTextSceneNode::render()
 		driver->drawMeshBuffer(Mesh->getMeshBuffer(i));
 	}
 
-	if (DebugDataVisible)
+	if ( DebugDataVisible & scene::EDS_BBOX )
 	{
 		driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
 		video::SMaterial m;

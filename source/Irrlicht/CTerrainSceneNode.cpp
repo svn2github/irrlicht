@@ -640,24 +640,26 @@ namespace scene
 			video::EVT_2TCOORDS, EPT_TRIANGLES);
 
 		// for debug purposes only:
-		if (DebugDataVisible )
+		if (DebugDataVisible)
 		{
 			video::SMaterial m;
 			m.Lighting = false;
 			driver->setMaterial(m);
-			driver->draw3DBox( TerrainData.BoundingBox, video::SColor(0,255,255,255));
+			if ( DebugDataVisible & scene::EDS_BBOX )
+				driver->draw3DBox( TerrainData.BoundingBox, video::SColor(0,255,255,255));
 
-			s32 count = TerrainData.PatchCount * TerrainData.PatchCount;
+			const s32 count = TerrainData.PatchCount * TerrainData.PatchCount;
 			s32 visible = 0;
-			for( s32 j = 0; j < count; ++j )
-			{
-				driver->draw3DBox( TerrainData.Patches[j].BoundingBox, video::SColor(0,255,0,0));
-				visible += ( TerrainData.Patches[j].CurrentLOD >= 0 );
-			}
+			if ( DebugDataVisible & scene::EDS_BBOX_BUFFERS )
+				for( s32 j = 0; j < count; ++j )
+				{
+					driver->draw3DBox( TerrainData.Patches[j].BoundingBox, video::SColor(0,255,0,0));
+					visible += ( TerrainData.Patches[j].CurrentLOD >= 0 );
+				}
 
 			static u32 lastTime = 0;
 
-			u32 now = os::Timer::getRealTime ();
+			const u32 now = os::Timer::getRealTime();
 			if ( now - lastTime > 1000 )
 			{
 				char buf[64];
@@ -666,9 +668,7 @@ namespace scene
 
 				lastTime = now;
 			}
-
 		}
-
 	}
 
 	//! Return the bounding box of the entire terrain.

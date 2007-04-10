@@ -194,7 +194,7 @@ void CSphereSceneNode::render()
 		driver->setMaterial(Buffer.Material);
 		driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
 		driver->drawMeshBuffer(&Buffer);
-		if (DebugDataVisible)
+		if ( DebugDataVisible & scene::EDS_BBOX )
 		{
 			video::SMaterial m;
 			m.Lighting = false;

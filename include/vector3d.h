@@ -133,7 +133,8 @@ namespace core
 				getDistanceFromSQ(end) < f;
 		}
 
-		//! Normalizes the vector.
+		//! Normalizes the vector. In case of the 0 vector the result
+		//! is still 0, otherwise the length of the vector will be 1.
 		//! Todo: 64 Bit template doesnt work.. need specialized template
 		vector3d<T>& normalize()
 		{

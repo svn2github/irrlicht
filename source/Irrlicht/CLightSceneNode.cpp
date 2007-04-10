@@ -55,7 +55,7 @@ void CLightSceneNode::render()
 	if (!driver)
 		return;
 
-	if (DebugDataVisible)
+	if ( DebugDataVisible & scene::EDS_BBOX )
 	{
 		driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
 		video::SMaterial m;
@@ -65,13 +65,13 @@ void CLightSceneNode::render()
 		switch ( LightData.Type )
 		{
 			case video::ELT_POINT:
-				driver->draw3DBox( BBox, LightData.DiffuseColor.toSColor());
+				driver->draw3DBox(BBox, LightData.DiffuseColor.toSColor());
 				break;
 
 			case video::ELT_DIRECTIONAL:
-				driver->draw3DLine (	core::vector3df ( 0.f, 0.f, 0.f ), 
-										core::vector3df ( 0.f, 0.f, 0.f ) + (LightData.Position * 10.f ),
-										LightData.DiffuseColor.toSColor()
+				driver->draw3DLine(core::vector3df ( 0.f, 0.f, 0.f ), 
+						core::vector3df ( 0.f, 0.f, 0.f ) + (LightData.Position * 10.f ),
+						LightData.DiffuseColor.toSColor()
 									);
 				break;
 		}

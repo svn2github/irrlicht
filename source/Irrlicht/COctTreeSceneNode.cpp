@@ -145,18 +145,22 @@ void COctTreeSceneNode::render()
 			}
 
 			// for debug purposes only
-			if (DebugDataVisible && !Materials.empty() && PassCount==1)
+			if ( DebugDataVisible && !Materials.empty() && PassCount==1)
 			{
 				const core::aabbox3d<float> &box = frust.getBoundingBox();
 				core::array< core::aabbox3d<f32> > boxes;
 				video::SMaterial m;
 				m.Lighting = false;
 				driver->setMaterial(m);
-				StdOctTree->renderBoundingBoxes(box, boxes);
-				for (u32 b=0; b<boxes.size(); ++b)
-					driver->draw3DBox(boxes[b], video::SColor(0,255,255,255));
+				if ( DebugDataVisible & scene::EDS_BBOX_BUFFERS )
+				{
+					StdOctTree->renderBoundingBoxes(box, boxes);
+					for (u32 b=0; b<boxes.size(); ++b)
+						driver->draw3DBox(boxes[b], video::SColor(0,255,255,255));
+				}
 
-				driver->draw3DBox(Box,video::SColor(0,255,0,0));
+				if ( DebugDataVisible & scene::EDS_BBOX )
+					driver->draw3DBox(Box,video::SColor(0,255,0,0));
 			}
 			break;
 
@@ -195,11 +199,15 @@ void COctTreeSceneNode::render()
 				video::SMaterial m;
 				m.Lighting = false;
 				driver->setMaterial(m);
-				LightMapOctTree->renderBoundingBoxes(box, boxes);
-				for (u32 b=0; b<boxes.size(); ++b)
-					driver->draw3DBox(boxes[b], video::SColor(0,255,255,255));
+				if ( DebugDataVisible & scene::EDS_BBOX_BUFFERS )
+				{
+					LightMapOctTree->renderBoundingBoxes(box, boxes);
+					for (u32 b=0; b<boxes.size(); ++b)
+						driver->draw3DBox(boxes[b], video::SColor(0,255,255,255));
+				}
 
-				driver->draw3DBox(Box,video::SColor(0,255,0,0));
+				if ( DebugDataVisible & scene::EDS_BBOX )
+					driver->draw3DBox(Box,video::SColor(0,255,0,0));
 			}
 		}
 		break;
