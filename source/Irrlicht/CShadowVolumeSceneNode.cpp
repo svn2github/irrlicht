@@ -75,14 +75,13 @@ void CShadowVolumeSceneNode::createShadowVolume(const core::vector3df& light)
 	{
 		// add a buffer
 		SShadowVolume tmp;
+		// lets make a rather large shadowbuffer
+		tmp.size = IndexCount*5;
+		tmp.count = 0;
+		tmp.vertices = new core::vector3df[tmp.size];
 		ShadowVolumes.push_back(tmp);
 		svp = &ShadowVolumes[ShadowVolumes.size()-1];
 		++ShadowVolumesUsed;
-
-		// lets make a rather large shadowbuffer
-		svp->size = IndexCount*5;
-		svp->count = 0;
-		svp->vertices = new core::vector3df[svp->size];
 	}
 
 	s32 faceCount = (int)(IndexCount / 3);

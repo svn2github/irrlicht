@@ -222,6 +222,8 @@ namespace irr
 			HWND HWnd;
 
 			s32 BorderX, BorderY;
+			bool UseReferenceRect;
+			core::rect<s32> ReferenceRect;
 		};
 
 

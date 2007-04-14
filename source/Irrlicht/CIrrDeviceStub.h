@@ -119,6 +119,7 @@ namespace irr
 		CLogger* Logger;
 		IOSOperator* Operator;
 		io::IFileSystem* FileSystem;
+		scene::ISceneManager* InputReceivingSceneManager;
 	};
 
 } // end namespace irr

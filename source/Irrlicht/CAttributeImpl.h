@@ -1952,15 +1952,15 @@ public:
 
 	virtual void getString(char* target) 
 	{
-		sprintf(target, "0x%x", Value);
+		sprintf(target, "0x%x", (int)Value);
 	}
 
 	virtual void setString(const char* text) 
 	{
-		sscanf(text, "0x%x", &Value);
+		sscanf(text, "0x%x", (int*)(&Value));
 	}
 
-	virtual E_ATTRIBUTE_TYPE getType()
+	virtual E_ATTRIBUTE_TYPE getType() const
 	{
 		return EAT_USER_POINTER;
 	}
