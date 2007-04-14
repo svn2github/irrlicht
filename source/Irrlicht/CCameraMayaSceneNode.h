@@ -69,16 +69,16 @@ namespace scene
 		bool MouseKeys[3];
 
 		core::vector3df Pos;
-		bool zooming, rotating, moving, translating;
-		f32 zoomSpeed;
-		f32 rotateSpeed;
-		f32 translateSpeed;
-		f32 rotateStartX, rotateStartY;
-		f32 zoomStartX, zoomStartY;
-		f32 translateStartX, translateStartY;
-		f32 currentZoom;
-		f32 rotX, rotY;
-		core::vector3df oldTarget;
+		bool Zooming, Rotating, Moving, Translating;
+		f32 ZoomSpeed;
+		f32 RotateSpeed;
+		f32 TranslateSpeed;
+		f32 RotateStartX, RotateStartY;
+		f32 ZoomStartX, ZoomStartY;
+		f32 TranslateStartX, TranslateStartY;
+		f32 CurrentZoom;
+		f32 RotX, RotY;
+		core::vector3df OldTarget;
 
 		core::vector2df MousePos;
 	};

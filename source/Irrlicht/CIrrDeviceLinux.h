@@ -208,6 +208,10 @@ namespace irr
 					CursorPos.Y / (f32)Device->Height);
 			}
 
+			virtual void setReferenceRect(core::rect<s32>* rect=0)
+			{
+			}
+
 		private:
 
 			void updateCursorPos()
