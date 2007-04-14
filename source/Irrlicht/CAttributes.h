@@ -617,6 +617,31 @@ public:
 	//! Sets an attribute as texture reference
 	virtual void setAttribute(s32 index, video::ITexture* texture);
 
+
+	
+	/*
+
+		User Pointer Attribute
+
+	*/
+
+	//! Adds an attribute as user pointner
+	virtual void addUserPointer(const c8* attributeName, void* userPointer);
+
+	//! Sets an attribute as user pointer
+	virtual void setAttribute(const c8* attributeName, void* userPointer);
+
+	//! Gets an attribute as user pointer
+	//! \param attributeName: Name of the attribute to get.
+	virtual void* getAttributeAsUserPointer(const c8* attributeName);
+
+	//! Gets an attribute as user pointer
+	//! \param index: Index value, must be between 0 and getAttributeCount()-1.
+	virtual void* getAttributeAsUserPointer(s32 index);
+
+	//! Sets an attribute as user pointer
+	virtual void setAttribute(s32 index, void* userPointer);
+
 protected:
 
 	void readAttributeFromXML(io::IXMLReader* reader);
@@ -662,6 +687,7 @@ public:
 
 	virtual video::ITexture* getTexture()		{ return 0; }
 	virtual const char* getEnum()			{ return 0; }
+	virtual void* getUserPointer()			{ return 0; }
 
 	virtual void setInt(s32 intValue)		{};
 	virtual void setFloat(f32 floatValue)		{};
@@ -687,6 +713,7 @@ public:
 	virtual void setDimension2d(core::dimension2di v) {};
 	virtual void setBBox(core::aabbox3d<f32> v) {};
 	virtual void setPlane(core::plane3df v) {};
+	virtual void setUserPointer(void* v)	{};
 
 	virtual void setEnum(const char* enumValue, const char* const* enumerationLiterals) {};
 	virtual void setTexture(video::ITexture*)	{};

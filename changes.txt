@@ -2,10 +2,21 @@ Changes in version 1.3.1 (?? Mar 2007)
 
  - getType() is now const correct (API Changes)
 
-
  - Added scissor test to opengl draw2DImage method that ignored clip.
 
  - Fixed a bug in rect::isValid, it was almost always true.
+ 
+ - There is now a way to set which scene manager should recieve user input, when working
+   with multiple scene managers: IrrlichtDevice::setInputReceivingSceneManager().
+ 
+ - ICursorControl now supports setting a reference rectangle.
+   If this rect is set, the cursor position is not being calculated relative to
+   the rendering window but to this rect. You can set the rect pointer to 0 to disable
+   this feature again. This feature is useful when rendering into parts of foreign windows
+   for example in an editor. See ICursorControl::setReferenceRect() for details.
+   (Windows only implementation currently)
+
+ - IAttributes now supports a user pointer (void*)
 
  - Added query methods to scene manager: Find Scene nodes by type
     getSceneNodesFromType

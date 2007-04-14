@@ -1324,7 +1324,55 @@ void CAttributes::setAttribute(s32 index, core::line3df v)
 }
 
 
+//! Adds an attribute as user pointner
+void CAttributes::addUserPointer(const c8* attributeName, void* userPointer)
+{
+	Attributes.push_back(new CUserPointerAttribute(attributeName, userPointer));
+}
 
+//! Sets an attribute as user pointer
+void CAttributes::setAttribute(const c8* attributeName, void* userPointer)
+{
+	IAttribute* att = getAttributeP(attributeName);
+	if (att)
+		att->setUserPointer(userPointer);
+	else
+	{
+		Attributes.push_back(new CUserPointerAttribute(attributeName, userPointer));
+	}
+}
+
+//! Gets an attribute as user pointer
+//! \param attributeName: Name of the attribute to get.
+void* CAttributes::getAttributeAsUserPointer(const c8* attributeName)
+{
+	void* value = 0;
+
+	IAttribute* att = getAttributeP(attributeName);
+	if (att)
+		value = att->getUserPointer();
+
+	return value;
+}
+
+//! Gets an attribute as user pointer
+//! \param index: Index value, must be between 0 and getAttributeCount()-1.
+void* CAttributes::getAttributeAsUserPointer(s32 index)
+{
+	void* value = 0;
+
+	if (index >= 0 && index < (s32)Attributes.size())
+        value = Attributes[index]->getUserPointer();
+
+	return value;
+}
+
+//! Sets an attribute as user pointer
+void CAttributes::setAttribute(s32 index, void* userPointer)
+{
+	if (index >= 0 && index < (s32)Attributes.size() )
+		Attributes[index]->setUserPointer(userPointer);
+}
 
 
 //! Reads attributes from a xml file.

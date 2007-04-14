@@ -73,7 +73,7 @@ namespace irr
 
 			CCursorControl(const core::dimension2d<s32>& wsize, HWND hwnd, bool fullscreen)
 				: WindowSize(wsize), InvWindowSize(0.0f, 0.0f), IsVisible(true),
-					HWnd(hwnd), BorderX(0), BorderY(0)
+					HWnd(hwnd), BorderX(0), BorderY(0), UseReferenceRect(false)
 			{
 				if (WindowSize.Width!=0)
 					InvWindowSize.Width = 1.0f / WindowSize.Width;
@@ -110,7 +110,10 @@ namespace irr
 			//! Sets the new position of the cursor.
 			virtual void setPosition(f32 x, f32 y)
 			{
-				setPosition((s32)(x*WindowSize.Width), (s32)(y*WindowSize.Height));
+				if (!UseReferenceRect)
+					setPosition((s32)(x*WindowSize.Width), (s32)(y*WindowSize.Height));
+				else
+					setPosition((s32)(x*ReferenceRect.getWidth()), (s32)(y*ReferenceRect.getHeight()));
 			}
 
 			//! Sets the new position of the cursor.
@@ -123,8 +126,17 @@ namespace irr
 			virtual void setPosition(s32 x, s32 y)
 			{
 				RECT rect;
-				if (GetWindowRect(HWnd, &rect))
-					SetCursorPos(x + rect.left + BorderX, y + rect.top + BorderY);
+
+				if (UseReferenceRect)
+				{
+					SetCursorPos(ReferenceRect.UpperLeftCorner.X + x, 
+								 ReferenceRect.UpperLeftCorner.Y + y);
+				}
+				else
+				{
+					if (GetWindowRect(HWnd, &rect))
+						SetCursorPos(x + rect.left + BorderX, y + rect.top + BorderY);
+				}
 
 				CursorPos.X = x;
 				CursorPos.Y = y;
@@ -141,8 +153,35 @@ namespace irr
 			virtual core::position2d<f32> getRelativePosition()
 			{
 				updateInternalCursorPosition();
-				return core::position2d<f32>(CursorPos.X * InvWindowSize.Width,
-					CursorPos.Y * InvWindowSize.Height);
+
+				if (!UseReferenceRect)
+				{
+					return core::position2d<f32>(CursorPos.X * InvWindowSize.Width,
+						CursorPos.Y * InvWindowSize.Height);
+				}
+
+				return core::position2d<f32>(CursorPos.X / (f32)ReferenceRect.getWidth(),
+						CursorPos.Y / (f32)ReferenceRect.getHeight());
+			}
+
+			//! Sets an absolute reference rect for calculating the cursor position.
+			virtual void setReferenceRect(core::rect<s32>* rect=0)
+			{
+				if (rect)
+				{
+					ReferenceRect = *rect;
+					UseReferenceRect = true;
+
+					// prevent division through zero and uneven sizes
+
+					if (!ReferenceRect.getHeight() || ReferenceRect.getHeight()%2)
+						ReferenceRect.LowerRightCorner.Y += 1;
+
+					if (!ReferenceRect.getWidth() || ReferenceRect.getWidth()%2)
+						ReferenceRect.LowerRightCorner.X += 1;
+				}
+				else
+					UseReferenceRect = false;
 			}
 
 		private:
@@ -153,9 +192,27 @@ namespace irr
 				POINT p;
 				GetCursorPos(&p);
 				RECT rect;
-				GetWindowRect(HWnd, &rect);
-				CursorPos.X = p.x-rect.left-BorderX;
-				CursorPos.Y = p.y-rect.top-BorderY;
+
+				if (UseReferenceRect)
+				{
+					CursorPos.X = p.x - ReferenceRect.UpperLeftCorner.X;
+					CursorPos.Y = p.y - ReferenceRect.UpperLeftCorner.Y;
+				}
+				else
+				{
+					if (GetWindowRect(HWnd, &rect))
+					{
+						CursorPos.X = p.x-rect.left-BorderX;
+						CursorPos.Y = p.y-rect.top-BorderY;
+					}
+					else
+					{
+						// window seems not to be existent, so set cursor to
+						// a negative value
+						CursorPos.X = -1;
+						CursorPos.Y = -1;
+					}
+				}
 			}
 
 			core::position2d<s32> CursorPos;

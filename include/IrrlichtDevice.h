@@ -159,6 +159,10 @@ while(device->run())
 		scene manager and the GUI environment. */
 		virtual void postEventFromUser(SEvent event) = 0;
 
+		//! Sets the input receiving scene manager. 
+		/** If set to null, the main scene manager (returned by GetSceneManager()) will receive the input */
+		virtual void setInputReceivingSceneManager(scene::ISceneManager* sceneManager) = 0;
+
 		//! Sets if the window should be resizeable in windowed mode.
 		/** The default is false. This method only works in windowed mode. */
 		virtual void setResizeAble(bool resize=false) = 0;

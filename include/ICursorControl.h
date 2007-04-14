@@ -60,6 +60,14 @@ namespace gui
 		 the top left corner and (1.0f, 1.0f) is the bottom right corner of the
 		 render window. */
 		virtual core::position2d<f32> getRelativePosition() = 0;
+
+		//! Sets an absolute reference rect for setting and retrieving the cursor position.
+		/** If this rect is set, the cursor position is not being calculated relative to
+		the rendering window but to this rect. You can set the rect pointer to 0 to disable
+		this feature again. This feature is useful when rendering into parts of foreign windows
+		for example in an editor. 
+		\param rect: A pointer to an reference rectangle or 0 to disable the reference rectangle.*/
+		virtual void setReferenceRect(core::rect<s32>* rect=0) = 0;
 	};
 
 

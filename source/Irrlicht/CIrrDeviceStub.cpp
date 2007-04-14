@@ -16,7 +16,10 @@ namespace irr
 
 //! constructor
 CIrrDeviceStub::CIrrDeviceStub(const char* version, irr::IEventReceiver* recv)
-: IrrlichtDevice(), VideoDriver(0), GUIEnvironment(0), SceneManager(0), Timer(new irr::CTimer()), CursorControl(0), UserReceiver(recv), Logger(new CLogger(UserReceiver)), Operator(0), FileSystem(io::createFileSystem())
+: IrrlichtDevice(), VideoDriver(0), GUIEnvironment(0), SceneManager(0), 
+	Timer(new irr::CTimer()), CursorControl(0), UserReceiver(recv),
+	Logger(new CLogger(UserReceiver)), Operator(0), FileSystem(io::createFileSystem()),
+	InputReceivingSceneManager(0)
 {
 	os::Printer::Logger = Logger;
 
@@ -40,6 +43,9 @@ CIrrDeviceStub::~CIrrDeviceStub()
 
 	if (SceneManager)
 		SceneManager->drop();
+
+	if (InputReceivingSceneManager)
+		InputReceivingSceneManager->drop();
 
 	if (CursorControl)
 		CursorControl->drop();
@@ -157,8 +163,12 @@ void CIrrDeviceStub::postEventFromUser(SEvent event)
 	if (!absorbed && GUIEnvironment)
 		absorbed = GUIEnvironment->postEventFromUser(event);
 
-	if (!absorbed && SceneManager)
-		absorbed = SceneManager->postEventFromUser(event);
+	scene::ISceneManager* inputReceiver = InputReceivingSceneManager;
+	if (!inputReceiver)
+		inputReceiver = SceneManager;
+
+	if (!absorbed && inputReceiver)
+		absorbed = inputReceiver->postEventFromUser(event);
 }
 
 
@@ -198,6 +208,20 @@ void CIrrDeviceStub::setResizeAble(bool resize)
 {
 
 }
+
+
+//! Sets the input receiving scene manager. 
+void CIrrDeviceStub::setInputReceivingSceneManager(scene::ISceneManager* sceneManager)
+{
+	if (InputReceivingSceneManager)
+		InputReceivingSceneManager->drop();
+
+	InputReceivingSceneManager = sceneManager;
+
+	if (InputReceivingSceneManager)
+		InputReceivingSceneManager->grab();
+}
+
 
 
 } // end namespace irr

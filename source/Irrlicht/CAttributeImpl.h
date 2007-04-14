@@ -1929,6 +1929,60 @@ public:
 };
 
 
+// Attribute implemented for user pointers
+class CUserPointerAttribute : public IAttribute
+{
+public:
+
+	CUserPointerAttribute(const char* name, void* value)
+	{
+		Name = name;
+		Value = value;
+	}
+
+	virtual s32 getInt() 
+	{ 
+		return (s32)(Value);
+	}
+
+	virtual bool getBool()
+	{ 
+		return (Value != 0);
+	}
+
+	virtual void getString(char* target) 
+	{
+		sprintf(target, "0x%x", Value);
+	}
+
+	virtual void setString(const char* text) 
+	{
+		sscanf(text, "0x%x", &Value);
+	}
+
+	virtual E_ATTRIBUTE_TYPE getType()
+	{
+		return EAT_USER_POINTER;
+	}
+
+	virtual void setUserPointer(void* v)
+	{
+		Value = v;
+	}
+
+	virtual void* getUserPointer()
+	{
+		return Value;
+	}
+
+	
+	virtual const wchar_t* getTypeString() const
+	{
+		return L"userPointer";
+	}
+
+	void* Value;
+};
 
 
 // todo: CGUIFontAttribute

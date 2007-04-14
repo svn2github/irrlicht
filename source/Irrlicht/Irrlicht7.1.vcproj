@@ -348,9 +348,6 @@
 			<File
 				RelativePath=".\..\..\include\SIrrCreationParameters.h">
 			</File>
-			<File
-				RelativePath=".\..\..\include\SKeyMap.h">
-			</File>
 			<Filter
 				Name="video"
 				Filter="">
@@ -392,6 +389,9 @@
 				</File>
 				<File
 					RelativePath=".\..\..\include\SExposedVideoData.h">
+				</File>
+				<File
+					RelativePath=".\..\..\include\SKeyMap.h">
 				</File>
 				<File
 					RelativePath=".\..\..\include\SLight.h">
