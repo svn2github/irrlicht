@@ -310,6 +310,7 @@ void CGUIEnvironment::OnPostRender( u32 time )
 		ToolTip.Element = addStaticText(Hovered->getToolTipText().c_str(), pos, true, true, this, -1, true);
 		ToolTip.Element->setOverrideColor(getSkin()->getColor(EGDC_TOOLTIP));
 		ToolTip.Element->setSubElement(true);
+		ToolTip.Element->grab();
 
 		s32 textHeight = ToolTip.Element->getTextHeight();
 		pos = ToolTip.Element->getRelativePosition();
@@ -350,7 +351,8 @@ void CGUIEnvironment::updateHoveredElement(core::position2d<s32> mousePos)
 
 			if ( ToolTip.Element )
 			{
-				ToolTip.Element->remove ();
+				ToolTip.Element->remove();
+				ToolTip.Element->drop();
 				ToolTip.Element = 0;
 			}
 			else
