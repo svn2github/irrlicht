@@ -81,16 +81,16 @@ namespace scene
 		IAnimatedMesh* findMesh(const c8* lowerMadeFilename);
 
 		//! Renames a loaded mesh, if possible.
-		virtual bool setMeshFilename(s32 index, const c8* filename) = 0;
+		virtual bool setMeshFilename(s32 index, const c8* filename);
 
 		//! Renames a loaded mesh, if possible.
-		virtual bool setMeshFilename(IAnimatedMesh* mesh, const c8* filename) = 0;
+		virtual bool setMeshFilename(IAnimatedMesh* mesh, const c8* filename);
 
 		//! Renames a loaded mesh, if possible.
-		virtual bool setMeshFilename(IMesh* mesh, const c8* filename) = 0;
+		virtual bool setMeshFilename(IMesh* mesh, const c8* filename);
 
 		//! Clears the whole mesh cache, removing all meshes.
-		virtual void clear() = 0;
+		virtual void clear();
 
 	protected:
 
