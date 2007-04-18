@@ -1942,7 +1942,7 @@ public:
 
 	virtual s32 getInt() 
 	{ 
-		return (s32)(Value);
+		return *(s32*)(&Value);
 	}
 
 	virtual bool getBool()
@@ -1952,7 +1952,7 @@ public:
 
 	virtual void getString(char* target) 
 	{
-		sprintf(target, "0x%x", (int)Value);
+		sprintf(target, "0x%x", *(int*)(&Value));
 	}
 
 	virtual void setString(const char* text) 
