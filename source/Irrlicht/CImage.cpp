@@ -919,14 +919,14 @@ static s32 Blit (	eBlitter operation,
 
 namespace irr
 {
-namespace video  
+namespace video
 {
 
 //! constructor
 CImage::CImage(ECOLOR_FORMAT format, const core::dimension2d<s32>& size)
 :Data(0), Size(size), Format(format), DeleteMemory(true)
 {
-	initData();	
+	initData();
 }
 
 
@@ -938,7 +938,7 @@ CImage::CImage(ECOLOR_FORMAT format, const core::dimension2d<s32>& size, void* d
 	if (ownForeignMemory)
 	{
 		Data = (void*)0xbadf00d;
-		initData();	
+		initData();
 		Data = data;
 	}
 	else

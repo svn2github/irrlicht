@@ -789,10 +789,12 @@ void CIrrDeviceWin32::getWindowsVersion(core::stringc& out)
 			#ifdef VER_SUITE_ENTERPRISE
 			if (osvi.wProductType == VER_NT_WORKSTATION)
 			{
+#ifndef __BORLANDC__
 				if( osvi.wSuiteMask & VER_SUITE_PERSONAL )
 					out.append("Personal ");
 				else
 					out.append("Professional ");
+#endif
 			}
 			else if (osvi.wProductType == VER_NT_SERVER)
 			{

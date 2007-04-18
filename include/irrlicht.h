@@ -272,16 +272,16 @@ namespace irr
 	\param receiver: A user created event receiver.
 	\param sdk_version_do_not_use: Don't use or change this parameter. Always set it to
 	IRRLICHT_SDK_VERSION, which is done by default. This is needed for sdk version checks.
-	\return Returns pointer to the created IrrlichtDevice or null if the 
+	\return Returns pointer to the created IrrlichtDevice or null if the
 	device could not be created.
 	*/
 	IRRLICHT_API IrrlichtDevice* IRRCALLCONV createDevice(
-		video::E_DRIVER_TYPE deviceType = video::EDT_SOFTWARE, 
-		const core::dimension2d<s32>& windowSize = core::dimension2d<s32>(640,480),
+		video::E_DRIVER_TYPE deviceType = video::EDT_SOFTWARE,
+		const core::dimension2d<s32>& windowSize = (core::dimension2d<s32>(640,480)), // paranthese are necessary for some compilers
 		u32 bits = 16,
 		bool fullscreen = false,
-		bool stencilbuffer=false,
-		bool vsync=false,
+		bool stencilbuffer = false,
+		bool vsync = false,
 		IEventReceiver* receiver = 0,
 		const c8* sdk_version_do_not_use = IRRLICHT_SDK_VERSION);
 

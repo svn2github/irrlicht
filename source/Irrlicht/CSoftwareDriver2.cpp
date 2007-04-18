@@ -46,7 +46,7 @@ CSoftwareDriver2::CSoftwareDriver2(const core::dimension2d<s32>& windowSize, boo
 
 	// create triangle renderers
 
-	memset32 ( BurningShader, 0, sizeof ( BurningShader ) );
+	irr::memset32 ( BurningShader, 0, sizeof ( BurningShader ) );
 	//BurningShader[ETR_FLAT] = createTRFlat2(DepthBuffer);
 	//BurningShader[ETR_FLAT_WIRE] = createTRFlatWire2(DepthBuffer);
 	BurningShader[ETR_GOURAUD] = createTriangleRendererGouraud2(DepthBuffer);
@@ -643,7 +643,7 @@ u32 CSoftwareDriver2::clipToHyperPlane ( s4DVertex * dest, const s4DVertex * sou
 
 			// copy current to out
 			//*out = *a;
-			memcpy32_small ( out, a, SIZEOF_SVERTEX * 2 );
+			irr::memcpy32_small ( out, a, SIZEOF_SVERTEX * 2 );
 			b = out;
 
 			out += 2;
@@ -942,7 +942,7 @@ void CSoftwareDriver2::VertexCache_fill(const u32 sourceIndex,
 	if ( Transformation [ ETS_TEXTURE_0 ].isIdentity )
 	{
 		// only look on first transform
-		memcpy32_small ( &dest->Tex[0],
+		irr::memcpy32_small ( &dest->Tex[0],
 						&((S3DVertex*) source )->TCoords,
 						vSize[VertexCache.vType].TexSize * ( sizeof ( f32 ) * 2 )
 					);
@@ -1034,7 +1034,7 @@ REALINLINE void CSoftwareDriver2::VertexCache_get ( s4DVertex ** face )
 		// rewind to start of primitive
 		VertexCache.indicesIndex = VertexCache.indicesRun;
 
-		memset32 ( info, VERTEXCACHE_MISS, sizeof ( info ) );
+		irr::memset32 ( info, VERTEXCACHE_MISS, sizeof ( info ) );
 
 		// get the next unique vertices cache line
 		u32 fillIndex = 0;
@@ -1154,7 +1154,7 @@ void CSoftwareDriver2::VertexCache_reset ( const void* vertices, u32 vertexCount
 			break;
 	}
 
-	memset32 ( VertexCache.info, VERTEXCACHE_MISS, sizeof ( VertexCache.info ) );
+	irr::memset32 ( VertexCache.info, VERTEXCACHE_MISS, sizeof ( VertexCache.info ) );
 
 }
 
@@ -1222,9 +1222,9 @@ void CSoftwareDriver2::drawVertexPrimitiveList(const void* vertices, u32 vertexC
 		}
 
 		// else if not complete inside clipping necessary
-		memcpy32_small ( ( (u8*) CurrentOut.data + ( 0 << ( SIZEOF_SVERTEX_LOG2 + 1 ) ) ), face[0], SIZEOF_SVERTEX * 2 );
-		memcpy32_small ( ( (u8*) CurrentOut.data + ( 1 << ( SIZEOF_SVERTEX_LOG2 + 1 ) ) ), face[1], SIZEOF_SVERTEX * 2 );
-		memcpy32_small ( ( (u8*) CurrentOut.data + ( 2 << ( SIZEOF_SVERTEX_LOG2 + 1 ) ) ), face[2], SIZEOF_SVERTEX * 2 );
+		irr::memcpy32_small ( ( (u8*) CurrentOut.data + ( 0 << ( SIZEOF_SVERTEX_LOG2 + 1 ) ) ), face[0], SIZEOF_SVERTEX * 2 );
+		irr::memcpy32_small ( ( (u8*) CurrentOut.data + ( 1 << ( SIZEOF_SVERTEX_LOG2 + 1 ) ) ), face[1], SIZEOF_SVERTEX * 2 );
+		irr::memcpy32_small ( ( (u8*) CurrentOut.data + ( 2 << ( SIZEOF_SVERTEX_LOG2 + 1 ) ) ), face[2], SIZEOF_SVERTEX * 2 );
 
 		u32 flag = CurrentOut.data->flag & VERTEX4D_FORMAT_MASK;
 
