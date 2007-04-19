@@ -141,7 +141,7 @@ namespace core
 			T l = X*X + Y*Y + Z*Z;
 			if (l == 0)
 				return *this;
-			l = (T) reciprocal_squareroot ( l );
+			l = (T) reciprocal_squareroot ( (f32)l );
 			X *= l;
 			Y *= l;
 			Z *= l;
