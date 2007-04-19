@@ -10,6 +10,7 @@
 #include "COpenGLTexture.h"
 #include "COpenGLDriver.h"
 #include "os.h"
+#include "CImage.h"
 #include "CColorConverter.h"
 
 #include "irrString.h"
@@ -19,7 +20,7 @@ namespace irr
 namespace video
 {
 
-const bool checkFBOStatus(COpenGLDriver* Driver)
+bool checkFBOStatus(COpenGLDriver* Driver)
 {
 #ifdef GL_EXT_framebuffer_object
 	GLenum status = Driver->extGlCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
@@ -75,9 +76,8 @@ const bool checkFBOStatus(COpenGLDriver* Driver)
 
 //! constructor
 COpenGLTexture::COpenGLTexture(IImage* image, bool generateMipLevels, const char* name, COpenGLDriver* driver)
- : ITexture(name), Pitch(0), SurfaceHasSameSize(false), ImageData(0),
-  ColorFormat(ECF_A8R8G8B8), Driver(driver), TextureName(0),
-  InternalFormat(GL_RGBA), PixelFormat(GL_BGRA_EXT),
+ : ITexture(name), Driver(driver), Image(0),
+  TextureName(0), InternalFormat(GL_RGBA), PixelFormat(GL_BGRA_EXT),
   PixelType(GL_UNSIGNED_BYTE), HasMipMaps(generateMipLevels),
   ColorFrameBuffer(0), DepthRenderBuffer(0), StencilRenderBuffer(0)
 {
@@ -87,7 +87,7 @@ COpenGLTexture::COpenGLTexture(IImage* image, bool generateMipLevels, const char
 
 	getImageData(image);
 
-	if (ImageData)
+	if (Image)
 	{
 		glGenTextures(1, &TextureName);
 		copyTexture();
@@ -99,9 +99,8 @@ COpenGLTexture::COpenGLTexture(const core::dimension2d<s32>& size,
                                 bool extPackedDepthStencilSupported,
                                 const char* name,
                                 COpenGLDriver* driver)
- : ITexture(name), ImageSize(size), Pitch(0), SurfaceHasSameSize(false),
-  ImageData(0), ColorFormat(ECF_A8R8G8B8), Driver(driver), TextureName(0),
-  InternalFormat(GL_RGBA), PixelFormat(GL_BGRA_EXT),
+ : ITexture(name), Driver(driver), Image(0),
+  TextureName(0), InternalFormat(GL_RGBA), PixelFormat(GL_BGRA_EXT),
   PixelType(GL_UNSIGNED_BYTE), HasMipMaps(false),
   ColorFrameBuffer(0), DepthRenderBuffer(0), StencilRenderBuffer(0)
 {
@@ -214,10 +213,10 @@ COpenGLTexture::~COpenGLTexture()
 	StencilRenderBuffer = 0;
 
 	glDeleteTextures(1, &TextureName);
-	if (ImageData)
+	if (Image)
 	{
-		delete [] ImageData;
-		ImageData=0;
+		Image->drop();
+		Image=0;
 	}
 }
 
@@ -231,7 +230,6 @@ void COpenGLTexture::getImageData(IImage* image)
 	}
 
 	ImageSize = image->getDimension();
-	OriginalSize = ImageSize;
 
 	if ( !ImageSize.Width || !ImageSize.Height)
 	{
@@ -247,39 +245,28 @@ void COpenGLTexture::getImageData(IImage* image)
 		nImageSize.Width = getTextureSizeFromSurfaceSize(ImageSize.Width);
 		nImageSize.Height = getTextureSizeFromSurfaceSize(ImageSize.Height);
 	}
-	SurfaceHasSameSize=ImageSize==nImageSize;
 
-	s32 bpp=0;
-	if (image->getColorFormat()==ECF_R8G8B8)
+	if (ImageSize==nImageSize)
 	{
-		bpp=4;
-		ColorFormat = ECF_A8R8G8B8;
-	}
-	else
-	{
-		bpp=image->getBytesPerPixel();
-		ColorFormat = image->getColorFormat();
-	}
-
-	Pitch = nImageSize.Width*bpp;
-	ImageData = new u8[Pitch * nImageSize.Height];
-
-	if (nImageSize == ImageSize)
-	{
-		void* source = image->lock();
 		if (image->getColorFormat()==ECF_R8G8B8)
-			CColorConverter::convert_R8G8B8toA8R8G8B8(source,ImageSize.Width*ImageSize.Height,ImageData);
+			Image = new CImage(ECF_A8R8G8B8, image);
 		else
-			memcpy(ImageData,source,Pitch*nImageSize.Height);
+			Image = new CImage(image->getColorFormat(), image);
 	}
 	else
 	{
-		u8* source = (u8*)image->lock();
+		if (image->getColorFormat()==ECF_R8G8B8)
+			Image = new CImage(ECF_A8R8G8B8, nImageSize);
+		else
+			Image = new CImage(image->getColorFormat(), nImageSize);
 		// scale texture
-
 		f32 sourceXStep = (f32)ImageSize.Width / (f32)nImageSize.Width;
 		f32 sourceYStep = (f32)ImageSize.Height / (f32)nImageSize.Height;
 		f32 sx,sy;
+		const s32 bpp=image->getBytesPerPixel();
+
+		u8* source = (u8*)image->lock();
+		u8* dest = (u8*)Image->lock();
 
 		// copy texture scaling
 		sy = 0.0f;
@@ -292,17 +279,17 @@ void COpenGLTexture::getImageData(IImage* image)
 				if (image->getColorFormat()==ECF_R8G8B8)
 				{
 					i*=3;
-					((s32*)ImageData)[y*nImageSize.Width + x]=SColor(255,source[i],source[i+1],source[i+2]).color;
+					((s32*)dest)[y*nImageSize.Width + x]=SColor(255,source[i],source[i+1],source[i+2]).color;
 				}
 				else
-					memcpy(&ImageData[(y*nImageSize.Width + x)*bpp],&source[i*bpp],bpp);
+					memcpy(&dest[(y*nImageSize.Width + x)*bpp],&source[i*bpp],bpp);
 				sx+=sourceXStep;
 			}
 			sy+=sourceYStep;
 		}
+		image->unlock();
+		Image->unlock();
 	}
-	image->unlock();
-	ImageSize = nImageSize;
 }
 
 
@@ -314,7 +301,7 @@ void COpenGLTexture::copyTexture(bool newTexture)
 	if (Driver->testGLError())
 		os::Printer::log("Could not bind Texture", ELL_ERROR);
 
-	switch (ColorFormat)
+	switch (Image->getColorFormat())
 	{
 		case ECF_A1R5G5B5:
 			InternalFormat=GL_RGBA;
@@ -369,12 +356,14 @@ void COpenGLTexture::copyTexture(bool newTexture)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
+	void* source = Image->lock();
 	if (newTexture)
-		glTexImage2D(GL_TEXTURE_2D, 0, InternalFormat, ImageSize.Width,
-			ImageSize.Height, 0, PixelFormat, PixelType, ImageData);
+		glTexImage2D(GL_TEXTURE_2D, 0, InternalFormat, Image->getDimension().Width,
+			Image->getDimension().Height, 0, PixelFormat, PixelType, source);
 	else
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, ImageSize.Width,
-			ImageSize.Height, PixelFormat, PixelType, ImageData);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, Image->getDimension().Width,
+			Image->getDimension().Height, PixelFormat, PixelType, source);
+	Image->unlock();
 
 	if (Driver->testGLError())
 		os::Printer::log("Could not glTexImage2D", ELL_ERROR);
@@ -396,7 +385,10 @@ inline s32 COpenGLTexture::getTextureSizeFromSurfaceSize(s32 size)
 //! lock function
 void* COpenGLTexture::lock()
 {
-	return ImageData;
+	if (Image)
+		return Image->lock();
+	else
+		return 0;
 }
 
 
@@ -405,6 +397,8 @@ void* COpenGLTexture::lock()
 void COpenGLTexture::unlock()
 {
 	copyTexture(false);
+	if (Image)
+		return Image->unlock();
 }
 
 
@@ -412,7 +406,10 @@ void COpenGLTexture::unlock()
 //! Returns original size of the texture.
 const core::dimension2d<s32>& COpenGLTexture::getOriginalSize()
 {
-	return OriginalSize;
+	if (Image)
+		return Image->getDimension();
+	else
+		return ImageSize;
 }
 
 
@@ -436,7 +433,10 @@ E_DRIVER_TYPE COpenGLTexture::getDriverType()
 //! returns color format of texture
 ECOLOR_FORMAT COpenGLTexture::getColorFormat() const
 {
-	return ColorFormat;
+	if (Image)
+		return Image->getColorFormat();
+	else
+		return ECF_A8R8G8B8;
 }
 
 
@@ -444,7 +444,10 @@ ECOLOR_FORMAT COpenGLTexture::getColorFormat() const
 //! returns pitch of texture (in bytes)
 u32 COpenGLTexture::getPitch() const
 {
-	return Pitch;
+	if (Image)
+		return Image->getPitch();
+	else
+		return 0;
 }
 
 
@@ -475,12 +478,17 @@ void COpenGLTexture::regenerateMipMapLevels()
 		return;
 		HasMipMaps=false;
 	return;
+	void* source = Image->lock();
 	if (gluBuild2DMipmaps(GL_TEXTURE_2D, InternalFormat,
 			ImageSize.Width, ImageSize.Height,
-			PixelFormat, PixelType, ImageData))
+			PixelFormat, PixelType, source))
+	{
+		Image->unlock();
 		return;
+	}
 	else
 		HasMipMaps=false;
+	Image->unlock();
 	return;
 
 	// This code is wrong as it does not take into account the image scaling
@@ -488,17 +496,19 @@ void COpenGLTexture::regenerateMipMapLevels()
 	u32 width=ImageSize.Width>>1;
 	u32 height=ImageSize.Height>>1;
 	u32 i=1;
+	source = Image->lock();
 	while (width>1 || height>1)
 	{
 		//TODO: Add image scaling
-		glTexImage2D(GL_TEXTURE_2D, i, InternalFormat, ImageSize.Width,
-			ImageSize.Height, 0, PixelFormat, PixelType, ImageData);
+		glTexImage2D(GL_TEXTURE_2D, i, InternalFormat, Image->getDimension().Width,
+			Image->getDimension().Height, 0, PixelFormat, PixelType, source);
 		if (width>1)
 			width>>=1;
 		if (height>1)
 			height>>=1;
 		++i;
 	}
+	Image->unlock();
 }
 
 bool COpenGLTexture::isFrameBufferObject()

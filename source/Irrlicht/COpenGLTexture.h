@@ -44,6 +44,7 @@ namespace video
 {
 
 class COpenGLDriver;
+class CImage;
 //! OpenGL texture.
 class COpenGLTexture : public ITexture
 {
@@ -109,12 +110,8 @@ private:
 	inline s32 getTextureSizeFromSurfaceSize(s32 size);
 
 	core::dimension2d<s32> ImageSize;
-	core::dimension2d<s32> OriginalSize;
-	s32 Pitch;
-	bool SurfaceHasSameSize; // true if Surface has the same dimension as texture.
-	u8* ImageData;
-	ECOLOR_FORMAT ColorFormat;
 	COpenGLDriver* Driver;
+	CImage* Image;
 
 	GLuint TextureName;
 	GLint InternalFormat;

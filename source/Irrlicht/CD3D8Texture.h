@@ -87,10 +87,10 @@ private:
 	bool copyTexture();
 
 	//! optimized for 16 bit to 16 copy.
-	bool copyTo16BitTexture();
+	bool copyTo16BitTexture(bool surfaceHasSameSize);
 
 	//! copies texture to 32 bit hardware texture
-	bool copyTo32BitTexture();
+	bool copyTo32BitTexture(bool surfaceHasSameSize);
 
 	bool createMipMaps(s32 level=1);
 
@@ -109,7 +109,6 @@ private:
 	core::dimension2d<s32> ImageSize;
 	s32 Pitch;
 	ECOLOR_FORMAT ColorFormat;
-	bool SurfaceHasSameSize; // true if image has the same dimension as texture.
 	bool HasMipMaps;
 	bool IsRenderTarget;
 };

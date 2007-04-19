@@ -12,7 +12,7 @@
 
 namespace irr
 {
-namespace video  
+namespace video
 {
 
 /*!

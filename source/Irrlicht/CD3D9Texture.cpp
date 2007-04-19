@@ -32,7 +32,7 @@ namespace video
 //! rendertarget constructor
 CD3D9Texture::CD3D9Texture(CD3D9Driver* driver, core::dimension2d<s32> size, const char* name)
 : ITexture(name), Image(0), Texture(0), RTTSurface(0), Driver(driver),
-	TextureSize(size), ImageSize(size), Pitch(0), SurfaceHasSameSize(true),
+	TextureSize(size), ImageSize(size), Pitch(0),
 	HasMipMaps(false), HardwareMipMaps(false), IsRenderTarget(true)
 {
 	#ifdef _DEBUG
@@ -51,7 +51,7 @@ CD3D9Texture::CD3D9Texture(CD3D9Driver* driver, core::dimension2d<s32> size, con
 CD3D9Texture::CD3D9Texture(IImage* image, CD3D9Driver* driver,
 					   u32 flags, const char* name)
 : ITexture(name), Image(image), Texture(0), RTTSurface(0), Driver(driver),
-TextureSize(0,0), ImageSize(0,0), Pitch(0), SurfaceHasSameSize(true),
+TextureSize(0,0), ImageSize(0,0), Pitch(0),
 HasMipMaps(false), HardwareMipMaps(false), IsRenderTarget(false)
 {
 	#ifdef _DEBUG
@@ -345,13 +345,11 @@ bool CD3D9Texture::copyTexture()
 		TextureSize.Width = desc.Width;
 		TextureSize.Height = desc.Height;
 
-		SurfaceHasSameSize = (TextureSize == ImageSize);
-
 		if (desc.Format == D3DFMT_A1R5G5B5)
-			return copyTo16BitTexture();
+			return copyTo16BitTexture(TextureSize == ImageSize);
 		else
 		if (desc.Format == D3DFMT_A8R8G8B8)
-			return copyTo32BitTexture();
+			return copyTo32BitTexture(TextureSize == ImageSize);
 		else
 			os::Printer::log("CD3D9Texture: Unsupported D3D9 hardware texture format", ELL_ERROR);
 	}
@@ -361,7 +359,7 @@ bool CD3D9Texture::copyTexture()
 
 
 //! copies texture to 32 bit hardware texture
-bool CD3D9Texture::copyTo32BitTexture()
+bool CD3D9Texture::copyTo32BitTexture(bool surfaceHasSameSize)
 {
 	D3DLOCKED_RECT rect;
 	HRESULT hr = Texture->LockRect(0, &rect, 0, 0);
@@ -376,7 +374,7 @@ bool CD3D9Texture::copyTo32BitTexture()
 	Pitch = rect.Pitch;
 	s32 pitch = rect.Pitch / 4;
 
-	if (SurfaceHasSameSize)
+	if (surfaceHasSameSize)
 	{
 		if (Image->getColorFormat() == ECF_A8R8G8B8)
 		{
@@ -451,7 +449,7 @@ bool CD3D9Texture::copyTo32BitTexture()
 
 
 //! optimized for 16 bit to 16 copy.
-bool CD3D9Texture::copyTo16BitTexture()
+bool CD3D9Texture::copyTo16BitTexture(bool surfaceHasSameSize)
 {
 	D3DLOCKED_RECT rect;
 	HRESULT hr = Texture->LockRect(0, &rect, 0, 0);
@@ -466,7 +464,7 @@ bool CD3D9Texture::copyTo16BitTexture()
 	Pitch = rect.Pitch;
 	s32 pitch = rect.Pitch/2;
 
-	if (SurfaceHasSameSize)
+	if (surfaceHasSameSize)
 	{
 		// copy texture
 
