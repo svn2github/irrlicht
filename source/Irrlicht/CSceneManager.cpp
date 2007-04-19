@@ -1971,6 +1971,18 @@ const c8* CSceneManager::getSceneNodeTypeName(ESCENE_NODE_TYPE type)
 	return name;
 }
 
+//! Adds a scene node to the scene by name
+ISceneNode* CSceneManager::addSceneNode(const char* sceneNodeTypeName, ISceneNode* parent)
+{
+	ISceneNode* node = 0;
+
+	for (int i=0; i<(int)SceneNodeFactoryList.size() && !node; ++i)
+			node = SceneNodeFactoryList[i]->addSceneNode(sceneNodeTypeName, parent);
+
+	return node;
+}
+
+
 //! Returns a typename from a scene node animator type or null if not found
 const c8* CSceneManager::getAnimatorTypeName(ESCENE_NODE_ANIMATOR_TYPE type)
 {
@@ -1981,6 +1993,8 @@ const c8* CSceneManager::getAnimatorTypeName(ESCENE_NODE_ANIMATOR_TYPE type)
 
 	return name;
 }
+
+
 //! Writes attributes of the scene node.
 void CSceneManager::serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options)
 {
