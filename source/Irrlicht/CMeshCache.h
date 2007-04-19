@@ -61,6 +61,10 @@ namespace scene
 		\return Returns pointer to the mesh or 0 if there is none with this number. */
 		virtual IAnimatedMesh* getMeshByIndex(s32 index);
 
+		//! Returns a mesh based on its file name.
+		/** \return Returns pointer to the mesh or 0 if there is none with this number. */
+		virtual IAnimatedMesh* getMeshByFilename(const c8* filename);
+
 		//! Returns name of a mesh based on its index number. 
 		/** \param index: Index of the mesh, number between 0 and getMeshCount()-1. 
 		Note that this is only valid until a new mesh is loaded */

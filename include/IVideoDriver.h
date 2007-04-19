@@ -235,6 +235,9 @@ namespace video
 		//! Returns amount of textures currently loaded
 		virtual s32 getTextureCount() = 0;
 
+		//! Renames a texture
+		virtual void renameTexture(ITexture* texture, const c8* newName) = 0;
+
 		//! Creates an empty Texture of specified size.
 		/** \param size: Size of the texture.
 		\param name: A name for the texture. Later calls to getTexture() with this name

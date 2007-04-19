@@ -218,6 +218,14 @@ void CMeshCache::clear()
 	Meshes.clear();
 }
 
+//! Returns a mesh based on its file name.
+IAnimatedMesh* CMeshCache::getMeshByFilename(const c8* filename)
+{
+	core::stringc str = filename;
+	str.make_lower();
+	return findMesh(str.c_str());
+}
+
 } // end namespace scene
 } // end namespace irr
 

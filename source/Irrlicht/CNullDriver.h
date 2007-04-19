@@ -58,6 +58,9 @@ namespace video
 		//! Returns amount of textures currently loaded
 		virtual s32 getTextureCount();
 
+		//! Renames a texture
+		virtual void renameTexture(ITexture* texture, const c8* newName);
+
 		//! creates a Texture
 		virtual ITexture* addTexture(const core::dimension2d<s32>& size, const c8* name, ECOLOR_FORMAT format = ECF_A8R8G8B8);
 

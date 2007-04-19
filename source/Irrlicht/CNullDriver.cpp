@@ -274,6 +274,20 @@ s32 CNullDriver::getTextureCount()
 }
 
 
+//! Renames a texture
+void CNullDriver::renameTexture(ITexture* texture, const c8* newName)
+{
+	// we can do a const_cast here safely, the name of the ITexture interface
+	// is only readonly to prevent the user changing the textures name without invoking
+	// this method, because the texures will need resorting afterwards
+
+	core::stringc& name = const_cast<core::stringc&>(texture->getName());
+	name = newName;
+
+	Textures.sort();
+}
+
+
 //! loads a Texture
 ITexture* CNullDriver::getTexture(const c8* filename)
 {
