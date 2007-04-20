@@ -11,7 +11,7 @@ namespace scene
 
 //! constructor
 CSceneNodeAnimatorRotation::CSceneNodeAnimatorRotation(u32 time, const core::vector3df& rotation)
-: Rotation(rotation), StartTime(time), DiffTime(0)
+: Rotation(rotation), StartTime(time)
 {
 	#ifdef _DEBUG
 	setDebugName("CSceneNodeAnimatorRotation");
@@ -31,12 +31,15 @@ void CSceneNodeAnimatorRotation::animateNode(ISceneNode* node, u32 timeMs)
 {
 	if (node) // thanks to warui for this fix
 	{
-		if ((timeMs-StartTime) != 0)
-			DiffTime=timeMs-StartTime;
-		core::vector3df NewRotation = node->getRotation();
-		NewRotation += Rotation* ((f32)DiffTime/10.0f);
-		node->setRotation(NewRotation);
-		StartTime=timeMs;
+		u32 diffTime = timeMs - StartTime;
+
+		if (diffTime != 0)
+		{
+			core::vector3df NewRotation = node->getRotation(); 
+			NewRotation += Rotation* ((diffTime)/10.0f); 
+			node->setRotation(NewRotation); 
+			StartTime=timeMs; 
+		}
 	}
 }
 

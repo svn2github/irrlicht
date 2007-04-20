@@ -71,7 +71,12 @@ ISceneNode* CDefaultSceneNodeFactory::addSceneNode(ESCENE_NODE_TYPE type, IScene
 	case ESNT_WATER_SURFACE:
 		return Manager->addWaterSurfaceSceneNode(0, 2.0f, 300.0f, 10.0f, parent);
 	case ESNT_TERRAIN:
-		return Manager->addTerrainSceneNode((const char*)0, parent);
+		return Manager->addTerrainSceneNode((const char*)0, parent, -1, 
+							core::vector3df(0.0f,0.0f,0.0f),
+							core::vector3df(0.0f,0.0f,0.0f),
+							core::vector3df(1.0f,1.0f,1.0f),
+							video::SColor(255,255,255,255),
+							4, ETPS_17, 0, true);
 	case ESNT_SKY_BOX:
 		return Manager->addSkyBoxSceneNode(0,0,0,0,0,0, parent);
 	case ESNT_SHADOW_VOLUME:

@@ -16,6 +16,10 @@
 
 namespace irr
 {
+namespace io
+{
+	class IFileSystem;
+}
 namespace scene
 {
 	//! A scene node for displaying terrain using the geo mip map algorithm.
@@ -39,7 +43,7 @@ namespace scene
 		//! \param scale: The scale factor for the terrain.  If you're using a heightmap of size 128x128 and would like
 		//! your terrain to be 12800x12800 in game units, then use a scale factor of ( core::vector ( 100.0f, 100.0f, 100.0f ).
 		//! If you use a Y scaling factor of 0.0f, then your terrain will be flat.
-		CTerrainSceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id, 
+		CTerrainSceneNode(ISceneNode* parent, ISceneManager* mgr, io::IFileSystem* fs, s32 id, 
 			s32 maxLOD = 4, E_TERRAIN_PATCH_SIZE patchSize = ETPS_17,
 			const core::vector3df& position = core::vector3df(0.0f, 0.0f, 0.0f),
 			const core::vector3df& rotation = core::vector3df(0.0f, 0.0f, 0.0f),
@@ -206,6 +210,12 @@ namespace scene
 		//! Returns type of the scene node
 		virtual ESCENE_NODE_TYPE getType() const { return ESNT_TERRAIN; }
 
+		//! Writes attributes of the scene node.
+		virtual void serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options=0);
+
+		//! Reads attributes of the scene node.
+		virtual void deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options=0);
+
 	private:
 
 		friend class CTerrainTriangleSelector;
@@ -305,6 +315,12 @@ namespace scene
 		core::vector3df	OldCameraRotation;
 		f32 CameraMovementDelta;
 		f32 CameraRotationDelta;
+
+		// needed for (de)serialization
+		f32 TCoordScale1;
+		f32 TCoordScale2;
+		core::stringc HeightmapFile;
+		io::IFileSystem* FileSystem;
 
 	};
 

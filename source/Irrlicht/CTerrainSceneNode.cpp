@@ -16,6 +16,8 @@
 #include "irrMath.h"
 #include "os.h"
 #include "IGUIFont.h"
+#include "IFileSystem.h"
+#include "IReadFile.h"
 
 namespace irr
 {
@@ -24,19 +26,25 @@ namespace scene
 
 	//! constructor
 	CTerrainSceneNode::CTerrainSceneNode(ISceneNode* parent, ISceneManager* mgr,
-			s32 id, s32 maxLOD, E_TERRAIN_PATCH_SIZE patchSize, const core::vector3df& position,
-			const core::vector3df& rotation, const core::vector3df& scale)
+			io::IFileSystem* fs, s32 id, s32 maxLOD, E_TERRAIN_PATCH_SIZE patchSize,
+			const core::vector3df& position,
+			const core::vector3df& rotation, 
+			const core::vector3df& scale)
 	: ITerrainSceneNode(parent, mgr, id, position, rotation, scale),
 	TerrainData(patchSize, maxLOD, position, rotation, scale),
 	VerticesToRender(0), IndicesToRender(0), DynamicSelectorUpdate(false),
 	OverrideDistanceThreshold(false), UseDefaultRotationPivot(true),
 	OldCameraPosition(core::vector3df(-99999.9f, -99999.9f, -99999.9f)),
 	OldCameraRotation(core::vector3df(-99999.9f, -99999.9f, -99999.9f)),
-	CameraMovementDelta(10.0f), CameraRotationDelta(1.0f)
+	CameraMovementDelta(10.0f), CameraRotationDelta(1.0f), FileSystem(fs),
+	TCoordScale1(1.0f), TCoordScale2(1.0f)
 	{
 		#ifdef _DEBUG
 		setDebugName("CTerrainSceneNode");
 		#endif
+
+		if (FileSystem)
+			FileSystem->grab();
 
 		setAutomaticCulling( scene::EAC_OFF );
 	}
@@ -49,6 +57,9 @@ namespace scene
 
 		if (TerrainData.Patches)
 			delete [] TerrainData.Patches;
+
+		if (FileSystem)
+			FileSystem->drop();
 	}
 
 	//! Initializes the terrain data.  Loads the vertices from the heightMapFile
@@ -65,6 +76,8 @@ namespace scene
 			os::Printer::print( "Was not able to load heightmap." );
 			return false;
 		}
+
+		HeightmapFile = file->getFileName();
 
 		// Get the dimension of the heightmap data
 		TerrainData.Size = heightMap->getDimension().Width;
@@ -626,6 +639,9 @@ namespace scene
 		if (!IsVisible || !SceneManager->getActiveCamera())
 			return;
 
+		if (!Mesh.getMeshBufferCount())
+			return;
+
 		video::IVideoDriver* driver = SceneManager->getVideoDriver();
 
 		core::matrix4 identity;
@@ -688,6 +704,9 @@ namespace scene
 	//! \param LOD: The Level Of Detail you want the indices from.
 	void CTerrainSceneNode::getMeshBufferForLOD(SMeshBufferLightMap& mb, s32 LOD )
 	{
+		if (!Mesh.getMeshBufferCount())
+			return;
+
 		if ( LOD < 0 )
 			LOD = 0;
 		else if ( LOD > TerrainData.MaxLOD - 1 )
@@ -870,6 +889,9 @@ namespace scene
 	//! specifying the relation between world space and texture coordinate space.
 	void CTerrainSceneNode::scaleTexture(f32 resolution, f32 resolution2)
 	{
+		TCoordScale1 = resolution;
+		TCoordScale2 = resolution2;
+
 		const f32 resBySize = resolution / (f32)(TerrainData.Size-1);
 		const f32 res2BySize = resolution2 / (f32)(TerrainData.Size-1);
 		u32 index = 0;
@@ -1217,6 +1239,9 @@ namespace scene
 	//! Gets the height
 	f32 CTerrainSceneNode::getHeight( f32 x, f32 z )
 	{
+		if (!Mesh.getMeshBufferCount())
+			return 0;
+
 		f32 height = -999999.9f;
 
 		core::matrix4 rotMatrix;
@@ -1251,6 +1276,59 @@ namespace scene
 		}
 
 		return height;
+	}
+
+
+	//! Writes attributes of the scene node.
+	void CTerrainSceneNode::serializeAttributes(io::IAttributes* out, 
+												io::SAttributeReadWriteOptions* options)
+	{
+		ISceneNode::serializeAttributes(out, options);
+
+		out->addString("Heightmap", HeightmapFile.c_str());
+		out->addFloat("TextureScale1", TCoordScale1);
+		out->addFloat("TextureScale2", TCoordScale2);
+	}
+
+
+	//! Reads attributes of the scene node.
+	void CTerrainSceneNode::deserializeAttributes(io::IAttributes* in,
+												  io::SAttributeReadWriteOptions* options)
+	{
+		core::stringc newHeightmap = in->getAttributeAsString("Heightmap");
+		f32 tcoordScale1 = in->getAttributeAsFloat("TextureScale1");
+		f32 tcoordScale2 = in->getAttributeAsFloat("TextureScale2");
+
+		// set possible new heightmap
+
+		if (newHeightmap.size() > 0 && 
+			newHeightmap != HeightmapFile)
+		{
+			io::IReadFile* file = FileSystem->createAndOpenFile(newHeightmap.c_str());
+			if (file)
+			{
+				loadHeightMap(file, video::SColor(255,255,255,255), 0);
+				file->drop();
+			}	
+			else
+				os::Printer::log("could not open heightmap", newHeightmap.c_str());
+		}
+
+		// set possible new scale
+
+		if (core::equals(tcoordScale1, 0))
+			tcoordScale1 = 1.0f;
+
+		if (core::equals(tcoordScale2, 0))
+			tcoordScale2 = 1.0f;
+
+		if (!core::equals(tcoordScale1, TCoordScale1) ||
+			!core::equals(tcoordScale2, TCoordScale2))
+		{
+			scaleTexture(tcoordScale1, tcoordScale2);
+		}
+
+		ISceneNode::deserializeAttributes(in, options);
 	}
 
 } // end namespace scene

@@ -575,9 +575,11 @@ namespace scene
 		{
 			out->addString	("Name", Name.c_str());
 			out->addInt	("Id", ID );
-			out->addVector3d("Position", RelativeTranslation );
-			out->addVector3d("Rotation", RelativeRotation );
-			out->addVector3d("Scale", RelativeScale );
+
+			out->addVector3d("Position", getPosition() );
+			out->addVector3d("Rotation", getRotation() );
+			out->addVector3d("Scale", getScale() );
+
 			out->addBool	("Visible", IsVisible );
 			out->addEnum	("AutomaticCulling", AutomaticCullingState, AutomaticCullingNames);
 			out->addInt	("DebugDataVisible", DebugDataVisible );
@@ -591,9 +593,11 @@ namespace scene
 		{
 			Name = in->getAttributeAsString("Name");
 			ID = in->getAttributeAsInt("Id");
-			RelativeTranslation = in->getAttributeAsVector3d("Position");
-			RelativeRotation = in->getAttributeAsVector3d("Rotation");
-			RelativeScale = in->getAttributeAsVector3d("Scale");
+
+			setPosition(in->getAttributeAsVector3d("Position"));
+			setRotation(in->getAttributeAsVector3d("Rotation"));
+			setScale(in->getAttributeAsVector3d("Scale"));
+
 			IsVisible = in->getAttributeAsBool("Visible");
 			AutomaticCullingState = (scene::E_CULLING_TYPE ) in->getAttributeAsEnumeration("AutomaticCulling", scene::AutomaticCullingNames);
 

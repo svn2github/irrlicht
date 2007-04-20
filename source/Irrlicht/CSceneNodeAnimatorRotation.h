@@ -37,7 +37,6 @@ namespace scene
 
 		core::vector3df Rotation;
 		u32 StartTime;
-		u32 DiffTime;
 	};
 
 
