@@ -68,6 +68,9 @@ namespace scene
 		//! Returns if the scene node should not copy the materials of the mesh but use them in a read only style
 		virtual bool isReadOnlyMaterials();
 
+		//! Creates a clone of this scene node and its children.
+		virtual ISceneNode* clone(ISceneNode* newParent=0, ISceneManager* newManager=0);
+
 	protected:
 
 		void copyMaterials();

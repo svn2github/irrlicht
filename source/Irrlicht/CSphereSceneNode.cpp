@@ -267,6 +267,21 @@ void CSphereSceneNode::deserializeAttributes(io::IAttributes* in, io::SAttribute
 	ISceneNode::deserializeAttributes(in, options);
 }
 
+//! Creates a clone of this scene node and its children.
+ISceneNode* CSphereSceneNode::clone(ISceneNode* newParent, ISceneManager* newManager)
+{
+	if (!newParent) newParent = Parent;
+	if (!newManager) newManager = SceneManager;
+
+	CSphereSceneNode* nb = new CSphereSceneNode(Radius, PolyCount, newParent, 
+		newManager, ID, RelativeTranslation);
+
+	nb->cloneMembers(this, newManager);
+	nb->Buffer.Material = Buffer.Material;
+
+	nb->drop();
+	return nb;
+}
 
 } // end namespace scene
 } // end namespace irr

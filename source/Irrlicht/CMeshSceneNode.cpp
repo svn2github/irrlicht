@@ -306,6 +306,24 @@ bool CMeshSceneNode::isReadOnlyMaterials()
 }
 
 
+//! Creates a clone of this scene node and its children.
+ISceneNode* CMeshSceneNode::clone(ISceneNode* newParent, ISceneManager* newManager)
+{
+	if (!newParent) newParent = Parent;
+	if (!newManager) newManager = SceneManager;
+
+	CMeshSceneNode* nb = new CMeshSceneNode(Mesh, newParent, 
+		newManager, ID, RelativeTranslation, RelativeRotation, RelativeScale);
+
+	nb->cloneMembers(this, newManager);
+	nb->ReadOnlyMaterials = ReadOnlyMaterials;
+	nb->Materials = Materials;
+
+	nb->drop();
+	return nb;
+}
+
+
 
 } // end namespace scene
 } // end namespace irr

@@ -242,6 +242,25 @@ u32 CSkyBoxSceneNode::getMaterialCount()
 }
 
 
+//! Creates a clone of this scene node and its children.
+ISceneNode* CSkyBoxSceneNode::clone(ISceneNode* newParent, ISceneManager* newManager)
+{
+	if (!newParent) newParent = Parent;
+	if (!newManager) newManager = SceneManager;
+
+	CSkyBoxSceneNode* nb = new CSkyBoxSceneNode(0,0,0,0,0,0, newParent, 
+		newManager, ID);
+
+	nb->cloneMembers(this, newManager);
+
+	for (int i=0; i<6; ++i)
+		nb->Material[i] = Material[i];
+
+	nb->drop();
+	return nb;
+}
+
+
 } // end namespace scene
 } // end namespace irr
 

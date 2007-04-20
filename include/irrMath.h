@@ -44,10 +44,10 @@ namespace core
 	//! 32bit Constant for converting from degrees to radians
 	const f32 DEGTORAD   = PI / 180.0f;
 
-	//! 32bit constant for converting from radians to degrees
+	//! 32bit constant for converting from radians to degrees (formally known as GRAD_PI)
 	const f32 RADTODEG   = 180.0f / PI;
 
-	//! 64bit constant for converting from degrees to radians
+	//! 64bit constant for converting from degrees to radians (formally known as GRAD_PI2)
 	const f64 DEGTORAD64 = PI64 / 180.0;
 
 	//! 64bit constant for converting from radians to degrees

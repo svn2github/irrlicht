@@ -157,6 +157,23 @@ void CCubeSceneNode::deserializeAttributes(io::IAttributes* in, io::SAttributeRe
 }
 
 
+//! Creates a clone of this scene node and its children.
+ISceneNode* CCubeSceneNode::clone(ISceneNode* newParent, ISceneManager* newManager)
+{
+	if (!newParent) newParent = Parent;
+	if (!newManager) newManager = SceneManager;
+
+	CCubeSceneNode* nb = new CCubeSceneNode(Size, newParent, 
+		newManager, ID, RelativeTranslation);
+
+	nb->cloneMembers(this, newManager);
+	nb->Buffer.Material = Buffer.Material;
+
+	nb->drop();
+	return nb;
+}
+
+
 
 } // end namespace scene
 } // end namespace irr

@@ -165,6 +165,23 @@ void CLightSceneNode::deserializeAttributes(io::IAttributes* in, io::SAttributeR
 	ILightSceneNode::deserializeAttributes(in, options);
 }
 
+//! Creates a clone of this scene node and its children.
+ISceneNode* CLightSceneNode::clone(ISceneNode* newParent, ISceneManager* newManager)
+{
+	if (!newParent) newParent = Parent;
+	if (!newManager) newManager = SceneManager;
+
+	CLightSceneNode* nb = new CLightSceneNode(newParent, 
+		newManager, ID, RelativeTranslation, LightData.DiffuseColor, LightData.Radius);
+
+	nb->cloneMembers(this, newManager);
+	nb->LightData = LightData;
+	nb->BBox = BBox;
+
+	nb->drop();
+	return nb;
+}
+
 } // end namespace scene
 } // end namespace irr
 

@@ -68,6 +68,9 @@ public:
 
 	//! Returns type of the scene node
 	virtual ESCENE_NODE_TYPE getType() const { return ESNT_BILLBOARD; }
+
+	//! Creates a clone of this scene node and its children.
+	virtual ISceneNode* clone(ISceneNode* newParent=0, ISceneManager* newManager=0);
 	
 private:
 

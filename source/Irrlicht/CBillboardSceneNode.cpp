@@ -223,6 +223,23 @@ void CBillboardSceneNode::getColor(video::SColor & topColor, video::SColor & bot
 }
 
 
+//! Creates a clone of this scene node and its children.
+ISceneNode* CBillboardSceneNode::clone(ISceneNode* newParent, ISceneManager* newManager)
+{
+	if (!newParent) newParent = Parent;
+	if (!newManager) newManager = SceneManager;
+
+	CBillboardSceneNode* nb = new CBillboardSceneNode(newParent, 
+		newManager, ID, RelativeTranslation, Size);
+
+	nb->cloneMembers(this, newManager);
+	nb->Material = Material;
+
+	nb->drop();
+	return nb;
+}
+
+
 } // end namespace scene
 } // end namespace irr
 
