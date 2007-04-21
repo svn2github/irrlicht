@@ -216,6 +216,9 @@ namespace scene
 		//! Reads attributes of the scene node.
 		virtual void deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options=0);
 
+		//! Creates a clone of this scene node and its children.
+		virtual ISceneNode* clone(ISceneNode* newParent, ISceneManager* newManager);
+
 	private:
 
 		friend class CTerrainTriangleSelector;
@@ -310,6 +313,7 @@ namespace scene
 		bool DynamicSelectorUpdate;
 		bool OverrideDistanceThreshold;
 		bool UseDefaultRotationPivot;
+		bool ForceRecalculation;
 
 		core::vector3df	OldCameraPosition;
 		core::vector3df	OldCameraRotation;

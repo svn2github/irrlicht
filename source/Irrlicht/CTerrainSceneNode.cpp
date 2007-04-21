@@ -37,7 +37,7 @@ namespace scene
 	OldCameraPosition(core::vector3df(-99999.9f, -99999.9f, -99999.9f)),
 	OldCameraRotation(core::vector3df(-99999.9f, -99999.9f, -99999.9f)),
 	CameraMovementDelta(10.0f), CameraRotationDelta(1.0f), FileSystem(fs),
-	TCoordScale1(1.0f), TCoordScale2(1.0f)
+	TCoordScale1(1.0f), TCoordScale2(1.0f), ForceRecalculation(false)
 	{
 		#ifdef _DEBUG
 		setDebugName("CTerrainSceneNode");
@@ -386,6 +386,7 @@ namespace scene
 	{
 		TerrainData.Scale = scale;
 		applyTransformation();
+		ForceRecalculation = true;
 	}
 
 	//! Sets the rotation of the node. This only modifies
@@ -395,6 +396,7 @@ namespace scene
 	{
 		TerrainData.Rotation = rotation;
 		applyTransformation();
+		ForceRecalculation = true;
 	}
 
 	//! Sets the pivot point for rotation of this node.  This is useful for the TiledTerrainManager to
@@ -412,6 +414,7 @@ namespace scene
 	{
 		TerrainData.Position = newpos;
 		applyTransformation();
+		ForceRecalculation = true;
 	}
 
 	//! Apply transformation changes( scale, position, rotation )
@@ -452,6 +455,7 @@ namespace scene
 		preRenderLODCalculations();
 		preRenderIndicesCalculations();
 		ISceneNode::OnRegisterSceneNode();
+		ForceRecalculation = false;
 	}
 
 	void CTerrainSceneNode::preRenderLODCalculations()
@@ -467,14 +471,17 @@ namespace scene
 		core::vector3df cameraPosition = SceneManager->getActiveCamera()->getPosition ( );
 
 		// Only check on the Camera's Y Rotation
-		if (( fabs(cameraRotation.X - OldCameraRotation.X) < CameraRotationDelta) &&
-			( fabs(cameraRotation.Y - OldCameraRotation.Y) < CameraRotationDelta))
+		if (!ForceRecalculation)
 		{
-			if ((fabs(cameraPosition.X - OldCameraPosition.X) < CameraMovementDelta) &&
-				(fabs(cameraPosition.Y - OldCameraPosition.Y) < CameraMovementDelta) &&
-				(fabs(cameraPosition.Z - OldCameraPosition.Z) < CameraMovementDelta))
+			if (( fabs(cameraRotation.X - OldCameraRotation.X) < CameraRotationDelta) &&
+				( fabs(cameraRotation.Y - OldCameraRotation.Y) < CameraRotationDelta))
 			{
-				return;
+				if ((fabs(cameraPosition.X - OldCameraPosition.X) < CameraMovementDelta) &&
+					(fabs(cameraPosition.Y - OldCameraPosition.Y) < CameraMovementDelta) &&
+					(fabs(cameraPosition.Z - OldCameraPosition.Z) < CameraMovementDelta))
+				{
+					return;
+				}
 			}
 		}
 
@@ -1329,6 +1336,56 @@ namespace scene
 		}
 
 		ISceneNode::deserializeAttributes(in, options);
+	}
+
+
+	//! Creates a clone of this scene node and its children.
+	ISceneNode* CTerrainSceneNode::clone(ISceneNode* newParent, ISceneManager* newManager)
+	{
+		if (!newParent) newParent = Parent;
+		if (!newManager) newManager = SceneManager;
+
+		CTerrainSceneNode* nb = new CTerrainSceneNode(
+			newParent, newManager, FileSystem, ID, 
+			4, ETPS_17,	getPosition(), getRotation(), getScale());
+
+		nb->cloneMembers(this, newManager);
+		
+		// instead of cloning the data structures, recreate the terrain.
+		// (temporary solution)
+
+		// load file
+
+		io::IReadFile* file = FileSystem->createAndOpenFile(HeightmapFile.c_str());
+		if (file)
+		{
+			nb->loadHeightMap(file, video::SColor(255,255,255,255), 0);
+			file->drop();
+		}	
+
+		// scale textures
+
+		nb->scaleTexture(TCoordScale1, TCoordScale2);
+
+		// copy materials
+
+		for (unsigned int m = 0; m<Mesh.getMeshBufferCount(); ++m)
+		{
+			if (nb->Mesh.getMeshBufferCount()>m &&
+				nb->Mesh.getMeshBuffer(m) &&
+				Mesh.getMeshBuffer(m))
+			{
+				nb->Mesh.getMeshBuffer(m)->getMaterial() = 
+					Mesh.getMeshBuffer(m)->getMaterial();
+			}
+		}
+
+		nb->RenderBuffer.Material = RenderBuffer.Material;
+
+		// finish
+
+		nb->drop();
+		return nb;
 	}
 
 } // end namespace scene
