@@ -33,11 +33,11 @@ namespace scene
 	: ITerrainSceneNode(parent, mgr, id, position, rotation, scale),
 	TerrainData(patchSize, maxLOD, position, rotation, scale),
 	VerticesToRender(0), IndicesToRender(0), DynamicSelectorUpdate(false),
-	OverrideDistanceThreshold(false), UseDefaultRotationPivot(true),
+	OverrideDistanceThreshold(false), UseDefaultRotationPivot(true), ForceRecalculation(false),
 	OldCameraPosition(core::vector3df(-99999.9f, -99999.9f, -99999.9f)),
 	OldCameraRotation(core::vector3df(-99999.9f, -99999.9f, -99999.9f)),
-	CameraMovementDelta(10.0f), CameraRotationDelta(1.0f), FileSystem(fs),
-	TCoordScale1(1.0f), TCoordScale2(1.0f), ForceRecalculation(false)
+	CameraMovementDelta(10.0f), CameraRotationDelta(1.0f),
+	TCoordScale1(1.0f), TCoordScale2(1.0f), FileSystem(fs)
 	{
 		#ifdef _DEBUG
 		setDebugName("CTerrainSceneNode");

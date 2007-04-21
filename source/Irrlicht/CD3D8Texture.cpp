@@ -479,9 +479,6 @@ inline s32 CD3D8Texture::getTextureSizeFromImageSize(s32 size)
 	while(ts < size)
 		ts <<= 1;
 
-	if (ts > size && ts > 64)
-		ts >>= 1;
-
 	return ts;
 }
 
