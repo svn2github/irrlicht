@@ -1668,7 +1668,7 @@ void CSceneManager::readSceneNode(io::IXMLReader* reader, ISceneNode* parent, IS
 			// find node type and create it
 			core::stringc attrName = reader->getAttributeValue(IRR_XML_FORMAT_NODE_ATTR_TYPE.c_str());
 
-			for (int i=0; i<(int)SceneNodeFactoryList.size() && !node; ++i)
+			for (int i=(int)SceneNodeFactoryList.size()-1; i>=0 && !node; --i)
 				node = SceneNodeFactoryList[i]->addSceneNode(attrName.c_str(), parent);
 
 			if (!node)
@@ -1975,7 +1975,7 @@ const c8* CSceneManager::getSceneNodeTypeName(ESCENE_NODE_TYPE type)
 {
 	const char* name = 0;
 
-	for (int i=0; !name && i<(int)SceneNodeFactoryList.size(); ++i)
+	for (int i=(int)SceneNodeFactoryList.size()-1; !name && i>=0; --i)
 		name = SceneNodeFactoryList[i]->getCreateableSceneNodeTypeName(type);
 
 	return name;
@@ -1986,7 +1986,7 @@ ISceneNode* CSceneManager::addSceneNode(const char* sceneNodeTypeName, ISceneNod
 {
 	ISceneNode* node = 0;
 
-	for (int i=0; i<(int)SceneNodeFactoryList.size() && !node; ++i)
+	for (int i=(int)SceneNodeFactoryList.size()-1; i>=0 && !node; --i)
 			node = SceneNodeFactoryList[i]->addSceneNode(sceneNodeTypeName, parent);
 
 	return node;
