@@ -16,8 +16,8 @@ namespace gui
 
 //! constructor
 CGUIImage::CGUIImage(IGUIEnvironment* environment, IGUIElement* parent, s32 id, core::rect<s32> rectangle)
-: IGUIImage(environment, parent, id, rectangle), Texture(0), UseAlphaChannel(false), 
-	Color(255,255,255,255), ScaleImage(false)
+: IGUIImage(environment, parent, id, rectangle), Color(255,255,255,255),
+	Texture(0), UseAlphaChannel(false), ScaleImage(false)
 {
 	#ifdef _DEBUG
 	setDebugName("CGUIImage");
@@ -46,6 +46,7 @@ void CGUIImage::setImage(video::ITexture* image)
 	if (Texture)
 		Texture->grab();
 }
+
 
 //! sets the color of the image
 void CGUIImage::setColor(video::SColor color)
