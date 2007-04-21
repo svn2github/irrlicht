@@ -113,6 +113,7 @@ Compiler version defines: VC6.0 : 1200, VC7.0 : 1300, VC7.1 : 1310, VC8.0 : 1400
 #endif // _IRR_MANAGED_MARSHALLING_BUGFIX
 
 
+// memory debugging
 #if defined(_DEBUG) && defined(IRRLICHT_EXPORTS) && defined(_MSC_VER) && \
 	(_MSC_VER > 1299) && !defined(_IRR_DONT_DO_MEMORY_DEBUGGING_HERE)
 	
@@ -129,6 +130,7 @@ Compiler version defines: VC6.0 : 1200, VC7.0 : 1300, VC7.1 : 1310, VC8.0 : 1400
 #pragma warning( disable: 4786)
 #endif // _MSC
 
+
 //! ignore VC8 warning deprecated
 /** The microsoft compiler */
 #if defined(_IRR_WINDOWS_) && defined(_MSC_VER) && (_MSC_VER >= 1400)
@@ -136,6 +138,14 @@ Compiler version defines: VC6.0 : 1200, VC7.0 : 1300, VC7.1 : 1310, VC8.0 : 1400
 	//#define _CRT_SECURE_NO_DEPRECATE 1
 	//#define _CRT_NONSTDC_NO_DEPRECATE 1
 #endif
+
+
+//! creates four CC codes used in Irrlicht for simple ids
+/** some compilers can create those by directly writing the
+code like 'code', but some generate warnings so we use this macro here */
+#define MAKE_IRR_ID(c0, c1, c2, c3)                       \
+                ((u32)(u8)(c0) | ((u32)(u8)(c1) << 8) |   \
+                ((u32)(u8)(c2) << 16) | ((u32)(u8)(c3) << 24 ))
 
 
 #endif // __IRR_TYPES_H_INCLUDED__

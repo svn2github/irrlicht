@@ -502,6 +502,12 @@
 				Name="scene"
 				Filter="">
 				<File
+					RelativePath="..\..\include\ECullingTypes.h">
+				</File>
+				<File
+					RelativePath="..\..\include\EDebugSceneTypes.h">
+				</File>
+				<File
 					RelativePath=".\..\..\include\ESceneNodeAnimatorTypes.h">
 				</File>
 				<File

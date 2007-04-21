@@ -6,6 +6,8 @@
 #define __C_DEFAULT_SCENE_NODE_FACTORY_H_INCLUDED__
 
 #include "ISceneNodeFactory.h"
+#include "irrArray.h"
+#include "irrString.h"
 
 namespace irr
 {
@@ -55,6 +57,18 @@ namespace scene
 	private:
 
 		ESCENE_NODE_TYPE getTypeFromName(const c8* name);
+
+		struct SSceneNodeTypePair
+		{
+			SSceneNodeTypePair(ESCENE_NODE_TYPE type, const c8* name)
+				: Type(type), TypeName(name)
+			{}
+
+			ESCENE_NODE_TYPE Type;
+			core::stringc TypeName;
+		};
+
+		core::array<SSceneNodeTypePair> SupportedSceneNodeTypes;
 
 		ISceneManager* Manager;
 	};

@@ -7,6 +7,8 @@
 
 #include "IUnknown.h"
 #include "ESceneNodeTypes.h"
+#include "ECullingTypes.h"
+#include "EDebugSceneTypes.h"
 #include "ISceneManager.h"
 #include "ISceneNodeAnimator.h"
 #include "ITriangleSelector.h"
