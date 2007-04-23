@@ -13,9 +13,10 @@
 #include <windows.h>
 #include <GL/gl.h>
 #include "glext.h"
-#endif
-
-#ifdef LINUX
+#elif defined(MACOSX)
+#include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
+#else
 #if defined(_IRR_OPENGL_USE_EXTPOINTER_)
 #define GL_GLEXT_LEGACY 1
 #endif
@@ -25,10 +26,6 @@
 #endif
 #endif
 
-#ifdef MACOSX
-#include <OpenGL/gl.h>
-#include <OpenGL/glext.h>
-#endif
 
 #include "IMaterialRenderer.h"
 #include "IMaterialRendererServices.h"

@@ -12,7 +12,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <GL/gl.h>
-#elif defined(LINUX)
+#elif defined(MACOSX)
+#include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
+#else
 #if defined(_IRR_OPENGL_USE_EXTPOINTER_)
 #define GL_GLEXT_LEGACY 1
 #endif
@@ -20,9 +23,6 @@
 #if defined(_IRR_OPENGL_USE_EXTPOINTER_)
 #include "glext.h"
 #endif
-#elif defined(MACOSX)
-#include <OpenGL/gl.h>
-#include <OpenGL/glext.h>
 #endif
 
 #include "IMaterialRenderer.h"

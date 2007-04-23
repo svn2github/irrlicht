@@ -82,7 +82,7 @@ namespace irr
 
 		//! create the driver
 		void createDriver(const core::dimension2d<s32>& windowSize,
-					u32 bits, bool vsync);
+					bool vsync);
 
 		bool createWindow(const core::dimension2d<s32>& windowSize, u32 bits);
 

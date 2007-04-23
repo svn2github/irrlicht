@@ -18,9 +18,7 @@
 
 #ifdef _IRR_WINDOWS_
 #include <direct.h> // for _chdir
-#endif
-
-#if (defined(LINUX) || defined(MACOSX))
+#else
 #include <unistd.h>
 #include <limits.h>
 #include <stdlib.h>

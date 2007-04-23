@@ -87,7 +87,7 @@ CIrrDeviceLinux::CIrrDeviceLinux(video::E_DRIVER_TYPE driverType,
 	CursorControl = new CCursorControl(this, driverType == video::EDT_NULL);
 
 	// create driver
-	createDriver(windowSize, bits, vsync);
+	createDriver(windowSize, vsync);
 
 	if (!VideoDriver)
 		return;
@@ -601,7 +601,7 @@ bool CIrrDeviceLinux::createWindow(const core::dimension2d<s32>& windowSize,
 
 //! create the driver
 void CIrrDeviceLinux::createDriver(const core::dimension2d<s32>& windowSize,
-				   u32 bits, bool vsync)
+				   bool vsync)
 {
 	switch(DriverType)
 	{
