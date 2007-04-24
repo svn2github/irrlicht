@@ -16,6 +16,10 @@
 #include "CImage.h"
 #include "os.h"
 
+#ifdef _IRR_SDL_
+#include <SDL/SDL.h>
+#endif
+
 namespace irr
 {
 namespace video
@@ -292,6 +296,51 @@ COpenGLDriver::~COpenGLDriver()
 #endif // LINUX
 
 
+// -----------------------------------------------------------------------
+// SDL CONSTRUCTOR
+// -----------------------------------------------------------------------
+#ifdef _IRR_SDL_
+//! SDL constructor and init code
+COpenGLDriver::COpenGLDriver(const core::dimension2d<s32>& screenSize, bool fullscreen, bool stencilBuffer, io::IFileSystem* io, bool vsync, bool antiAlias)
+: CNullDriver(io, screenSize),
+	CurrentRenderMode(ERM_NONE), ResetRenderStates(true), Transformation3DChanged(true),
+	StencilBuffer(stencilBuffer), AntiAlias(antiAlias),
+	MultiTextureExtension(false), MultiSamplingExtension(false), AnisotropyExtension(false),
+	ARBVertexProgramExtension(false), ARBFragmentProgramExtension(false),
+	ARBShadingLanguage100Extension(false), SeparateStencilExtension(false),
+	GenerateMipmapExtension(false), TextureCompressionExtension(false),
+	TextureNPOTExtension(false), FramebufferObjectExtension(false), EXTPackedDepthStencil(false),
+	RenderTargetTexture(0), LastSetLight(-1), MaxAnisotropy(1),
+	MaxTextureUnits(1), MaxLights(1), CurrentRendertargetSize(0,0)
+#ifdef _IRR_OPENGL_USE_EXTPOINTER_
+	,pGlActiveTextureARB(0), pGlClientActiveTextureARB(0),
+	pGlGenProgramsARB(0), pGlBindProgramARB(0), pGlProgramStringARB(0),
+	pGlDeleteProgramsARB(0), pGlProgramLocalParameter4fvARB(0)
+		#ifdef PFNGLCOMPRESSEDTEXIMAGE2DPROC
+			,pGlCompressedTexImage2D(0)
+		#endif // PFNGLCOMPRESSEDTEXIMAGE2DPROC
+    ,pGlBindFramebufferEXT(0), pGlDeleteFramebuffersEXT(0), pGlGenFramebuffersEXT(0),
+    pGlCheckFramebufferStatusEXT(0), pGlFramebufferTexture2DEXT(0),
+    pGlBindRenderbufferEXT(0), pGlDeleteRenderbuffersEXT(0), pGlGenRenderbuffersEXT(0),
+    pGlRenderbufferStorageEXT(0), pGlFramebufferRenderbufferEXT(0)
+#endif
+{
+	#ifdef _DEBUG
+	setDebugName("COpenGLDriver");
+	#endif
+
+	genericDriverInit(screenSize);
+}
+
+//! SDL destructor
+COpenGLDriver::~COpenGLDriver()
+{
+	deleteAllTextures();
+}
+
+#endif // _IRR_SDL_
+
+
 
 // -----------------------------------------------------------------------
 // METHODS
@@ -561,9 +610,12 @@ void COpenGLDriver::loadExtensions()
 		// get vsync extension
 		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)wglGetProcAddress( "wglSwapIntervalEXT" );
 
-		#elif defined(LINUX)
+		#elif defined(LINUX) || defined (_IRR_SDL_)
 			#ifdef _IRR_OPENGL_USE_EXTPOINTER_
 
+			#ifdef _IRR_SDL_
+				#define IRR_OGL_LOAD_EXTENSION(x) SDL_GL_GetProcAddress(reinterpret_cast<const char*>(x))
+			#else
 			// Accessing the correct function is quite complex
 			// All libraries should support the ARB version, however
 			// since GLX 1.4 the non-ARB version is the official one
@@ -585,6 +637,7 @@ void COpenGLDriver::loadExtensions()
 					IRR_OGL_LOAD_EXTENSION=glXGetProcAddressARB;
 			#else
 				#define IRR_OGL_LOAD_EXTENSION glXGetProcAddressARB
+			#endif
 			#endif
 
 			pGlActiveTextureARB = (PFNGLACTIVETEXTUREARBPROC)
@@ -693,7 +746,7 @@ void COpenGLDriver::loadExtensions()
 				IRR_OGL_LOAD_EXTENSION(reinterpret_cast<const GLubyte*>("glCompressedTexImage2D"));
 			#endif // PFNGLCOMPRESSEDTEXIMAGE2DPROC
 
-#ifdef GLX_SGI_swap_control
+#if defined(GLX_SGI_swap_control) && !defined(_IRR_SDL_)
 			// get vsync extension
 			glxSwapIntervalSGI = (PFNGLXSWAPINTERVALSGIPROC)IRR_OGL_LOAD_EXTENSION(reinterpret_cast<const GLubyte*>("glXSwapIntervalSGI"));
 #endif
@@ -765,16 +818,17 @@ bool COpenGLDriver::endScene( s32 windowId, core::rect<s32>* sourceRect )
 
 #ifdef _IRR_WINDOWS_
 	return SwapBuffers(HDc) == TRUE;
-#endif
-
-#ifdef LINUX
+#elif defined(LINUX)
 	glXSwapBuffers(XDisplay, XWindow);
 	return true;
-#endif
-
-#ifdef MACOSX
+#elif defined(MACOSX)
 	_device->flush();
 	return true;
+#elif defined(_IRR_SDL_)
+	SDL_GL_SwapBuffers();
+	return true;
+#else
+	return false;
 #endif
 }
 
@@ -3085,6 +3139,22 @@ IVideoDriver* createOpenGLDriver(const core::dimension2d<s32>& screenSize,
 #endif //  _IRR_COMPILE_WITH_OPENGL_
 }
 #endif // LINUX
+
+// -----------------------------------
+// SDL VERSION
+// -----------------------------------
+#ifdef _IRR_SDL_
+IVideoDriver* createOpenGLDriver(const core::dimension2d<s32>& screenSize,
+		bool fullscreen, bool stencilBuffer, io::IFileSystem* io, bool vsync, bool antiAlias)
+{
+#ifdef _IRR_COMPILE_WITH_OPENGL_
+	return new COpenGLDriver(screenSize, fullscreen, stencilBuffer,
+		io, vsync, antiAlias);
+#else
+	return 0;
+#endif //  _IRR_COMPILE_WITH_OPENGL_
+}
+#endif // _IRR_SDL_
 
 } // end namespace
 } // end namespace

@@ -76,6 +76,11 @@ namespace video
 			bool stencilBuffer, CIrrDeviceMacOSX *device,io::IFileSystem* io, bool vsync, bool antiAlias);
 		#endif
 
+		#ifdef _IRR_SDL_
+		COpenGLDriver(const core::dimension2d<s32>& screenSize, bool fullscreen,
+			bool stencilBuffer, io::IFileSystem* io, bool vsync, bool antiAlias);
+		#endif
+
 		//! destructor
 		virtual ~COpenGLDriver();
 
