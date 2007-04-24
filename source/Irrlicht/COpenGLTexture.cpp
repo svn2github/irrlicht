@@ -99,7 +99,7 @@ COpenGLTexture::COpenGLTexture(const core::dimension2d<s32>& size,
                                 bool extPackedDepthStencilSupported,
                                 const char* name,
                                 COpenGLDriver* driver)
- : ITexture(name), Driver(driver), Image(0),
+ : ITexture(name), Driver(driver), Image(0), ImageSize(size),
   TextureName(0), InternalFormat(GL_RGBA), PixelFormat(GL_BGRA_EXT),
   PixelType(GL_UNSIGNED_BYTE), HasMipMaps(false),
   ColorFrameBuffer(0), DepthRenderBuffer(0), StencilRenderBuffer(0)
@@ -218,6 +218,7 @@ COpenGLTexture::~COpenGLTexture()
 		Image->drop();
 		Image=0;
 	}
+	ImageSize.Width=Image.Height=0;
 }
 
 
