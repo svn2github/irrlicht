@@ -457,17 +457,15 @@ static void executeBlit_TextureCopy_x_to_x ( const SBlitJob * job )
 */
 static void executeBlit_TextureCopy_32_to_16 ( const SBlitJob * job )
 {
-	const u32 *src = (u32*) job->src;
-	u16 *dst = (u16*) job->dst;
-
-	u32 s;
+	const u32 *src = static_cast<const u32*>(job->src);
+	u16 *dst = static_cast<u16*>(job->dst);
 
 	for ( s32 dy = 0; dy != job->height; ++dy )
 	{
 		for ( s32 dx = 0; dx != job->width; ++dx )
 		{
 			//16 bit Blitter depends on pre-multiplied color
-			s = PixelLerp32 ( src[dx] | 0xFF000000, extractAlpha ( src[dx] ) );
+			const u32 s = PixelLerp32 ( src[dx] | 0xFF000000, extractAlpha ( src[dx] ) );
 			dst[dx] = video::A8R8G8B8toA1R5G5B5 ( s );
 		}
 

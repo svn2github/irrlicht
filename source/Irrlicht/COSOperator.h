@@ -20,7 +20,7 @@ public:
 	COSOperator(const c8* osversion);
 
 	//! destructor
-	virtual ~COSOperator();
+	virtual ~COSOperator() {};
 
 	//! returns the current operation system version as string.
 	virtual const wchar_t* getOperationSystemVersion();
@@ -45,7 +45,7 @@ public:
 
 private:
 
-	core::stringw OperationSystem;
+	core::stringw OperatingSystem;
 };
 
 } // end namespace

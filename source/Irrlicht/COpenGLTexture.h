@@ -52,7 +52,7 @@ public:
 
 	//! constructor
 	COpenGLTexture(IImage* surface, bool generateMipLevels, const char* name, COpenGLDriver* driver=0);
-    //! FrameBufferObject constructor
+	//! FrameBufferObject constructor
 	COpenGLTexture(const core::dimension2d<s32>& size, bool extPackedDepthStencilSupported, const char* name, COpenGLDriver* driver=0);
 
 	//! destructor

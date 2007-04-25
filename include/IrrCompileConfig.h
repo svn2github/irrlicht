@@ -13,15 +13,17 @@
 //! WIN32 for Windows32
 //! WIN64 for Windows64
 //! _IRR_WINDOWS_ for all irrlicht supported windows versions
-//! OS2 for OS/2
+//! _IRR_SDL_ for platform independent SDL framework
 //! MACOSX for Mac OS X
 //! LINUX for linux and unix (it is defined here if no other os is defined)
 
-#if defined(WIN32) || defined(WIN64)
+// #define _IRR_SDL_ 1
+
+#if (defined(WIN32) || defined(WIN64)) && !defined(_IRR_SDL_)
 #define _IRR_WINDOWS_
 #endif
 
-#if !defined(_IRR_WINDOWS_) && !defined(_XBOX) && !defined(OS2) && !defined(MACOSX)
+#if !defined(_IRR_WINDOWS_) && !defined(_XBOX) && !defined(_IRR_SDL_) && !defined(MACOSX) 
 #define LINUX
 #endif
 

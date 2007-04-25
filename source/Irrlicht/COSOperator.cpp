@@ -9,17 +9,12 @@
 #include <windows.h>
 #else
 #include <string.h>
-#endif
-
-#ifdef LINUX
 #include <unistd.h>
-#endif
-
 #ifdef MACOSX
 #include "OSXClipboard.h"
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>
+#endif
 #endif
 
 namespace irr
@@ -29,20 +24,14 @@ namespace irr
 // constructor
 COSOperator::COSOperator(const c8* osVersion)
 {
-	OperationSystem = osVersion;
+	OperatingSystem = osVersion;
 }
 
 
-//! destructor
-COSOperator::~COSOperator()
-{
-}
-
-
-//! returns the current operation system version as string.
+//! returns the current operating system version as string.
 const wchar_t* COSOperator::getOperationSystemVersion()
 {
-	return OperationSystem.c_str();
+	return OperatingSystem.c_str();
 }
 
 
