@@ -631,7 +631,7 @@ class map
 	//! \return: A pointer to the node, or 0 if not found
 	Node* delink(const KeyType& k)
 	{
-		Node* p = Find(k);
+		Node* p = find(k);
 		if (p == 0)
 			return 0;
 
