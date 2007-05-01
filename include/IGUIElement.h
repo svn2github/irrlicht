@@ -371,8 +371,9 @@ public:
 		{
 			child->grab();
 			child->remove();  // remove from old parent
+			child->LastParentRect = getAbsolutePosition();
 			child->Parent = this;
-			Children.push_back(child);						
+			Children.push_back(child);			
 		}
 	}
 

@@ -2,8 +2,8 @@
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
-#ifndef __I_GUI_ENVIRNMENT_H_INCLUDED__
-#define __I_GUI_ENVIRNMENT_H_INCLUDED__
+#ifndef __I_GUI_ENVIRONMENT_H_INCLUDED__
+#define __I_GUI_ENVIRONMENT_H_INCLUDED__
 
 #include "rect.h"
 #include "IUnknown.h"
