@@ -21,7 +21,7 @@
 #include <GL/gl.h>
 #define GLX_GLXEXT_LEGACY 1
 #include <GL/glx.h>
-#ifndef _IRR_OPENGL_USE_EXTPOINTER_
+#ifdef _IRR_OPENGL_USE_EXTPOINTER_
 #include "glxext.h"
 #endif
 #endif
