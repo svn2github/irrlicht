@@ -16,7 +16,7 @@
 #include "CAttributes.h"
 #include "CMemoryReadFile.h"
 
-#ifdef _IRR_WINDOWS_
+#ifdef _IRR_WINDOWS_API_
 #include <direct.h> // for _chdir
 #else
 #include <unistd.h>
@@ -183,11 +183,11 @@ bool CFileSystem::addPakFileArchive(const c8* filename, bool ignoreCase, bool ig
 //! Returns the string of the current working directory
 const c8* CFileSystem::getWorkingDirectory()
 {
-#ifdef _IRR_WINDOWS_
+#ifdef _IRR_WINDOWS_API_
 	_getcwd(WorkingDirectory, FILE_SYSTEM_MAX_PATH);
 #endif
 
-#if (defined(LINUX) || defined(MACOSX))
+#if (defined(_IRR_POSIX_API_) || defined(MACOSX))
 	getcwd(WorkingDirectory, (size_t)FILE_SYSTEM_MAX_PATH);
 #endif
 	return WorkingDirectory;
@@ -214,13 +214,13 @@ irr::core::stringc CFileSystem::getAbsolutePath(irr::core::stringc &filename)
 	c8 *p=0;
 	irr::core::stringc ret;
 
-#ifdef _IRR_WINDOWS_
+#ifdef _IRR_WINDOWS_API_
 
 	c8 fpath[_MAX_PATH];
 	p = _fullpath( fpath, filename.c_str(), _MAX_PATH);
 	ret = p;
 
-#elif (defined(LINUX) || defined(MACOSX))
+#elif (defined(_IRR_POSIX_API_) || defined(MACOSX))
 
 	c8 fpath[4096];
 	p = realpath(filename.c_str(), fpath);

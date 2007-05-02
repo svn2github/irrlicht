@@ -3,7 +3,8 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
 #include "IrrCompileConfig.h"
-#ifdef _IRR_WINDOWS_
+
+#ifdef _IRR_COMPILE_WITH_DIRECT3D_9_
 
 #define _IRR_DONT_DO_MEMORY_DEBUGGING_HERE
 #include "CD3D9Driver.h"
@@ -11,9 +12,6 @@
 #include "S3DVertex.h"
 #include "CD3D9Texture.h"
 #include "CImage.h"
-
-#ifdef _IRR_COMPILE_WITH_DIRECT3D_9_
-
 #include "CD3D9MaterialRenderer.h"
 #include "CD3D9ShaderMaterialRenderer.h"
 #include "CD3D9NormalMapRenderer.h"
@@ -25,7 +23,6 @@ namespace irr
 {
 namespace video
 {
-
 
 //! constructor
 CD3D9Driver::CD3D9Driver(const core::dimension2d<s32>& screenSize, HWND window,
@@ -424,10 +421,10 @@ bool CD3D9Driver::initDriver(const core::dimension2d<s32>& screenSize, HWND hwnd
 	setRenderStates3DMode();
 
 	// set maximal anisotropy
-	pID3DDevice->SetSamplerState(0, D3DSAMP_MAXANISOTROPY, min(16, Caps.MaxAnisotropy));
-	pID3DDevice->SetSamplerState(1, D3DSAMP_MAXANISOTROPY, min(16, Caps.MaxAnisotropy));
-	pID3DDevice->SetSamplerState(2, D3DSAMP_MAXANISOTROPY, min(16, Caps.MaxAnisotropy));
-	pID3DDevice->SetSamplerState(3, D3DSAMP_MAXANISOTROPY, min(16, Caps.MaxAnisotropy));
+	pID3DDevice->SetSamplerState(0, D3DSAMP_MAXANISOTROPY, min(16ul, Caps.MaxAnisotropy));
+	pID3DDevice->SetSamplerState(1, D3DSAMP_MAXANISOTROPY, min(16ul, Caps.MaxAnisotropy));
+	pID3DDevice->SetSamplerState(2, D3DSAMP_MAXANISOTROPY, min(16ul, Caps.MaxAnisotropy));
+	pID3DDevice->SetSamplerState(3, D3DSAMP_MAXANISOTROPY, min(16ul, Caps.MaxAnisotropy));
 
 	// so far so good.
 	return true;
@@ -2166,8 +2163,6 @@ core::dimension2d<s32> CD3D9Driver::getCurrentRenderTargetSize()
 } // end namespace irr
 
 #endif // _IRR_COMPILE_WITH_DIRECT3D_9_
-#endif // _IRR_WINDOWS_
-
 
 
 
@@ -2176,7 +2171,7 @@ namespace irr
 namespace video
 {
 
-#if (defined(_IRR_WINDOWS_) || defined(_XBOX))
+#if defined(_IRR_WINDOWS_)
 //! creates a video driver
 IVideoDriver* createDirectX9Driver(const core::dimension2d<s32>& screenSize, HWND window,
 				u32 bits, bool fullscreen, bool stencilbuffer,

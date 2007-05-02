@@ -4,7 +4,7 @@
 
 #include "CIrrDeviceLinux.h"
 
-#ifdef LINUX
+#ifdef _IRR_USE_LINUX_DEVICE_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1219,5 +1219,5 @@ IRRLICHT_API IrrlichtDevice* IRRCALLCONV createDeviceEx(const SIrrlichtCreationP
 
 } // end namespace
 
-#endif // LINUX
+#endif // _IRR_USE_LINUX_DEVICE_
 

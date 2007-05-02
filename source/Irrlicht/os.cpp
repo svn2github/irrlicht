@@ -7,7 +7,11 @@
 #include "IrrCompileConfig.h"
 #include "irrMath.h"
 
-#ifdef _IRR_WINDOWS_
+#if defined(_IRR_USE_SDL_DEVICE_)
+	#include <SDL/SDL_endian.h>
+	#define bswap_16(X) SDL_Swap16(X)
+	#define bswap_32(X) SDL_Swap32(X)
+#elif defined(_IRR_WINDOWS_API_)
 	#if (defined(_MSC_VER) && (_MSC_VER > 1298))
 		#include <stdlib.h>
 		#define bswap_16(X) _byteswap_ushort(X)
@@ -24,7 +28,7 @@
 		#include <sys/endian.h>
 		#define bswap_16(X) bswap16(X)
 		#define bswap_32(X) bswap32(X)
-	#elif !defined(__sun__) && !defined(__PPC__)
+	#elif !defined(_IRR_SOLARIS_PLATFORM_) && !defined(__PPC__)
 		#include <byteswap.h>
 	#else
 		#define bswap_16(X) ((((X)&0xFF) << 8) | (((X)&=0xFF00) >> 8))
@@ -44,17 +48,16 @@ namespace os
 }
 }
 
-#if defined(_IRR_WINDOWS_) || defined(_XBOX)
+#if defined(_IRR_WINDOWS_API_)
 // ----------------------------------------------------------------
 // Windows specific functions
 // ----------------------------------------------------------------
 
-#ifdef _IRR_WINDOWS_
+#ifdef _IRR_XBOX_PLATFORM_
+#include <xtl.h>
+#else
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#endif
-#ifdef _XBOX
-#include <xtl.h>
 #endif
 
 namespace irr
@@ -71,10 +74,8 @@ namespace os
 		delete [] tmp;
 	}
 
-
 	LARGE_INTEGER HighPerformanceFreq;
 	BOOL HighPerformanceTimerSupport = FALSE;
-
 
 	void Timer::initTimer()
 	{

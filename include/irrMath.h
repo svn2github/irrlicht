@@ -9,7 +9,7 @@
 #include "irrTypes.h"
 #include <math.h>
 
-#if defined(__sun__) || defined(__BORLANDC__) || defined (__BCPLUSPLUS__) 
+#if defined(_IRR_SOLARIS_PLATFORM_) || defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
 	#define sqrtf(X) sqrt(X)
 	#define sinf(X) sin(X)
 	#define cosf(X) cos(X)

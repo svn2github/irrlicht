@@ -7,7 +7,7 @@
 
 #include "IrrCompileConfig.h"
 
-#ifdef LINUX
+#ifdef _IRR_USE_LINUX_DEVICE_
 
 #include "CIrrDeviceStub.h"
 #include "IrrlichtDevice.h"
@@ -21,7 +21,7 @@
 #include <GL/gl.h>
 #define GLX_GLXEXT_LEGACY 1
 #include <GL/glx.h>
-#ifndef __sun__
+#ifndef _IRR_OPENGL_USE_EXTPOINTER_
 #include "glxext.h"
 #endif
 #endif
@@ -309,6 +309,6 @@ namespace irr
 
 } // end namespace irr
 
-#endif // LINUX
+#endif // _IRR_USE_LINUX_DEVICE_
 #endif // __C_IRR_DEVICE_LINUX_H_INCLUDED__
 

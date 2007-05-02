@@ -3,17 +3,16 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
 #include "IrrCompileConfig.h"
-#ifdef _IRR_WINDOWS_
 
 #define _IRR_DONT_DO_MEMORY_DEBUGGING_HERE
 #include "CD3D8Driver.h"
+
+#ifdef _IRR_COMPILE_WITH_DIRECT3D_8_
+
 #include "os.h"
 #include "S3DVertex.h"
 #include "CD3D8Texture.h"
 #include "CImage.h"
-
-#ifdef _IRR_COMPILE_WITH_DIRECT3D_8_
-
 #include "CD3D8MaterialRenderer.h"
 #include "CD3D8ShaderMaterialRenderer.h"
 #include "CD3D8NormalMapRenderer.h"
@@ -27,8 +26,8 @@ namespace video
 
 //! constructor
 CD3D8Driver::CD3D8Driver(const core::dimension2d<s32>& screenSize, HWND window,
-								bool fullscreen, bool stencilbuffer,
-								io::IFileSystem* io, bool pureSoftware, bool vsync)
+			bool fullscreen, bool stencilbuffer,
+			io::IFileSystem* io, bool pureSoftware, bool vsync)
 : CNullDriver(io, screenSize), CurrentRenderMode(ERM_NONE),
 	ResetRenderStates(true), Transformation3DChanged(false), StencilBuffer(stencilbuffer),
 	D3DLibrary(0), pID3D(0), pID3DDevice(0), PrevRenderTarget(0),
@@ -2061,15 +2060,10 @@ core::dimension2d<s32> CD3D8Driver::getCurrentRenderTargetSize()
 		return CurrentRendertargetSize;
 }
 
-
-
 } // end namespace video
 } // end namespace irr
 
 #endif // _IRR_COMPILE_WITH_DIRECT3D_8_
-#endif // _IRR_WINDOWS_
-
-
 
 
 namespace irr
@@ -2077,7 +2071,7 @@ namespace irr
 namespace video
 {
 
-#ifdef _IRR_WINDOWS_
+#ifdef _IRR_WINDOWS_API_
 //! creates a video driver
 IVideoDriver* createDirectX8Driver(const core::dimension2d<s32>& screenSize, HWND window,
 				   u32 bits, bool fullscreen, bool stencilbuffer,
@@ -2103,11 +2097,8 @@ IVideoDriver* createDirectX8Driver(const core::dimension2d<s32>& screenSize, HWN
 
 	#endif // _IRR_COMPILE_WITH_DIRECT3D_8_
 }
-#endif
+#endif // _IRR_WINDOWS_API_
 
 } // end namespace video
 } // end namespace irr
-
-
-
 

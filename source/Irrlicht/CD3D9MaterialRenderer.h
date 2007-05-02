@@ -92,7 +92,7 @@ public:
 	virtual void OnSetMaterial(SMaterial& material, const SMaterial& lastMaterial,
 		bool resetAllRenderstates, IMaterialRendererServices* services)
 	{
-		if (material.MaterialType != lastMaterial.MaterialType || 
+		if (material.MaterialType != lastMaterial.MaterialType ||
 			material.MaterialTypeParam != lastMaterial.MaterialTypeParam ||
 			resetAllRenderstates)
 		{
@@ -132,7 +132,7 @@ public:
 		u32 getD3DBlend ( E_BLEND_FACTOR factor ) const
 		{
 			u32 r = 0;
-    		switch ( factor )
+		switch ( factor )
 			{
 				case EBF_ZERO:					r = D3DBLEND_ZERO; break;
 				case EBF_ONE:					r = D3DBLEND_ONE; break;
@@ -152,7 +152,7 @@ public:
 		u32 getTexelAlpha ( E_BLEND_FACTOR factor ) const
 		{
 			u32 r = 0;
-    		switch ( factor )
+		switch ( factor )
 			{
 				case EBF_SRC_ALPHA:				r = 1; break;
 				case EBF_ONE_MINUS_SRC_ALPHA:	r = 1; break;

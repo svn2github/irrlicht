@@ -16,7 +16,7 @@
 #include "CImage.h"
 #include "os.h"
 
-#ifdef _IRR_SDL_
+#ifdef _IRR_USE_SDL_DEVICE_
 #include <SDL/SDL.h>
 #endif
 
@@ -28,7 +28,7 @@ namespace video
 // -----------------------------------------------------------------------
 // WINDOWS CONSTRUCTOR
 // -----------------------------------------------------------------------
-#ifdef _IRR_WINDOWS_
+#ifdef _IRR_USE_WINDOWS_DEVICE_
 //! Windows constructor and init code
 COpenGLDriver::COpenGLDriver(const core::dimension2d<s32>& screenSize, HWND window, bool fullscreen, bool stencilBuffer, io::IFileSystem* io, bool antiAlias)
 : CNullDriver(io, screenSize),
@@ -201,7 +201,7 @@ COpenGLDriver::~COpenGLDriver()
 
 	HDc = 0;
 }
-#endif //IRR_WINDOWS
+#endif //IRR_USE_WINDOWS_DEVICE_
 
 // -----------------------------------------------------------------------
 // MACOSX CONSTRUCTOR
@@ -237,7 +237,7 @@ COpenGLDriver::~COpenGLDriver()
 // -----------------------------------------------------------------------
 // LINUX CONSTRUCTOR
 // -----------------------------------------------------------------------
-#ifdef LINUX
+#ifdef _IRR_USE_LINUX_DEVICE_
 //! Linux constructor and init code
 COpenGLDriver::COpenGLDriver(const core::dimension2d<s32>& screenSize, bool fullscreen, bool stencilBuffer, io::IFileSystem* io, bool vsync, bool antiAlias)
 : CNullDriver(io, screenSize),
@@ -293,13 +293,13 @@ COpenGLDriver::~COpenGLDriver()
 	deleteAllTextures();
 }
 
-#endif // LINUX
+#endif // _IRR_USE_LINUX_DEVICE_
 
 
 // -----------------------------------------------------------------------
 // SDL CONSTRUCTOR
 // -----------------------------------------------------------------------
-#ifdef _IRR_SDL_
+#ifdef _IRR_USE_SDL_DEVICE_
 //! SDL constructor and init code
 COpenGLDriver::COpenGLDriver(const core::dimension2d<s32>& screenSize, bool fullscreen, bool stencilBuffer, io::IFileSystem* io, bool vsync, bool antiAlias)
 : CNullDriver(io, screenSize),
@@ -338,7 +338,7 @@ COpenGLDriver::~COpenGLDriver()
 	deleteAllTextures();
 }
 
-#endif // _IRR_SDL_
+#endif // _IRR_USE_SDL_DEVICE_
 
 
 
@@ -546,7 +546,7 @@ void COpenGLDriver::loadExtensions()
 
 	if (MultiTextureExtension)
 	{
-		#ifdef _IRR_WINDOWS_
+		#ifdef _IRR_WINDOWS_API_
 
 		// Windows
 		// get multitexturing function pointers
@@ -610,10 +610,10 @@ void COpenGLDriver::loadExtensions()
 		// get vsync extension
 		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)wglGetProcAddress( "wglSwapIntervalEXT" );
 
-		#elif defined(LINUX) || defined (_IRR_SDL_)
+		#elif defined(_IRR_USE_LINUX_DEVICE_) || defined (_IRR_USE_SDL_DEVICE_)
 			#ifdef _IRR_OPENGL_USE_EXTPOINTER_
 
-			#ifdef _IRR_SDL_
+			#ifdef _IRR_USE_SDL_DEVICE_
 				#define IRR_OGL_LOAD_EXTENSION(x) SDL_GL_GetProcAddress(reinterpret_cast<const char*>(x))
 			#else
 			// Accessing the correct function is quite complex
@@ -746,7 +746,7 @@ void COpenGLDriver::loadExtensions()
 				IRR_OGL_LOAD_EXTENSION(reinterpret_cast<const GLubyte*>("glCompressedTexImage2D"));
 			#endif // PFNGLCOMPRESSEDTEXIMAGE2DPROC
 
-#if defined(GLX_SGI_swap_control) && !defined(_IRR_SDL_)
+#if defined(GLX_SGI_swap_control) && !defined(_IRR_USE_SDL_DEVICE_)
 			// get vsync extension
 			glxSwapIntervalSGI = (PFNGLXSWAPINTERVALSGIPROC)IRR_OGL_LOAD_EXTENSION(reinterpret_cast<const GLubyte*>("glXSwapIntervalSGI"));
 #endif
@@ -783,7 +783,7 @@ void COpenGLDriver::loadExtensions()
                 IRR_OGL_LOAD_EXTENSION(reinterpret_cast<const GLubyte*>("glFramebufferRenderbufferEXT"));
 
 			#endif // _IRR_OPENGL_USE_EXTPOINTER_
-		#endif // _IRR_WINDOWS_
+		#endif // _IRR_WINDOWS_API_
 
 		// load common extensions
 
@@ -816,15 +816,15 @@ bool COpenGLDriver::endScene( s32 windowId, core::rect<s32>* sourceRect )
 {
 	CNullDriver::endScene( windowId );
 
-#ifdef _IRR_WINDOWS_
+#ifdef _IRR_USE_WINDOWS_DEVICE_
 	return SwapBuffers(HDc) == TRUE;
-#elif defined(LINUX)
+#elif defined(_IRR_USE_LINUX_DEVICE_)
 	glXSwapBuffers(XDisplay, XWindow);
 	return true;
 #elif defined(MACOSX)
 	_device->flush();
 	return true;
-#elif defined(_IRR_SDL_)
+#elif defined(_IRR_USE_SDL_DEVICE_)
 	SDL_GL_SwapBuffers();
 	return true;
 #else
@@ -3089,7 +3089,7 @@ namespace video
 // -----------------------------------
 // WINDOWS VERSION
 // -----------------------------------
-#ifdef _IRR_WINDOWS_
+#ifdef _IRR_USE_WINDOWS_DEVICE_
 IVideoDriver* createOpenGLDriver(const core::dimension2d<s32>& screenSize,
 	HWND window, u32 bits, bool fullscreen, bool stencilBuffer, io::IFileSystem* io, bool vsync, bool antiAlias)
 {
@@ -3105,7 +3105,7 @@ IVideoDriver* createOpenGLDriver(const core::dimension2d<s32>& screenSize,
 	return 0;
 #endif // _IRR_COMPILE_WITH_OPENGL_
 }
-#endif // _IRR_WINDOWS_
+#endif // _IRR_USE_WINDOWS_DEVICE_
 
 // -----------------------------------
 // MACOSX VERSION
@@ -3127,7 +3127,7 @@ IVideoDriver* createOpenGLDriver(const core::dimension2d<s32>& screenSize,
 // -----------------------------------
 // LINUX VERSION
 // -----------------------------------
-#ifdef LINUX
+#ifdef _IRR_USE_LINUX_DEVICE_
 IVideoDriver* createOpenGLDriver(const core::dimension2d<s32>& screenSize,
 		bool fullscreen, bool stencilBuffer, io::IFileSystem* io, bool vsync, bool antiAlias)
 {
@@ -3138,12 +3138,12 @@ IVideoDriver* createOpenGLDriver(const core::dimension2d<s32>& screenSize,
 	return 0;
 #endif //  _IRR_COMPILE_WITH_OPENGL_
 }
-#endif // LINUX
+#endif // _IRR_USE_LINUX_DEVICE_
 
 // -----------------------------------
 // SDL VERSION
 // -----------------------------------
-#ifdef _IRR_SDL_
+#ifdef _IRR_USE_SDL_DEVICE_
 IVideoDriver* createOpenGLDriver(const core::dimension2d<s32>& screenSize,
 		bool fullscreen, bool stencilBuffer, io::IFileSystem* io, bool vsync, bool antiAlias)
 {
@@ -3154,7 +3154,7 @@ IVideoDriver* createOpenGLDriver(const core::dimension2d<s32>& screenSize,
 	return 0;
 #endif //  _IRR_COMPILE_WITH_OPENGL_
 }
-#endif // _IRR_SDL_
+#endif // _IRR_USE_SDL_DEVICE_
 
 } // end namespace
 } // end namespace

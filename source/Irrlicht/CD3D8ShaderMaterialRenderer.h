@@ -6,7 +6,7 @@
 #define __C_D3D8_SHADER_MATERIAL_RENDERER_H_INCLUDED__
 
 #include "IrrCompileConfig.h"
-#ifdef _IRR_WINDOWS_
+#ifdef _IRR_WINDOWS_API_
 
 #ifdef _IRR_COMPILE_WITH_DIRECT3D_8_
 #include <d3d8.h>
@@ -17,7 +17,7 @@
 
 namespace irr
 {
-namespace video  
+namespace video
 {
 
 class IVideoDriver;
@@ -30,7 +30,7 @@ class CD3D8ShaderMaterialRenderer : public IMaterialRenderer
 public:
 
 	//! Public constructor
-	CD3D8ShaderMaterialRenderer(IDirect3DDevice8* d3ddev, video::IVideoDriver* driver, 
+	CD3D8ShaderMaterialRenderer(IDirect3DDevice8* d3ddev, video::IVideoDriver* driver,
 		s32& outMaterialTypeNr, const c8* vertexShaderProgram, const c8* pixelShaderProgram,
 		IShaderConstantSetCallBack* callback, IMaterialRenderer* baseMaterial, s32 userData);
 
@@ -52,7 +52,7 @@ protected:
 	//! constructor only for use by derived classes who want to
 	//! create a fall back material for example.
 	CD3D8ShaderMaterialRenderer(IDirect3DDevice8* d3ddev,
-								video::IVideoDriver* driver, 
+								video::IVideoDriver* driver,
 								IShaderConstantSetCallBack* callback,
 								IMaterialRenderer* baseMaterial, s32 userData=0);
 

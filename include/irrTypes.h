@@ -65,7 +65,7 @@ typedef double				f64;
 
 
 #include <wchar.h>
-#ifdef _IRR_WINDOWS_
+#ifdef _IRR_WINDOWS_API_
 //! Defines for s{w,n}printf because these methods do not match the ISO C
 //! standard on Windows platforms, but it does on all others.
 #define swprintf _snwprintf
@@ -86,11 +86,11 @@ typedef unsigned short wchar_t;
 #define _WCHAR_T_DEFINED
 #endif // wchar is not defined
 #endif // microsoft compiler
-#endif // _IRR_WINDOWS_
+#endif // _IRR_WINDOWS_API_
 
 //! define a break macro for debugging.
 #if defined(_DEBUG)
-#if defined(_IRR_WINDOWS_) && defined(_MSC_VER)
+#if defined(_IRR_WINDOWS_API_) && defined(_MSC_VER)
 #define _IRR_DEBUG_BREAK_IF( _CONDITION_ ) if (_CONDITION_) {_asm int 3}
 #else 
 #include "assert.h"
@@ -106,7 +106,7 @@ When you call unmanaged code that returns a bool type value of false from manage
 the return value may appear as true. See 
 http://support.microsoft.com/default.aspx?kbid=823071 for details. 
 Compiler version defines: VC6.0 : 1200, VC7.0 : 1300, VC7.1 : 1310, VC8.0 : 1400*/
-#if defined(_IRR_WINDOWS_) && defined(_MSC_VER) && (_MSC_VER > 1299) && (_MSC_VER < 1400)
+#if defined(_IRR_WINDOWS_API_) && defined(_MSC_VER) && (_MSC_VER > 1299) && (_MSC_VER < 1400)
 #define _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX __asm mov eax,100
 #else
 #define _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX
@@ -133,7 +133,7 @@ Compiler version defines: VC6.0 : 1200, VC7.0 : 1300, VC7.1 : 1310, VC8.0 : 1400
 
 //! ignore VC8 warning deprecated
 /** The microsoft compiler */
-#if defined(_IRR_WINDOWS_) && defined(_MSC_VER) && (_MSC_VER >= 1400)
+#if defined(_IRR_WINDOWS_API_) && defined(_MSC_VER) && (_MSC_VER >= 1400)
 	//#pragma warning( disable: 4996)
 	//#define _CRT_SECURE_NO_DEPRECATE 1
 	//#define _CRT_NONSTDC_NO_DEPRECATE 1

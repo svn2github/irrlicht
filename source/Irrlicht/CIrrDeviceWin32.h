@@ -6,7 +6,7 @@
 #define __C_IRR_DEVICE_WIN32_H_INCLUDED__
 
 #include "IrrCompileConfig.h"
-#ifdef _IRR_WINDOWS_
+#ifdef _IRR_USE_WINDOWS_DEVICE_
 
 #include "CIrrDeviceStub.h"
 #include "IrrlichtDevice.h"

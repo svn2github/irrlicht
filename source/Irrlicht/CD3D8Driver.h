@@ -7,21 +7,21 @@
 
 #include "IrrCompileConfig.h"
 
-#if defined(_IRR_WINDOWS_) || defined(_XBOX)
-
 #ifdef _IRR_WINDOWS_
 	#define WIN32_LEAN_AND_MEAN
-	#include "CNullDriver.h"
-	#include "IMaterialRendererServices.h"
 	#include <windows.h>
 #endif
 
-#ifdef _XBOX
+#ifdef _IRR_XBOX_PLATFORM_
 	#include <xtl.h>
 #endif
 
+// always included for static createDriver function
+#include "CNullDriver.h"
+#include "IMaterialRendererServices.h"
 
 #ifdef _IRR_COMPILE_WITH_DIRECT3D_8_
+
 #include <d3d8.h>
 
 namespace irr
@@ -277,8 +277,7 @@ namespace video
 } // end namespace video
 } // end namespace irr
 
-
 #endif // _IRR_COMPILE_WITH_DIRECT3D_8_
-#endif // _IRR_WINDOWS_
+
 #endif // __C_VIDEO_DIRECTX_8_H_INCLUDED__
 

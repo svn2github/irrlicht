@@ -9,15 +9,12 @@
 
 #include "IrrCompileConfig.h"
 
-#ifdef _IRR_SDL_
+#ifdef _IRR_USE_SDL_DEVICE_
 
 #include "IrrlichtDevice.h"
 #include "CIrrDeviceStub.h"
 #include "IImagePresenter.h"
 #include "ICursorControl.h"
-
-#include <GL/glx.h>
-#include <GL/gl.h>
 
 #include <SDL/SDL.h>
 
@@ -204,6 +201,6 @@ namespace irr
 
 } // end namespace irr
 
-#endif // _IRR_SDL_
+#endif // _IRR_USE_SDL_DEVICE_
 #endif // __C_IRR_DEVICE_SDL_H_INCLUDED__
 

@@ -290,7 +290,9 @@ HRESULT CD3D9ShaderMaterialRenderer::stubD3DXAssembleShader(LPCSTR pSrcData,  UI
 	#if ( D3DX_SDK_VERSION < 24 ) 
 		// directly link functions, old d3d sdks didn't try to load external dlls
 		// when linking to the d3dx9.lib
+		#ifdef _MSC_VER
 		#pragma comment (lib, "d3dx9.lib")
+		#endif
 
 		// invoke static linked function
 		return D3DXAssembleShader(pSrcData, SrcDataLen, pDefines, pInclude, 
@@ -348,7 +350,9 @@ HRESULT CD3D9ShaderMaterialRenderer::stubD3DXAssembleShaderFromFile(LPCSTR pSrcF
 	#if ( D3DX_SDK_VERSION < 24 ) 
 		// directly link functions, old d3d sdks didn't try to load external dlls
 		// when linking to the d3dx9.lib
+		#ifdef _MSC_VER
 		#pragma comment (lib, "d3dx9.lib")
+		#endif
 
 		// invoke static linked function
 		return D3DXAssembleShaderFromFile(pSrcFile, pDefines, pInclude, Flags, 
@@ -407,7 +411,9 @@ HRESULT CD3D9ShaderMaterialRenderer::stubD3DXCompileShader(LPCSTR pSrcData, UINT
 	#if ( D3DX_SDK_VERSION < 24 ) 
 		// directly link functions, old d3d sdks didn't try to load external dlls
 		// when linking to the d3dx9.lib
+		#ifdef _MSC_VER
 		#pragma comment (lib, "d3dx9.lib")
+		#endif
 
 		// invoke static linked function
 		return D3DXCompileShader(pSrcData, SrcDataLen, pDefines, pInclude, pFunctionName, pProfile, Flags, ppShader, ppErrorMsgs, ppConstantTable);
@@ -465,7 +471,9 @@ HRESULT CD3D9ShaderMaterialRenderer::stubD3DXCompileShaderFromFile(LPCSTR pSrcFi
 	#if ( D3DX_SDK_VERSION < 24 ) 
 		// directly link functions, old d3d sdks didn't try to load external dlls
 		// when linking to the d3dx9.lib
+		#ifdef _MSC_VER
 		#pragma comment (lib, "d3dx9.lib")
+		#endif
 
 		// invoke static linked function
 		return D3DXCompileShaderFromFile(pSrcFile, pDefines, pInclude, pFunctionName, pProfile, Flags, ppShader, ppErrorMsgs, ppConstantTable);

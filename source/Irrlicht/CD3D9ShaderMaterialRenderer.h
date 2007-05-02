@@ -16,7 +16,7 @@
 
 namespace irr
 {
-namespace video  
+namespace video
 {
 
 class IVideoDriver;
@@ -29,7 +29,7 @@ class CD3D9ShaderMaterialRenderer : public IMaterialRenderer
 public:
 
 	//! Public constructor
-	CD3D9ShaderMaterialRenderer(IDirect3DDevice9* d3ddev, video::IVideoDriver* driver, 
+	CD3D9ShaderMaterialRenderer(IDirect3DDevice9* d3ddev, video::IVideoDriver* driver,
 		s32& outMaterialTypeNr, const c8* vertexShaderProgram, const c8* pixelShaderProgram,
 		IShaderConstantSetCallBack* callback, IMaterialRenderer* baseMaterial, s32 userData);
 
@@ -51,7 +51,7 @@ protected:
 	//! constructor only for use by derived classes who want to
 	//! create a fall back material for example.
 	CD3D9ShaderMaterialRenderer(IDirect3DDevice9* d3ddev,
-								video::IVideoDriver* driver, 
+								video::IVideoDriver* driver,
 								IShaderConstantSetCallBack* callback,
 								IMaterialRenderer* baseMaterial, s32 userData=0);
 
@@ -62,7 +62,7 @@ protected:
 
 	HRESULT stubD3DXAssembleShader(LPCSTR pSrcData,  UINT SrcDataLen,
 								   CONST D3DXMACRO* pDefines, LPD3DXINCLUDE pInclude,
-								   DWORD Flags, LPD3DXBUFFER* ppShader, 
+								   DWORD Flags, LPD3DXBUFFER* ppShader,
 								   LPD3DXBUFFER* ppErrorMsgs);
 
 	HRESULT stubD3DXAssembleShaderFromFile(LPCSTR pSrcFile,
@@ -74,7 +74,7 @@ protected:
 								  LPCSTR pProfile, DWORD Flags, LPD3DXBUFFER* ppShader,
 								  LPD3DXBUFFER* ppErrorMsgs, LPD3DXCONSTANTTABLE* ppConstantTable);
 
-	HRESULT stubD3DXCompileShaderFromFile(LPCSTR pSrcFile, CONST D3DXMACRO* pDefines, 
+	HRESULT stubD3DXCompileShaderFromFile(LPCSTR pSrcFile, CONST D3DXMACRO* pDefines,
 								LPD3DXINCLUDE pInclude, LPCSTR pFunctionName,
 								LPCSTR pProfile, DWORD Flags, LPD3DXBUFFER* ppShader, LPD3DXBUFFER* ppErrorMsgs,
 								LPD3DXCONSTANTTABLE* ppConstantTable);

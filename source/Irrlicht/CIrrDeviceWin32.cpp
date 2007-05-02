@@ -4,7 +4,7 @@
 
 #include "IrrCompileConfig.h"
 
-#ifdef _IRR_WINDOWS_
+#ifdef _IRR_USE_WINDOWS_DEVICE_
 
 #include "CIrrDeviceWin32.h"
 #include "IEventReceiver.h"
@@ -951,5 +951,5 @@ IRRLICHT_API IrrlichtDevice* IRRCALLCONV createDeviceEx(
 
 } // end namespace
 
-#endif // _IRR_WINDOWS_
+#endif // _IRR_USE_WINDOWS_DEVICE_
 

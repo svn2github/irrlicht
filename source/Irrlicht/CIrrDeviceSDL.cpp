@@ -4,7 +4,7 @@
 
 #include "IrrCompileConfig.h"
 
-#ifdef _IRR_SDL_
+#ifdef _IRR_USE_SDL_DEVICE_
 
 #include "CIrrDeviceSDL.h"
 #include "IEventReceiver.h"
@@ -510,5 +510,5 @@ IRRLICHT_API IrrlichtDevice* IRRCALLCONV createDeviceEx(const SIrrlichtCreationP
 
 } // end namespace irr
 
-#endif // _IRR_SDL_
+#endif // _IRR_USE_SDL_DEVICE_
 

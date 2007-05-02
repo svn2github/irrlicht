@@ -12,7 +12,7 @@ namespace irr
 namespace io
 {
 
-#if (defined(LINUX) || defined(MACOSX))
+#if (defined(_IRR_POSIX_API_) || defined(MACOSX))
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,7 +23,7 @@ namespace io
 #include <unistd.h>
 #endif
 
-#ifdef _IRR_WINDOWS_
+#ifdef _IRR_WINDOWS_API_
 #include <io.h>
 #include <direct.h>
 #endif
@@ -33,7 +33,7 @@ CFileList::CFileList()
 {
 	// --------------------------------------------
 	// Windows version
-	#ifdef _IRR_WINDOWS_
+	#ifdef _IRR_WINDOWS_API_
 
 	char tmp[_MAX_PATH];
 	_getcwd(tmp, _MAX_PATH);
@@ -65,7 +65,7 @@ CFileList::CFileList()
 
 	// --------------------------------------------
 	// Linux version
-	#if (defined(LINUX) || defined(MACOSX))
+	#if (defined(_IRR_POSIX_API_) || defined(MACOSX))
 
 	FileEntry entry;
 
@@ -110,7 +110,7 @@ CFileList::CFileList()
 			entry.Size = buf.st_size;
 			entry.isDirectory = S_ISDIR(buf.st_mode);
 		}
-		#if !defined(__sun__) && !defined(__CYGWIN__)
+		#if !defined(_IRR_SOLARIS_PLATFORM_) && !defined(__CYGWIN__)
 		// only available on some systems
 		else
 		{
