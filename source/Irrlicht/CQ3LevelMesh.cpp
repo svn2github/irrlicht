@@ -1609,6 +1609,11 @@ void CQ3LevelMesh::scriptcallback_shader ( quake3::SVarGroupList *& grouplist )
 {
 	quake3::SShader element;
 
+	// TODO: There might be something wrong with this fix, but it avoids a core dump...
+	if (grouplist->VariableGroup[0].Variable.size()==0)
+		return;
+	// end fix
+
 	grouplist->grab ();
 
 	element.VarGroup = grouplist;
