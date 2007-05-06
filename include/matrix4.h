@@ -260,6 +260,15 @@ namespace core
 					const core::vector2df &translate,
 					const core::vector2df &scale);
 
+			//! sets all matrix data members at once
+			void setM(f32 data[]);
+
+			//! sets if the matrix is definitely identity matrix
+			void setDefinitelyIdentityMatrix( bool isDefinitelyIdentityMatrix);
+
+			//! gets if the matrix is definitely identity matrix
+			bool getDefinitelyIdentityMatrix() const; 
+
 		private:
 			//! Matrix data, stored in row-major order
 			f32 M[16];
@@ -1493,6 +1502,27 @@ namespace core
 		definitelyIdentityMatrix=false;
 	}
 
+	//! sets all matrix data members at once
+	inline void matrix4::setM(f32 data[])
+	{
+		for (int i = 0; i < 16; ++i) 
+			M[i] = data[i];
+
+		definitelyIdentityMatrix = false;
+	}
+
+	//! sets if the matrix is definitely identity matrix
+	inline void matrix4::setDefinitelyIdentityMatrix( bool isDefinitelyIdentityMatrix)
+	{
+		definitelyIdentityMatrix = isDefinitelyIdentityMatrix;
+	}
+
+	//! gets if the matrix is definitely identity matrix
+	inline bool matrix4::getDefinitelyIdentityMatrix() const
+	{
+		return definitelyIdentityMatrix;
+	}
+
 	//! Multiply by scalar.
 	inline matrix4 operator*(const f32 scalar, const matrix4& mat)
 	{
@@ -1500,6 +1530,7 @@ namespace core
 	}
 
 	const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
+
 } // end namespace core
 } // end namespace irr
 
