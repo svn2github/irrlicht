@@ -29,6 +29,9 @@ Changes in version 1.3.1 (?? Mar 2007)
 
  - Added min and max functions with 3 values: core::min_ and core::max_
 
+ - Fixed a crash when using Octtrees caused by unnecessary dropping of meshes when 
+   deserializing the scene node.
+
 GUI:
 
   - Added setColor and setScaleImage to GUIImage.
