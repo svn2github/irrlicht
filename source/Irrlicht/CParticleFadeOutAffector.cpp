@@ -63,7 +63,7 @@ s32 CParticleFadeOutAffector::deserializeAttributes(s32 startIndex, io::IAttribu
 	TargetColor = in->getAttributeAsColor(startIndex);
 	++startIndex;
 
-	in->getAttributeName(startIndex);
+	name = in->getAttributeName(startIndex);
 	if (!name || strcmp(name, "FadeOutTime"))
 		return startIndex; // attribute not valid
 
