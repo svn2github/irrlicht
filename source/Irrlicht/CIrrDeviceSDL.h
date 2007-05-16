@@ -30,7 +30,7 @@ namespace irr
 			const core::dimension2d<s32>& windowSize, u32 bits,
 			bool fullscreen, bool stencilbuffer, bool vsync,
 			bool antiAlias, IEventReceiver* receiver,
-			const char* version);
+			void* windowID, const char* version);
 
 		//! destructor
 		virtual ~CIrrDeviceSDL();
@@ -169,7 +169,7 @@ namespace irr
 		bool Stencilbuffer;
 		bool Vsync;
 		bool AntiAlias;
-		bool Doublebuffer;
+		bool Resizeable;
 		
 		SDL_Surface* Screen;
 		SDL_Event SDL_event;

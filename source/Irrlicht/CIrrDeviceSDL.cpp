@@ -42,10 +42,11 @@ CIrrDeviceSDL::CIrrDeviceSDL(video::E_DRIVER_TYPE driverType,
 				u32 bits,
 				bool fullscreen, bool stencilbuffer, bool vsync,
 				bool antiAlias, IEventReceiver* receiver,
-				const char* version)
+				void* windowID, const char* version)
 	: CIrrDeviceStub(version, receiver), Depth(bits),
 	Fullscreen(fullscreen), Stencilbuffer(stencilbuffer), Vsync(vsync),
-	AntiAlias(antiAlias), Screen(0), SDL_Flags(SDL_HWSURFACE|SDL_ANYFORMAT),
+	AntiAlias(antiAlias), Resizeable(false),
+	Screen(windowID), SDL_Flags(SDL_HWSURFACE|SDL_ANYFORMAT),
 	Width(windowSize.Width), Height(windowSize.Height), Close(0),
 	WindowActive(false)
 {
@@ -106,6 +107,8 @@ CIrrDeviceSDL::CIrrDeviceSDL(video::E_DRIVER_TYPE driverType,
 //! destructor
 CIrrDeviceSDL::~CIrrDeviceSDL()
 {
+	if (Screen)
+		SDL_FreeSurface(Screen);
 	SDL_Quit();
 }
 
@@ -134,8 +137,10 @@ bool CIrrDeviceSDL::createWindow(video::E_DRIVER_TYPE driverType)
 		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 	}
 
-	Screen = SDL_SetVideoMode( Width, Height, Depth, SDL_Flags );
-	if ( !Screen ) {
+	if ( !Screen )
+		Screen = SDL_SetVideoMode( Width, Height, Depth, SDL_Flags );
+	if ( !Screen )
+	{
 		os::Printer::log( "Could not initialize display!" );
 		return false;
 	}
@@ -364,7 +369,16 @@ video::IVideoModeList* CIrrDeviceSDL::getVideoModeList()
 //! Sets if the window should be resizeable in windowed mode.
 void CIrrDeviceSDL::setResizeAble(bool resize)
 {
-//TODO
+	if (resize != Resizeable)
+	{
+		if (resize)
+			SDL_Flags |= SDL_RESIZABLE;
+		else
+			SDL_Flags &= ~SDL_RESIZABLE;
+		SDL_FreeSurface(Screen);
+		Screen = SDL_SetVideoMode( Width, Height, Depth, SDL_Flags );
+		Resizeable = resize;
+	}
 }
 
 
@@ -496,6 +510,7 @@ IRRLICHT_API IrrlichtDevice* IRRCALLCONV createDeviceEx(const SIrrlichtCreationP
 		param.Vsync,
 		param.AntiAlias,
 		param.EventReceiver,
+		param.WindowId;
 		param.SDK_version_do_not_use);
 
 	if (dev && !dev->getVideoDriver() && param.DriverType != video::EDT_NULL)
