@@ -15,8 +15,10 @@ namespace video
 
 //! constructor
 CTRTextureGouraud::CTRTextureGouraud(IZBuffer* zbuffer)
-: RenderTarget(0),	BackFaceCullingEnabled(true), SurfaceHeight(0), SurfaceWidth(0),
-	Texture(0), ZBuffer(zbuffer)
+	: RenderTarget(0), ZBuffer(zbuffer), SurfaceWidth(0), SurfaceHeight(0),
+		BackFaceCullingEnabled(true), lockedZBuffer(0),
+		lockedSurface(0), lockedTexture(0), lockedTextureWidth(0),
+		textureXMask(0), textureYMask(0), Texture(0)
 {
 	#ifdef _DEBUG
 	setDebugName("CTRTextureGouraud");
