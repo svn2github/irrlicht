@@ -46,7 +46,7 @@ CIrrDeviceSDL::CIrrDeviceSDL(video::E_DRIVER_TYPE driverType,
 	: CIrrDeviceStub(version, receiver), Depth(bits),
 	Fullscreen(fullscreen), Stencilbuffer(stencilbuffer), Vsync(vsync),
 	AntiAlias(antiAlias), Resizeable(false),
-	Screen(windowID), SDL_Flags(SDL_HWSURFACE|SDL_ANYFORMAT),
+	Screen((SDL_Surface*)windowID), SDL_Flags(SDL_HWSURFACE|SDL_ANYFORMAT),
 	Width(windowSize.Width), Height(windowSize.Height), Close(0),
 	WindowActive(false)
 {
@@ -510,7 +510,7 @@ IRRLICHT_API IrrlichtDevice* IRRCALLCONV createDeviceEx(const SIrrlichtCreationP
 		param.Vsync,
 		param.AntiAlias,
 		param.EventReceiver,
-		param.WindowId;
+		param.WindowId,
 		param.SDK_version_do_not_use);
 
 	if (dev && !dev->getVideoDriver() && param.DriverType != video::EDT_NULL)
