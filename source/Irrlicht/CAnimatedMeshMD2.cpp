@@ -645,8 +645,8 @@ bool CAnimatedMeshMD2::loadFile(io::IReadFile* file)
 			if (normalidx > 0 && normalidx < Q2_VERTEX_NORMAL_TABLE_SIZE)
 			{
 				v.X = Q2_VERTEX_NORMAL_TABLE[normalidx][0];
-				v.Y = Q2_VERTEX_NORMAL_TABLE[normalidx][1];
-				v.Z = Q2_VERTEX_NORMAL_TABLE[normalidx][2];
+				v.Z = Q2_VERTEX_NORMAL_TABLE[normalidx][1];
+				v.Y = Q2_VERTEX_NORMAL_TABLE[normalidx][2];
 			}
 
 			normals[i].push_back(v);
