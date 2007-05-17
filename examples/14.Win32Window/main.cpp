@@ -102,7 +102,7 @@ int main()
 	// create irrlicht device in the button window
 
 	irr::SIrrlichtCreationParameters param;
-	param.WindowId = reinterpret_cast<s32>(hIrrlichtWindow); // hColorButton
+	param.WindowId = reinterpret_cast<void*>(hIrrlichtWindow); // hColorButton
 	param.DriverType = video::EDT_OPENGL;
 
 	irr::IrrlichtDevice* device = irr::createDeviceEx(param);

@@ -1,5 +1,9 @@
 Changes in version 1.3.1 (?? Mar 2007)
 
+ - Changed the external window pointer from s32 to void*. This makes the
+   mechanism 64bit safe, but also breaks the API. You have to cast to
+   void* now.
+
  - Moved image scaling algorithms to CImage class and made them public. This
    replaces lots of code from the hardware textures. It should also fix the
    missing MipMaps in OpenGL if the driver does not support mipmap generation.
