@@ -240,7 +240,9 @@ bool CIrrDeviceLinux::createWindow(const core::dimension2d<s32>& windowSize,
 				modes[oldRandrMode].width, modes[oldRandrMode].height));
 			for (s32 i = 0; i<modeCount; ++i)
 			{
-				if (bestMode==-1 && modes[i].width >= Width && modes[i].height >= Height)
+				if (bestMode==-1 && modes[i]->hdisplay >= Width && modes[i]->vdisplay >= Height)
+					bestMode = i;
+				else if (bestMode!=-1 && modes[i]->hdisplay >= Width && modes[i]->vdisplay >= Height && modes[i]->hdisplay < modes[bestMode]->hdisplay && modes[i]->vdisplay < modes[bestMode]->vdisplay)
 					bestMode = i;
 				VideoModeList.addMode(core::dimension2d<s32>(
 					modes[i].width, modes[i].height), defaultDepth);
@@ -255,7 +257,7 @@ bool CIrrDeviceLinux::createWindow(const core::dimension2d<s32>& windowSize,
 		else
 		#endif
 		{
-			os::Printer::log("VidMode extension must be installed to allow Irrlicht "
+			os::Printer::log("VidMode or RandR extension must be installed to allow Irrlicht "
 			"to switch to fullscreen mode. Running in windowed mode instead.", ELL_WARNING);
 			Fullscreen = false;
 		}
