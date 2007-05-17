@@ -433,7 +433,7 @@ void COpenGLTexture::regenerateMipMapLevels()
 	u32 width=ImageSize.Width>>1;
 	u32 height=ImageSize.Height>>1;
 	u32 i=1;
-	void* target = new u8[Image->getImageDataSizeInBytes()];
+	u8* target = new u8[Image->getImageDataSizeInBytes()];
 	while (width>1 || height>1)
 	{
 		Image->copyToScaling(target, width, height, Image->getColorFormat(), Image->getPitch());
