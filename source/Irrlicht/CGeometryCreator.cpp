@@ -22,7 +22,7 @@ IAnimatedMesh* CGeometryCreator::createHillPlaneMesh(const core::dimension2d<f32
 {
 	core::dimension2d<s32> tileCount = tc;
 	core::dimension2d<f32> countHills = ch;
-    
+
 	SMeshBuffer* buffer = new SMeshBuffer();
 	SMesh* mesh = new SMesh();
 	video::S3DVertex vtx;
@@ -50,7 +50,7 @@ IAnimatedMesh* CGeometryCreator::createHillPlaneMesh(const core::dimension2d<f32
 		{
 			vtx.Pos.set(tileSize.Width * x - halfX, 0, tileSize.Height * y - halfY);
 			vtx.TCoords.set(x * tx.Width, 1.0f - y * tx.Height);
-			
+
 			if (hillHeight)
 				vtx.Pos.Y = (f32)(sin(vtx.Pos.X * countHills.Width * irr::core::PI / halfX) *
 					cos(vtx.Pos.Z * countHills.Height * irr::core::PI / halfY))
@@ -112,14 +112,12 @@ IAnimatedMesh* CGeometryCreator::createHillPlaneMesh(const core::dimension2d<f32
 
 
 
-IAnimatedMesh* CGeometryCreator::createTerrainMesh(video::IImage* texture, 
+IAnimatedMesh* CGeometryCreator::createTerrainMesh(video::IImage* texture,
 		video::IImage* heightmap, const core::dimension2d<f32>& stretchSize,
-		f32 maxHeight, video::IVideoDriver* driver, 
+		f32 maxHeight, video::IVideoDriver* driver,
 		const core::dimension2d<s32> maxVtxBlockSize,
 		bool debugBorders)
 {
-	u32 tm = os::Timer::getRealTime()/1000;
-
 	if (!texture || !heightmap)
 		return 0;
 
@@ -135,9 +133,10 @@ IAnimatedMesh* CGeometryCreator::createTerrainMesh(video::IImage* texture,
 
 	SMesh* mesh = new SMesh();
 
+	u32 tm = os::Timer::getRealTime()/1000;
 	core::dimension2d<s32> hMapSize= heightmap->getDimension();
 	core::dimension2d<s32> tMapSize= texture->getDimension();
-	core::position2d<f32> thRel((f32)tMapSize.Width / hMapSize.Width, (f32)tMapSize.Height / hMapSize.Height); 
+	core::position2d<f32> thRel((f32)tMapSize.Width / hMapSize.Width, (f32)tMapSize.Height / hMapSize.Height);
 	core::position2d<s32> processed(0,0);
 
 	while (processed.Y<hMapSize.Height)
@@ -215,8 +214,8 @@ IAnimatedMesh* CGeometryCreator::createTerrainMesh(video::IImage* texture,
 
 				if (material.Textures[0])
 				{
-					sprintf(tmp, "Generated terrain texture (%dx%d): %s", 
-						material.Textures[0]->getSize().Width, 
+					sprintf(tmp, "Generated terrain texture (%dx%d): %s",
+						material.Textures[0]->getSize().Width,
 						material.Textures[0]->getSize().Height,
 						textureName);
 					os::Printer::log(tmp);
@@ -255,15 +254,14 @@ IAnimatedMesh* CGeometryCreator::createTerrainMesh(video::IImage* texture,
 	a cylinder, a cone and a cross
 	point up on (0,1.f, 0.f )
 */
-IAnimatedMesh* CGeometryCreator::createArrowMesh (	const u32 tesselationCylinder, 
-													const u32 tesselationCone, 
-													const f32 height,
-													const f32 cylinderHeight,
-													const f32 width0,
-													const f32 width1,
-													const video::SColor vtxColor0,
-													const video::SColor vtxColor1
-													)
+IAnimatedMesh* CGeometryCreator::createArrowMesh(const u32 tesselationCylinder,
+						const u32 tesselationCone,
+						const f32 height,
+						const f32 cylinderHeight,
+						const f32 width0,
+						const f32 width1,
+						const video::SColor vtxColor0,
+						const video::SColor vtxColor1)
 {
 	SMeshBuffer* buffer;
 	video::S3DVertex v;
@@ -278,7 +276,6 @@ IAnimatedMesh* CGeometryCreator::createArrowMesh (	const u32 tesselationCylinder
 
 	// floor, bottom
 	f32 angleStep = (core::PI * 2.f ) / tesselationCylinder;
-
 
 	for ( i = 0; i != tesselationCylinder; ++i )
 	{

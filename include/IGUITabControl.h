@@ -65,7 +65,7 @@ namespace gui
 		virtual bool setActiveTab(s32 idx) = 0;
 
 		//! Brings a tab to front.
-		/** \param idx: pointer to the tab.
+		/** \param tab: pointer to the tab.
 		 \return Returns true if successful. */
 		virtual bool setActiveTab(IGUIElement *tab) = 0;
 

@@ -653,6 +653,7 @@ namespace scene
 		 \param patchSize: patch size of the terrain. Only change if you
 		 know what you are doing, this might lead to strange behaviour.
 		 \param smoothFactor: The number of times the vertices are smoothed.
+		 \param addAlsoIfHeightmapEmpty: Add terrain node even with empty heightmap.
 		 \return Returns pointer to the created scene node. Can be null if the
 		 terrain could not be created, for example because the heightmap could not be loaded.
 		 The returned pointer should not be dropped. See IUnknown::drop() for more information. */
@@ -686,6 +687,7 @@ namespace scene
 		 \param patchSize: patch size of the terrain. Only change if you
 		 know what you are doing, this might lead to strange behaviour.
 		 \param smoothFactor: The number of times the vertices are smoothed.
+		 \param addAlsoIfHeightmapEmpty: Add terrain node even with empty heightmap.
 		 \return Returns pointer to the created scene node. Can be null if the
 		 terrain could not be created, for example because the heightmap could not be loaded.
 		 The returned pointer should not be dropped. See IUnknown::drop() for more information. */
@@ -789,6 +791,7 @@ namespace scene
 		 heightmap to increase rendering speed.
 		 \param stretchSize: Parameter defining how big a is pixel on the heightmap.
 		 \param maxHeight: Defines how height a white pixel on the heighmap is.
+		 \param defaultVertexBlockSize: Defines the initial dimension between vertices.
 		 \return Returns null if the creation failed. The reason could be that you
 		 specified some invalid parameters, that a mesh with that name already
 		 exists, or that a texture could not be found. If successful, a pointer to the mesh is returned.
@@ -843,7 +846,10 @@ namespace scene
 
 		//! returns scene nodes by type.
 		/** \param type: Type of scene node to find.
-		\param array: array to be filled with results. */
+		\param outNodes: array to be filled with results.
+		\param start: Scene node to start from. All children of this scene
+		node are searched. If null is specified, the root scene node is
+		taken. */
 		virtual void getSceneNodesFromType(ESCENE_NODE_TYPE type, core::array<scene::ISceneNode*>& outNodes, ISceneNode* start=0) = 0;
 
 		//! Returns the current active camera.

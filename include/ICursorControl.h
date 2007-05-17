@@ -28,18 +28,19 @@ namespace gui
 		/** \return Returns true if the cursor is visible, false if not. */
 		virtual bool isVisible() = 0;
 
-		//! Sets the new position of the cursor.
-		/** \param pos: New position of the cursor. The position must be between
-		(0.0f, 0.0f) and (1.0f, 1.0f), where (0.0f, 0.0f) is 
+		/** Sets the new position of the cursor. The position must be
+		between (0.0f, 0.0f) and (1.0f, 1.0f), where (0.0f, 0.0f) is 
 		the top left corner and (1.0f, 1.0f) is the bottom right corner of the
 		render window. */
+		//! \param pos: New position of the cursor.
 		virtual void setPosition(const core::position2d<f32> &pos) = 0;
 
-		//! Sets the new position of the cursor.
-		/** \param pos: New position of the cursor. The position must be between
-		 (0.0f, 0.0f) and (1.0f, 1.0f), where (0.0f, 0.0f) is 
-		 the top left corner and (1.0f, 1.0f) is the bottom right corner of the
-		 render window. */
+		/** Sets the new position of the cursor. The position must be
+		between (0.0f, 0.0f) and (1.0f, 1.0f), where (0.0f, 0.0f) is 
+		the top left corner and (1.0f, 1.0f) is the bottom right corner of the
+		render window. */
+		//! \param x: New x-coord of the cursor.
+		//! \param y: New x-coord of the cursor.
 		virtual void setPosition(f32 x, f32 y) = 0;
 
 		//! Sets the new position of the cursor.
@@ -47,7 +48,8 @@ namespace gui
 		virtual void setPosition(const core::position2d<s32> &pos) = 0;
 
 		//! Sets the new position of the cursor.
-		/** \param pos: New position of the cursor. The coordinates are pixel units. */
+		/** \param x: New x-coord of the cursor. The coordinates are pixel units. */
+		/** \param y: New y-coord of the cursor. The coordinates are pixel units. */
 		virtual void setPosition(s32 x, s32 y) = 0;
 
 		//! Returns the current position of the mouse cursor.

@@ -811,7 +811,6 @@ namespace core
 	}
 
 
-	// transform (x,y,z,1)
 	inline void matrix4::transformVect(f32 *out,const vector3df &in) const
 	{
 		out[0] = in.X*M[0] + in.Y*M[4] + in.Z*M[8] + M[12];
