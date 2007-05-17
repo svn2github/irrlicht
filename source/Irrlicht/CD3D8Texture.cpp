@@ -174,10 +174,10 @@ bool CD3D8Texture::copyTexture()
 		TextureSize.Height = desc.Height;
 
 		if (desc.Format == D3DFMT_A1R5G5B5)
-			return copyTo16BitTexture(TextureSize == ImageSize);
+			return copyTo16BitTexture();
 		else
 		if (desc.Format == D3DFMT_A8R8G8B8)
-			return copyTo32BitTexture(TextureSize == ImageSize);
+			return copyTo32BitTexture();
 		else
 			os::Printer::log("CD3D8Texture: Unsupported D3D8 hardware texture format", ELL_ERROR);
 	}
@@ -187,7 +187,7 @@ bool CD3D8Texture::copyTexture()
 
 
 //! copies texture to 32 bit hardware texture
-bool CD3D8Texture::copyTo32BitTexture(bool surfaceHasSameSize)
+bool CD3D8Texture::copyTo32BitTexture()
 {
 	D3DLOCKED_RECT rect;
 	HRESULT hr = Texture->LockRect(0, &rect, 0, 0);
@@ -197,72 +197,8 @@ bool CD3D8Texture::copyTo32BitTexture(bool surfaceHasSameSize)
 		return false;
 	}
 
-	u32* dest = (u32*)rect.pBits;
-	u32* source = (u32*)Image->lock();
 	Pitch = rect.Pitch;
-	s32 pitch = rect.Pitch / 4;
-
-	if (surfaceHasSameSize)
-	{
-		if (Image->getColorFormat() == ECF_A8R8G8B8)
-		{
-			// direct copy, fast
-
-			for (s32 y=0; y<ImageSize.Height; ++y)
-				for (s32 x=0; x<ImageSize.Width; ++x)
-					dest[x + y*pitch] = source[x + y * ImageSize.Width];
-		}
-		else
-		{
-			// slow convert
-
-			for (s32 y=0; y<ImageSize.Height; ++y)
-				for (s32 x=0; x<ImageSize.Width; ++x)
-					dest[x + y*pitch] = Image->getPixel(x,y).color;
-		}
-	}
-	else
-	{
-		// scale texture
-
-		f32 sourceXStep = (f32)ImageSize.Width / (f32)TextureSize.Width;
-		f32 sourceYStep = (f32)ImageSize.Height / (f32)TextureSize.Height;
-		f32 sy;
-
-		if (Image->getColorFormat() == ECF_A8R8G8B8)
-		{
-			// copy texture scaling
-
-			for (s32 x=0; x<TextureSize.Width; ++x)
-			{
-				sy = 0.0f;
-
-				for (s32 y=0; y<TextureSize.Height; ++y)
-				{
-					dest[(s32)(y*pitch + x)] = source[(s32)(((s32)sy)*ImageSize.Width + x*sourceXStep)];
-					sy+=sourceYStep;
-				}
-			}
-		}
-		else
-		{
-			// convert texture scaling, slow
-			for (s32 x=0; x<TextureSize.Width; ++x)
-			{
-				sy = 0.0f;
-
-				for (s32 y=0; y<TextureSize.Height; ++y)
-				{
-					dest[(s32)(y*pitch + x)] =
-						Image->getPixel((s32)(x*sourceXStep), (s32)sy).color;
-
-					sy+=sourceYStep;
-				}
-			}
-		}
-	}
-
-	Image->unlock();
+	Image->copyToScaling(rect.pBits, TextureSize.Width, TextureSize.Height, ECF_A8R8G8B8, Pitch);
 
 	hr = Texture->UnlockRect(0);
 	if (FAILED(hr))
@@ -272,12 +208,11 @@ bool CD3D8Texture::copyTo32BitTexture(bool surfaceHasSameSize)
 	}
 
 	return true;
-
 }
 
 
 //! optimized for 16 bit to 16 copy.
-bool CD3D8Texture::copyTo16BitTexture(bool surfaceHasSameSize)
+bool CD3D8Texture::copyTo16BitTexture()
 {
 	D3DLOCKED_RECT rect;
 	HRESULT hr = Texture->LockRect(0, &rect, 0, 0);
@@ -287,74 +222,8 @@ bool CD3D8Texture::copyTo16BitTexture(bool surfaceHasSameSize)
 		return false;
 	}
 
-	s16* dest = (s16*)rect.pBits;
-	s16* source = (s16*)Image->lock();
 	Pitch = rect.Pitch;
-	s32 pitch = rect.Pitch/2;
-
-	if (surfaceHasSameSize)
-	{
-		// copy texture
-
-		if (Image->getColorFormat() == ECF_A1R5G5B5)
-		{
-			// direct copy, fast
-
-			for (s32 y=0; y<ImageSize.Height; ++y)
-				for (s32 x=0; x<ImageSize.Width; ++x)
-					dest[x + y*pitch] = source[x + y * ImageSize.Width];
-		}
-		else
-		{
-			// slow convert
-
-			for (s32 y=0; y<ImageSize.Height; ++y)
-				for (s32 x=0; x<ImageSize.Width; ++x)
-					dest[x + y*pitch] = Image->getPixel(x,y).toA1R5G5B5();
-		}
-	}
-	else
-	{
-		// scale texture
-
-		f32 sourceXStep = (f32)ImageSize.Width / (f32)TextureSize.Width;
-		f32 sourceYStep = (f32)ImageSize.Height / (f32)TextureSize.Height;
-		f32 sy;
-
-		if (Image->getColorFormat() == ECF_A1R5G5B5)
-		{
-			// copy texture scaling
-
-			for (s32 x=0; x<TextureSize.Width; ++x)
-			{
-				sy = 0.0f;
-
-				for (s32 y=0; y<TextureSize.Height; ++y)
-				{
-					dest[(s32)(y*pitch + x)] = source[(s32)(((s32)sy)*ImageSize.Width + x*sourceXStep)];
-					sy+=sourceYStep;
-				}
-			}
-		}
-		else
-		{
-			// convert texture scaling, slow
-			for (s32 x=0; x<TextureSize.Width; ++x)
-			{
-				sy = 0.0f;
-
-				for (s32 y=0; y<TextureSize.Height; ++y)
-				{
-					dest[(s32)(y*pitch + x)] =
-						Image->getPixel((s32)(x*sourceXStep), (s32)sy).toA1R5G5B5();
-
-					sy+=sourceYStep;
-				}
-			}
-		}
-	}
-
-	Image->unlock();
+	Image->copyToScaling(rect.pBits, TextureSize.Width, TextureSize.Height, ECF_A1R5G5B5, Pitch);
 
 	hr = Texture->UnlockRect(0);
 	if (FAILED(hr))

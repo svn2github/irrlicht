@@ -10,7 +10,7 @@
 
 namespace irr
 {
-namespace video  
+namespace video
 {
 
 //! constructor
@@ -19,20 +19,19 @@ CSoftwareTexture::CSoftwareTexture(IImage* image, const char* name)
 {
 	#ifdef _DEBUG
 	setDebugName("CSoftwareTexture");
-	#endif	
+	#endif
 
 	if (image)
 	{
 		core::dimension2d<s32> optSize;
-		core::dimension2d<s32> origSize = image->getDimension();
-		OrigSize = origSize;
+		OrigSize = image->getDimension();
 
-		optSize.Width = getTextureSizeFromSurfaceSize(origSize.Width);
-		optSize.Height = getTextureSizeFromSurfaceSize(origSize.Height);
+		optSize.Width = getTextureSizeFromSurfaceSize(OrigSize.Width);
+		optSize.Height = getTextureSizeFromSurfaceSize(OrigSize.Height);
 
 		Image = new CImage(ECF_A1R5G5B5, image);
 
-		if (optSize == origSize)
+		if (optSize == OrigSize)
 		{
 			Texture = Image;
 			Texture->grab();
@@ -40,7 +39,7 @@ CSoftwareTexture::CSoftwareTexture(IImage* image, const char* name)
 		else
 		{
 			Texture = new CImage(ECF_A1R5G5B5, optSize);
-			Image->copyToScaling(Texture);			
+			Image->copyToScaling(Texture);
 		}
 	}
 }
@@ -145,7 +144,7 @@ u32 CSoftwareTexture::getPitch() const
 }
 
 
-//! Regenerates the mip map levels of the texture. Useful after locking and 
+//! Regenerates the mip map levels of the texture. Useful after locking and
 //! modifying the texture
 void CSoftwareTexture::regenerateMipMapLevels()
 {

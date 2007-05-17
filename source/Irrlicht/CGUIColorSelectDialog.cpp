@@ -13,6 +13,7 @@
 #include "IFileList.h"
 #include "os.h"
 #include "SoftwareDriver2_helper.h"
+#include "CImage.h"
 
 namespace irr
 {

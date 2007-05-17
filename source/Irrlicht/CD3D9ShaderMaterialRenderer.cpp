@@ -19,7 +19,7 @@
 
 namespace irr
 {
-namespace video  
+namespace video
 {
 
 //! Public constructor
@@ -524,5 +524,5 @@ HRESULT CD3D9ShaderMaterialRenderer::stubD3DXCompileShaderFromFile(LPCSTR pSrcFi
 } // end namespace video
 } // end namespace irr
 
-#endif
+#endif // _IRR_COMPILE_WITH_DIRECT3D_9_
 

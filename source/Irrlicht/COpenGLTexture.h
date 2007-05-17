@@ -44,14 +44,13 @@ namespace video
 {
 
 class COpenGLDriver;
-class CImage;
 //! OpenGL texture.
 class COpenGLTexture : public ITexture
 {
 public:
 
 	//! constructor
-	COpenGLTexture(IImage* surface, bool generateMipLevels, const char* name, COpenGLDriver* driver=0);
+	COpenGLTexture(IImage* surface, const char* name, COpenGLDriver* driver=0);
 	//! FrameBufferObject constructor
 	COpenGLTexture(const core::dimension2d<s32>& size, bool extPackedDepthStencilSupported, const char* name, COpenGLDriver* driver=0);
 
@@ -111,7 +110,7 @@ private:
 
 	core::dimension2d<s32> ImageSize;
 	COpenGLDriver* Driver;
-	CImage* Image;
+	IImage* Image;
 
 	GLuint TextureName;
 	GLint InternalFormat;
@@ -123,6 +122,8 @@ private:
 	GLuint ColorFrameBuffer; // for FBO path
 	GLuint DepthRenderBuffer; // for FBO path
 	GLuint StencilRenderBuffer; // for FBO path
+
+	u32 Locks;
 };
 
 

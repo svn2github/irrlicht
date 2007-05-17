@@ -312,5 +312,5 @@ bool CD3D8ShaderMaterialRenderer::createVertexShader(const char* vtxsh, E_VERTEX
 } // end namespace video
 } // end namespace irr
 
-#endif
+#endif // _IRR_COMPILE_WITH_DIRECT3D_8_
 

@@ -1,10 +1,52 @@
 Changes in version 1.3.1 (?? Mar 2007)
 
+ - Moved image scaling algorithms to CImage class and made them public. This
+   replaces lots of code from the hardware textures. It should also fix the
+   missing MipMaps in OpenGL if the driver does not support mipmap generation.
+
+ - Added support for texture creation flags in OpenGL. This changes some
+   textures to other color formats than in previous versions.
+
+ - MD2 normals fixed.
+
+ - Some defines for the platform choice have changed their names and semantics.
+   E.g. IRR_LINUX is now _IRR_LINUX_PLATFORM_ for os specific things and
+   _IRR_USE_LINUX_DEVICE_ to choose the original X11 IrrLinux device.
+
+ - Added an SDL device for cross-platform window support. Especially useful
+   for embedded systems and others without hardware acceleration. This device
+   is mutually exclusive with the other devices and requires linking against
+   the SDL library.
+
+ - Q3 shader crash fix.
+
+ - Fixed the too small D3D texture bug.
+
+ - The OpenGL texture is internally stored as a CImage now.
+
+ - Fixed some Borland compiler problems.
+
+ - ShadowVolume init bug fixed.
+
+ - MS3D rotation bug fixed.
+
+ - setFrameLoop bug fixed.
+
+ - Fixed OpenGL's draw2DImage texture inits to avoid texture confusion.
+
+ - Fixed getHeight from terrain scene node.
+
+ - The FPS counter now works as in previous releases, the accumulating counter can be enabled by a parameter.
+
  - getType() is now const correct (API Changes)
 
  - Added scissor test to opengl draw2DImage method that ignored clip.
 
  - Fixed a bug in rect::isValid, it was almost always true.
+ 
+ - Fixed wrong particle emission.
+ 
+ - Added LinuxDevice setResizeAble implementation.
  
  - Enumeration values of the ESCENE_NODE_TYPE enum are no longer ints but four
    character codes. If you were using them as index previously, this is no more possible now.

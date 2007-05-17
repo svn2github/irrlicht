@@ -5,6 +5,7 @@
 #include "CImage.h"
 #include "irrString.h"
 #include "SoftwareDriver2_helper.h"
+#include "CColorConverter.h"
 
 namespace irr
 {
@@ -817,7 +818,7 @@ static s32 Blit (	eBlitter operation,
 			video::IImage * dest,
 			const core::rect<s32> *destClipping,
 			const core::position2d<s32> *destPos,
-			video::IImage * source,
+			video::IImage * const source,
 			const core::rect<s32> *sourceClipping,
 			u32 argb
 			)
@@ -909,7 +910,7 @@ static s32 Blit (	eBlitter operation,
 
 	if ( dest )
 		dest->unlock();
-	
+
 	return 1;
 }
 
@@ -930,7 +931,7 @@ CImage::CImage(ECOLOR_FORMAT format, const core::dimension2d<s32>& size)
 
 //! constructor
 CImage::CImage(ECOLOR_FORMAT format, const core::dimension2d<s32>& size, void* data,
-			   bool ownForeignMemory, bool deleteForeignMemory)
+			bool ownForeignMemory, bool deleteForeignMemory)
 : Data(0), Size(size), Format(format), DeleteMemory(deleteForeignMemory)
 {
 	if (ownForeignMemory)
@@ -949,7 +950,7 @@ CImage::CImage(ECOLOR_FORMAT format, const core::dimension2d<s32>& size, void* d
 
 
 
-//! constructor 
+//! constructor
 CImage::CImage(ECOLOR_FORMAT format, IImage* imageToCopy)
 : Data(0), Format(format), DeleteMemory(true)
 {
@@ -968,8 +969,8 @@ CImage::CImage(ECOLOR_FORMAT format, IImage* imageToCopy)
 
 //! constructor
 CImage::CImage(IImage* imageToCopy, const core::position2d<s32>& pos,
-		   const core::dimension2d<s32>& size)
- : Data(0), Size(0,0), DeleteMemory(true)
+		const core::dimension2d<s32>& size)
+	: Data(0), Size(0,0), DeleteMemory(true)
 {
 	if (!imageToCopy)
 		return;
@@ -988,7 +989,8 @@ CImage::CImage(IImage* imageToCopy, const core::position2d<s32>& pos,
 //! assumes format and size has been set and creates the rest
 void CImage::initData()
 {
-	BitsPerPixel = getBitsPerPixelFromFormat();
+	setBitMasks();
+	BitsPerPixel = getBitsPerPixelFromFormat(Format);
 	BytesPerPixel = BitsPerPixel / 8;
 
 	// Pitch should be aligned...
@@ -1008,22 +1010,22 @@ CImage::~CImage()
 
 
 //! Returns width and height of image data.
-const core::dimension2d<s32>& CImage::getDimension()
+const core::dimension2d<s32>& CImage::getDimension() const
 {
 	return Size;
 }
 
 
 
-//! Returns bits per pixel. 
-s32 CImage::getBitsPerPixel()
+//! Returns bits per pixel.
+u32 CImage::getBitsPerPixel() const
 {
 	return BitsPerPixel;
 }
 
 
 //! Returns bytes per pixel
-s32 CImage::getBytesPerPixel()
+u32 CImage::getBytesPerPixel() const
 {
 	return BytesPerPixel;
 }
@@ -1031,7 +1033,7 @@ s32 CImage::getBytesPerPixel()
 
 
 //! Returns image data size in bytes
-s32 CImage::getImageDataSizeInBytes()
+u32 CImage::getImageDataSizeInBytes() const
 {
 	return Pitch * Size.Height;
 }
@@ -1039,7 +1041,7 @@ s32 CImage::getImageDataSizeInBytes()
 
 
 //! Returns image data size in pixels
-s32 CImage::getImageDataSizeInPixels()
+u32 CImage::getImageDataSizeInPixels() const
 {
 	return Size.Width * Size.Height;
 }
@@ -1047,7 +1049,7 @@ s32 CImage::getImageDataSizeInPixels()
 
 
 //! returns mask for red value of a pixel
-u32 CImage::getRedMask()
+u32 CImage::getRedMask() const
 {
 	return RedMask;
 }
@@ -1055,7 +1057,7 @@ u32 CImage::getRedMask()
 
 
 //! returns mask for green value of a pixel
-u32 CImage::getGreenMask()
+u32 CImage::getGreenMask() const
 {
 	return GreenMask;
 }
@@ -1063,7 +1065,7 @@ u32 CImage::getGreenMask()
 
 
 //! returns mask for blue value of a pixel
-u32 CImage::getBlueMask()
+u32 CImage::getBlueMask() const
 {
 	return BlueMask;
 }
@@ -1071,13 +1073,13 @@ u32 CImage::getBlueMask()
 
 
 //! returns mask for alpha value of a pixel
-u32 CImage::getAlphaMask()
+u32 CImage::getAlphaMask() const
 {
 	return AlphaMask;
 }
 
 
-s32 CImage::getBitsPerPixelFromFormat()
+void CImage::setBitMasks()
 {
 	switch(Format)
 	{
@@ -1086,35 +1088,50 @@ s32 CImage::getBitsPerPixelFromFormat()
 		RedMask = 0x1F<<10;
 		GreenMask = 0x1F<<5;
 		BlueMask = 0x1F;
-		return 16;
+	break;
 	case ECF_R5G6B5:
 		AlphaMask = 0x0;
 		RedMask = 0x1F<<11;
 		GreenMask = 0x3F<<5;
 		BlueMask = 0x1F;
-		return 16;
+	break;
 	case ECF_R8G8B8:
 		AlphaMask = 0x0;
 		RedMask = 0xFF<<16;
 		GreenMask = 0xFF<<8;
 		BlueMask = 0xFF;
-		return 24;
+	break;
 	case ECF_A8R8G8B8:
 		AlphaMask = 0xFF<<24;
 		RedMask = 0xFF<<16;
 		GreenMask = 0xFF<<8;
 		BlueMask = 0xFF;
+	break;
+	}
+}
+
+
+u32 CImage::getBitsPerPixelFromFormat(ECOLOR_FORMAT format)
+{
+	switch(format)
+	{
+	case ECF_A1R5G5B5:
+		return 16;
+	case ECF_R5G6B5:
+		return 16;
+	case ECF_R8G8B8:
+		return 24;
+	case ECF_A8R8G8B8:
 		return 32;
 	}
 
-//	os::Printer::log("CImage: Unknown color format.", ELL_ERROR);
 	return 0;
 }
 
 //! sets a pixel
-void CImage::setPixel(s32 x, s32 y, const SColor &color )
+void CImage::setPixel(u32 x, u32 y, const SColor &color )
 {
-	if (x < 0 || y < 0 || x >= Size.Width || y >= Size.Height)
+	if (x >= (u32)Size.Width || y >= (u32)Size.Height)
 		return;
 
 	switch(Format)
@@ -1125,20 +1142,33 @@ void CImage::setPixel(s32 x, s32 y, const SColor &color )
 			*dest = video::A8R8G8B8toA1R5G5B5 ( color.color );
 		} break;
 
+		case ECF_R5G6B5:
+		{
+			u16 * dest = (u16*) ((u8*) Data + ( y * Pitch ) + ( x << 1 ));
+			*dest = video::A8R8G8B8toR5G6B5 ( color.color );
+		} break;
+
+		case ECF_R8G8B8:
+		{
+			u8* dest = (u8*) Data + ( y * Pitch ) + ( x * 3 );
+			dest[0] = color.getRed();
+			dest[1] = color.getGreen();
+			dest[2] = color.getBlue();
+		} break;
+
 		case ECF_A8R8G8B8:
 		{
 			u32 * dest = (u32*) ((u8*) Data + ( y * Pitch ) + ( x << 2 ));
 			*dest = color.color;
 		} break;
-
 	}
 }
 
 
 //! returns a pixel
-SColor CImage::getPixel(s32 x, s32 y)
+SColor CImage::getPixel(u32 x, u32 y) const
 {
-	if (x < 0 || y < 0 || x >= Size.Width || y >= Size.Height)
+	if (x >= (u32)Size.Width || y >= (u32)Size.Height)
 		return SColor(0);
 
 	switch(Format)
@@ -1175,14 +1205,14 @@ void CImage::drawRectangle(const core::rect<s32>& rect, const SColor &color)
 
 
 //! copies this surface into another
-void CImage::copyTo(CImage* target, const core::position2d<s32>& pos)
+void CImage::copyTo(IImage* target, const core::position2d<s32>& pos)
 {
 	Blit (	BLITTER_TEXTURE, target, 0, &pos, this, 0, 0 );
 }
 
 
 //! copies this surface into another
-void CImage::copyTo(CImage* target, const core::position2d<s32>& pos, const core::rect<s32>& sourceRect, const core::rect<s32>* clipRect)
+void CImage::copyTo(IImage* target, const core::position2d<s32>& pos, const core::rect<s32>& sourceRect, const core::rect<s32>* clipRect)
 {
 	Blit (	BLITTER_TEXTURE, target, clipRect, &pos, this, &sourceRect, 0 );
 }
@@ -1190,7 +1220,7 @@ void CImage::copyTo(CImage* target, const core::position2d<s32>& pos, const core
 
 
 //! copies this surface into another, using the alpha mask, an cliprect and a color to add with
-void CImage::copyToWithAlpha(CImage* target, const core::position2d<s32>& pos, const core::rect<s32>& sourceRect, const SColor &color, const core::rect<s32>* clipRect)
+void CImage::copyToWithAlpha(IImage* target, const core::position2d<s32>& pos, const core::rect<s32>& sourceRect, const SColor &color, const core::rect<s32>* clipRect)
 {
 	// color blend only necessary on not full spectrum aka. color.color != 0xFFFFFFFF
 	Blit (	color.color == 0xFFFFFFFF ? BLITTER_TEXTURE_ALPHA_BLEND: BLITTER_TEXTURE_ALPHA_COLOR_BLEND,
@@ -1242,46 +1272,82 @@ void CImage::drawLine(const core::position2d<s32>& from, const core::position2d<
 //! copies this surface into another, scaling it to the target image size
 // note: this is very very slow. (i didn't want to write a fast version.
 // but hopefully, nobody wants to scale surfaces every frame.
-void CImage::copyToScaling(CImage* target)
+void CImage::copyToScaling(void* target, s32 width, s32 height, ECOLOR_FORMAT format, u32 pitch)
 {
-	if (Format != target->getColorFormat() )
-	{
-//		os::Printer::log("Format not equal", ELL_ERROR);
-		return;
-	}
-
-	core::dimension2d<s32> targetSize = target->getDimension();
-
-	if (!targetSize.Width || !targetSize.Height)
+	if (!target || !width || !height)
 		return;
 
-	f32 sourceXStep = (f32)Size.Width / (f32)targetSize.Width;
-	f32 sourceYStep = (f32)Size.Height / (f32)targetSize.Height;
+	const u32 bpp=getBitsPerPixelFromFormat(format)/8;
+	if (0==pitch)
+		pitch = width*bpp;
+
+	if (Format==format && Size.Width==width && Size.Height==height && pitch==width*bpp)
+		memcpy(target, Data, height*pitch);
+
+	const f32 sourceXStep = (f32)Size.Width / (f32)width;
+	const f32 sourceYStep = (f32)Size.Height / (f32)height;
 	f32 sx,sy;
-	s32 bpp=target->getBytesPerPixel();
-
-	u8* nData = (u8*)target->lock();
-
-	if (targetSize==Size)
-	{
-		memcpy(nData,Data,targetSize.Width*targetSize.Height*bpp);
-		target->unlock();
-		return;
-	}
-
 	sy = 0.0f;
-	for (s32 y=0; y<targetSize.Height; ++y)
+	for (s32 y=0; y<height; ++y)
 	{
 		sx = 0.0f;
-		for (s32 x=0; x<targetSize.Width; ++x)
+		for (s32 x=0; x<width; ++x)
 		{
-			memcpy(&nData[(y*targetSize.Width + x)*bpp], &((u8*)Data)[((s32)(((s32)sy)*Size.Width + sx))*bpp], bpp);
+			CColorConverter::convert_viaFormat(((u8*)Data)+(((s32)sy)*Size.Width + (s32)sx)*BytesPerPixel, Format, 1, ((u8*)target)+(y*pitch + x*bpp), format);
 			sx+=sourceXStep;
 		}
 		sy+=sourceYStep;
 	}
+}
 
+//! copies this surface into another, scaling it to the target image size
+// note: this is very very slow. (i didn't want to write a fast version.
+// but hopefully, nobody wants to scale surfaces every frame.
+void CImage::copyToScaling(IImage* target)
+{
+	if (!target)
+		return;
+
+	const core::dimension2d<s32>& targetSize = target->getDimension();
+
+	if (targetSize==Size)
+	{
+		copyTo(target);
+		return;
+	}
+
+	copyToScaling(target->lock(), targetSize.Width, targetSize.Height, target->getColorFormat());
 	target->unlock();
+}
+
+//! copies this surface into another, scaling it to fit it.
+void CImage::copyToScalingBoxFilter(IImage* target, s32 bias)
+{
+	const core::dimension2d<s32> destSize = target->getDimension();
+
+	const f32 sourceXStep = (f32) Size.Width / (f32) destSize.Width;
+	const f32 sourceYStep = (f32) Size.Height / (f32) destSize.Height;
+
+	target->lock();
+
+	s32 fx = irr::core::ceil32 ( sourceXStep );
+	s32 fy = irr::core::ceil32 ( sourceYStep );
+	f32 sx;
+	f32 sy;
+
+	sy = 0.f;
+	for ( s32 y = 0; y != destSize.Height; ++y )
+	{
+		sx = 0.f;
+		for ( s32 x = 0; x != destSize.Width; ++x )
+		{
+			target->setPixel ( x, y, getPixelBox( core::floor32 ( sx ), core::floor32 ( sy ), fx, fy, bias ) );
+			sx += sourceXStep;
+		}
+		sy += sourceYStep;
+	}
+
+	target->unlock ();
 }
 
 
@@ -1294,6 +1360,10 @@ void CImage::fill(const SColor &color)
 	{
 		case ECF_A1R5G5B5:
 			c = video::A8R8G8B8toA1R5G5B5 ( color.color );
+			c |= c << 16;
+			break;
+		case ECF_R5G6B5:
+			c = video::A8R8G8B8toR5G6B5 ( color.color );
 			c |= c << 16;
 			break;
 		case ECF_A8R8G8B8:
@@ -1309,7 +1379,7 @@ void CImage::fill(const SColor &color)
 
 
 //! get a filtered pixel
-inline SColor CImage::getPixelBox ( s32 x, s32 y, s32 fx, s32 fy, s32 bias )
+inline SColor CImage::getPixelBox ( s32 x, s32 y, s32 fx, s32 fy, s32 bias ) const
 {
 	SColor c;
 	s32 a = 0, r = 0, g = 0, b = 0;
@@ -1339,50 +1409,6 @@ inline SColor CImage::getPixelBox ( s32 x, s32 y, s32 fx, s32 fy, s32 bias )
 }
 
 
-//! copies this surface into another, scaling it to fit it.
-void CImage::copyToScalingBoxFilter(CImage* target, s32 bias)
-{
-	video::ECOLOR_FORMAT destFormat = target->getColorFormat();
-
-	if (Format != destFormat )
-	{
-		//os::Printer::log("Format not equal", ELL_ERROR);
-		return;
-	}
-
-	core::dimension2d<s32> destSize = target->getDimension();
-
-	f32 sourceXStep = (f32) Size.Width;
-	f32 sourceYStep = (f32) Size.Height;
-
-	sourceXStep /= (f32) ( destSize.Width - 0 );
-	sourceYStep /= (f32) ( destSize.Height - 0 );
-
-	s32 fx = irr::core::ceil32 ( sourceXStep );
-	s32 fy = irr::core::ceil32 ( sourceYStep );
-	f32 sx;
-	f32 sy;
-	SColor p;
-
-	sy = 0.f;
-
-	for ( s32 y = 0; y != destSize.Height; ++y )
-	{
-		sx = 0.f;
-		for ( s32 x = 0; x != destSize.Width; ++x )
-		{
-			target->setPixel ( x, y,getPixelBox ( core::floor32 ( sx ), core::floor32 ( sy ), fx, fy, bias ) );
-
-			sx += sourceXStep;
-		}
-		sy += sourceYStep;
-	}
-
-	target->unlock ();
-
-}
-
-
-
 } // end namespace video
 } // end namespace irr
+

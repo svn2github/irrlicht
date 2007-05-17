@@ -58,6 +58,15 @@ namespace video
 	}
 
 
+	//! Converts a 32 bit (A8R8G8B8) color to a 16 R5G6B5 color
+	inline u16 A8R8G8B8toR5G6B5(u32 color)
+	{
+		return (( color & 0x00F80000) >> 8 |
+			( color & 0x0000FC00) >> 5 |
+			( color & 0x000000F8) >> 3);
+	}
+
+
 	//! Returns A8R8G8B8 Color from A1R5G5B5 color
 	//! build a nicer 32 Bit Color by extending dest lower bits with source high bits
 	inline u32 A1R5G5B5toA8R8G8B8(u32 color)

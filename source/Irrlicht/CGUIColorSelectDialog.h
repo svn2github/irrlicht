@@ -7,13 +7,10 @@
 
 #include "IGUIColorSelectDialog.h"
 #include "IGUIButton.h"
-#include "IGUIListBox.h"
 #include "IGUIEditBox.h"
 #include "IGUIScrollBar.h"
 #include "IGUIImage.h"
-
 #include "irrArray.h"
-#include "CImage.h"
 
 
 namespace irr

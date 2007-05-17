@@ -20,66 +20,15 @@ namespace irr
 namespace video
 {
 
-bool checkFBOStatus(COpenGLDriver* Driver)
-{
-#ifdef GL_EXT_framebuffer_object
-	GLenum status = Driver->extGlCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+// helper function for render to texture
+bool checkFBOStatus(COpenGLDriver* Driver);
 
-	switch (status)
-	{
-		//Our FBO is perfect, return true
-		case GL_FRAMEBUFFER_COMPLETE_EXT:
-			return true;
-
-		case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
-			os::Printer::log("FBO has invalid read buffer", ELL_ERROR);
-			break;
-
-		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
-			os::Printer::log("FBO has invalid draw buffer", ELL_ERROR);
-			break;
-
-		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
-			os::Printer::log("FBO has one or several incomplete image attachments", ELL_ERROR);
-			break;
-
-		case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
-			os::Printer::log("FBO has one or several image attachments with different internal formats", ELL_ERROR);
-			break;
-
-		case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
-			os::Printer::log("FBO has one or several image attachments with different dimensions", ELL_ERROR);
-			break;
-
-// not part of fbo_object anymore, but won't harm as it is just a return value
-#ifdef GL_FRAMEBUFFER_INCOMPLETE_DUPLICATE_ATTACHMENT_EXT
-		case GL_FRAMEBUFFER_INCOMPLETE_DUPLICATE_ATTACHMENT_EXT:
-			os::Printer::log("FBO has a duplicate image attachment", ELL_ERROR);
-			break;
-#endif
-
-		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
-			os::Printer::log("FBO missing an image attachment", ELL_ERROR);
-			break;
-
-		case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
-			os::Printer::log("FBO format unsupported", ELL_ERROR);
-			break;
-
-		default:
-			break;
-	}
-	os::Printer::log("FBO error", ELL_ERROR);
-#endif
-	return false;
-}
-
-//! constructor
-COpenGLTexture::COpenGLTexture(IImage* image, bool generateMipLevels, const char* name, COpenGLDriver* driver)
+//! constructor for usual textures
+COpenGLTexture::COpenGLTexture(IImage* image, const char* name, COpenGLDriver* driver)
  : ITexture(name), Driver(driver), Image(0),
   TextureName(0), InternalFormat(GL_RGBA), PixelFormat(GL_BGRA_EXT),
-  PixelType(GL_UNSIGNED_BYTE), HasMipMaps(generateMipLevels),
-  ColorFrameBuffer(0), DepthRenderBuffer(0), StencilRenderBuffer(0)
+  PixelType(GL_UNSIGNED_BYTE), HasMipMaps(true),
+  ColorFrameBuffer(0), DepthRenderBuffer(0), StencilRenderBuffer(0), Locks(0)
 {
 	#ifdef _DEBUG
 	setDebugName("COpenGLTexture");
@@ -87,6 +36,7 @@ COpenGLTexture::COpenGLTexture(IImage* image, bool generateMipLevels, const char
 
 	getImageData(image);
 
+	HasMipMaps = Driver->getTextureCreationFlag(ETCF_CREATE_MIP_MAPS);
 	if (Image)
 	{
 		glGenTextures(1, &TextureName);
@@ -102,7 +52,7 @@ COpenGLTexture::COpenGLTexture(const core::dimension2d<s32>& size,
  : ITexture(name), ImageSize(size), Driver(driver), Image(0),
   TextureName(0), InternalFormat(GL_RGB8), PixelFormat(GL_RGBA),
   PixelType(GL_UNSIGNED_BYTE), HasMipMaps(false),
-  ColorFrameBuffer(0), DepthRenderBuffer(0), StencilRenderBuffer(0)
+  ColorFrameBuffer(0), DepthRenderBuffer(0), StencilRenderBuffer(0), Locks(0)
 {
 	#ifdef _DEBUG
 	setDebugName("COpenGLTexture_FBO");
@@ -247,49 +197,35 @@ void COpenGLTexture::getImageData(IImage* image)
 		nImageSize.Height = getTextureSizeFromSurfaceSize(ImageSize.Height);
 	}
 
-	if (ImageSize==nImageSize)
+	ECOLOR_FORMAT destFormat = ECF_A8R8G8B8;
+	switch (image->getColorFormat())
 	{
-		if (image->getColorFormat()==ECF_R8G8B8)
-			Image = new CImage(ECF_A8R8G8B8, image);
-		else
-			Image = new CImage(image->getColorFormat(), image);
+		case ECF_A1R5G5B5:
+			if (!Driver->getTextureCreationFlag(ETCF_ALWAYS_32_BIT))
+				destFormat = ECF_A1R5G5B5;
+		break;
+		case ECF_R5G6B5:
+			if (!Driver->getTextureCreationFlag(ETCF_ALWAYS_32_BIT))
+				destFormat = ECF_A1R5G5B5;
+		break;
+		case ECF_A8R8G8B8:
+			if (Driver->getTextureCreationFlag(ETCF_ALWAYS_16_BIT) ||
+					Driver->getTextureCreationFlag(ETCF_OPTIMIZED_FOR_SPEED))
+				destFormat = ECF_A1R5G5B5;
+		break;
+		case ECF_R8G8B8:
+			if (Driver->getTextureCreationFlag(ETCF_ALWAYS_16_BIT) ||
+					Driver->getTextureCreationFlag(ETCF_OPTIMIZED_FOR_SPEED))
+				destFormat = ECF_A1R5G5B5;
+		break;
 	}
+	if (ImageSize==nImageSize)
+		Image = new CImage(destFormat, image);
 	else
 	{
-		if (image->getColorFormat()==ECF_R8G8B8)
-			Image = new CImage(ECF_A8R8G8B8, nImageSize);
-		else
-			Image = new CImage(image->getColorFormat(), nImageSize);
+		Image = new CImage(destFormat, nImageSize);
 		// scale texture
-		f32 sourceXStep = (f32)ImageSize.Width / (f32)nImageSize.Width;
-		f32 sourceYStep = (f32)ImageSize.Height / (f32)nImageSize.Height;
-		f32 sx,sy;
-		const s32 bpp=image->getBytesPerPixel();
-
-		u8* source = (u8*)image->lock();
-		u8* dest = (u8*)Image->lock();
-
-		// copy texture scaling
-		sy = 0.0f;
-		for (s32 y=0; y<nImageSize.Height; ++y)
-		{
-			sx = 0.0f;
-			for (s32 x=0; x<nImageSize.Width; ++x)
-			{
-				s32 i=((s32)(((s32)sy)*ImageSize.Width + sx));
-				if (image->getColorFormat()==ECF_R8G8B8)
-				{
-					i*=3;
-					((s32*)dest)[y*nImageSize.Width + x]=SColor(255,source[i],source[i+1],source[i+2]).color;
-				}
-				else
-					memcpy(&dest[(y*nImageSize.Width + x)*bpp],&source[i*bpp],bpp);
-				sx+=sourceXStep;
-			}
-			sy+=sourceYStep;
-		}
-		image->unlock();
-		Image->unlock();
+		image->copyToScaling(Image);
 	}
 }
 
@@ -387,7 +323,10 @@ inline s32 COpenGLTexture::getTextureSizeFromSurfaceSize(s32 size)
 void* COpenGLTexture::lock()
 {
 	if (Image)
+	{
+		++Locks;
 		return Image->lock();
+	}
 	else
 		return 0;
 }
@@ -397,9 +336,12 @@ void* COpenGLTexture::lock()
 //! unlock function
 void COpenGLTexture::unlock()
 {
-	copyTexture(false);
 	if (Image)
-		return Image->unlock();
+	{
+		--Locks;
+		Image->unlock();
+		copyTexture(false);
+	}
 }
 
 
@@ -477,8 +419,6 @@ void COpenGLTexture::regenerateMipMapLevels()
 {
 	if (AutomaticMipmapUpdate || !HasMipMaps)
 		return;
-		HasMipMaps=false;
-	return;
 	void* source = Image->lock();
 	if (gluBuild2DMipmaps(GL_TEXTURE_2D, InternalFormat,
 			ImageSize.Width, ImageSize.Height,
@@ -487,28 +427,25 @@ void COpenGLTexture::regenerateMipMapLevels()
 		Image->unlock();
 		return;
 	}
-	else
-		HasMipMaps=false;
-	Image->unlock();
-	return;
 
 	// This code is wrong as it does not take into account the image scaling
 	// Therefore it is currently disabled
 	u32 width=ImageSize.Width>>1;
 	u32 height=ImageSize.Height>>1;
 	u32 i=1;
-	source = Image->lock();
+	void* target = new u8[Image->getImageDataSizeInBytes()];
 	while (width>1 || height>1)
 	{
-		//TODO: Add image scaling
+		Image->copyToScaling(target, width, height, Image->getColorFormat(), Image->getPitch());
 		glTexImage2D(GL_TEXTURE_2D, i, InternalFormat, Image->getDimension().Width,
-			Image->getDimension().Height, 0, PixelFormat, PixelType, source);
+			Image->getDimension().Height, 0, PixelFormat, PixelType, target);
 		if (width>1)
 			width>>=1;
 		if (height>1)
 			height>>=1;
 		++i;
 	}
+	delete [] target;
 	Image->unlock();
 }
 
@@ -535,6 +472,59 @@ void COpenGLTexture::unbindFrameBufferObject()
 #endif
 }
 
+bool checkFBOStatus(COpenGLDriver* Driver)
+{
+#ifdef GL_EXT_framebuffer_object
+	GLenum status = Driver->extGlCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+
+	switch (status)
+	{
+		//Our FBO is perfect, return true
+		case GL_FRAMEBUFFER_COMPLETE_EXT:
+			return true;
+
+		case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
+			os::Printer::log("FBO has invalid read buffer", ELL_ERROR);
+			break;
+
+		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
+			os::Printer::log("FBO has invalid draw buffer", ELL_ERROR);
+			break;
+
+		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
+			os::Printer::log("FBO has one or several incomplete image attachments", ELL_ERROR);
+			break;
+
+		case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
+			os::Printer::log("FBO has one or several image attachments with different internal formats", ELL_ERROR);
+			break;
+
+		case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+			os::Printer::log("FBO has one or several image attachments with different dimensions", ELL_ERROR);
+			break;
+
+// not part of fbo_object anymore, but won't harm as it is just a return value
+#ifdef GL_FRAMEBUFFER_INCOMPLETE_DUPLICATE_ATTACHMENT_EXT
+		case GL_FRAMEBUFFER_INCOMPLETE_DUPLICATE_ATTACHMENT_EXT:
+			os::Printer::log("FBO has a duplicate image attachment", ELL_ERROR);
+			break;
+#endif
+
+		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
+			os::Printer::log("FBO missing an image attachment", ELL_ERROR);
+			break;
+
+		case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
+			os::Printer::log("FBO format unsupported", ELL_ERROR);
+			break;
+
+		default:
+			break;
+	}
+	os::Printer::log("FBO error", ELL_ERROR);
+#endif
+	return false;
+}
 
 } // end namespace video
 } // end namespace irr

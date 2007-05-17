@@ -302,5 +302,5 @@ namespace video
 } // end namespace video
 } // end namespace irr
 
-#endif
+#endif // _IRR_COMPILE_WITH_DIRECT3D_8_
 

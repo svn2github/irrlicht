@@ -31,14 +31,14 @@ public:
 		video::SMaterial* material,	f32 hillHeight, const core::dimension2d<f32>& countHills,
 		const core::dimension2d<f32>& textureRepeatCount);
 
-	static IAnimatedMesh* createTerrainMesh(video::IImage* texture, 
+	static IAnimatedMesh* createTerrainMesh(video::IImage* texture,
 		video::IImage* heightmap, const core::dimension2d<f32>& stretchSize, f32 maxHeight,
-		video::IVideoDriver* driver, 
+		video::IVideoDriver* driver,
 		const core::dimension2d<s32> defaultVertexBlockSize,
 		bool debugBorders=false);
 
-	static IAnimatedMesh* createArrowMesh (	const u32 tesselationCylinder, 
-											const u32 tesselationCone, 
+	static IAnimatedMesh* createArrowMesh (	const u32 tesselationCylinder,
+											const u32 tesselationCone,
 											const f32 height,
 											const f32 cylinderHeight,
 											const f32 width0,

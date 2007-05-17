@@ -10,7 +10,6 @@
 #include "S2DVertex.h"
 #include "rect.h"
 #include "IZBuffer.h"
-#include "IImage.h"
 
 namespace irr
 {

@@ -87,10 +87,10 @@ private:
 	bool copyTexture();
 
 	//! optimized for 16 bit to 16 copy.
-	bool copyTo16BitTexture(bool surfaceHasSameSize);
+	bool copyTo16BitTexture();
 
 	//! copies texture to 32 bit hardware texture
-	bool copyTo32BitTexture(bool surfaceHasSameSize);
+	bool copyTo32BitTexture();
 
 	bool createMipMaps(s32 level=1);
 
