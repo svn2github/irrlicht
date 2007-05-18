@@ -59,7 +59,6 @@ namespace scene
 
 		//! Blitz Basic .b3d file, the file format by Mark Sibly
 		EAMT_B3D
-
 	};
 
 	//! Interface for an animated mesh.

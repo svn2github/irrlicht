@@ -7,7 +7,6 @@
 
 #include "IrrlichtDevice.h"
 #include "IImagePresenter.h"
-#include "IGUIEnvironment.h"
 #include "CVideoModeList.h"
 
 namespace irr
@@ -15,6 +14,13 @@ namespace irr
 	// lots of prototypes:
 	class ILogger;
 	class CLogger;
+
+	namespace gui
+	{
+		class IGUIEnvironment;
+		IGUIEnvironment* createGUIEnvironment(io::IFileSystem* fs, 
+			video::IVideoDriver* Driver, IOSOperator* op);
+	}
 
 	namespace scene
 	{
@@ -25,12 +31,6 @@ namespace irr
 	namespace io
 	{
 		IFileSystem* createFileSystem();
-	}
-
-	namespace gui
-	{
-		IGUIEnvironment* createGUIEnvironment(io::IFileSystem* fs, 
-			video::IVideoDriver* Driver, IOSOperator* op);
 	}
 
 	namespace video

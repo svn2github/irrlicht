@@ -32,17 +32,23 @@ namespace gui
 		//! draws the element and its children
 		virtual void draw();
 
-		//! sets the position of the scrollbar
-		virtual void setPos(s32 pos);
+		//! gets the maximum value of the scrollbar.
+		virtual s32 getMax();
 
-		//! sets the maximum value of the scrollbar. must be > 0
+		//! sets the maximum value of the scrollbar.
 		virtual void setMax(s32 max);
+
+		//! gets the small step value
+		virtual s32 getSmallStep();
 
 		//! sets the small step value
 		virtual void setSmallStep(s32 step);
 
 		//! gets the current position of the scrollbar
 		virtual s32 getPos();
+
+		//! sets the position of the scrollbar
+		virtual void setPos(s32 pos);
 
 		//! updates the rectangle
 		virtual void updateAbsolutePosition();
@@ -69,8 +75,6 @@ namespace gui
 		s32 DrawHeight;
 		s32 Max;
 		s32 SmallStep;
-
-
 	};
 
 } // end namespace gui

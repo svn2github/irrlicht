@@ -84,7 +84,7 @@ namespace scene
 		virtual IShadowVolumeSceneNode* addShadowVolumeSceneNode(s32 id=-1,
 			bool zfailmethod=true, f32 infinity=10000.0f) = 0;
 
-		//! Returns a pointer to a child node, wich has the same transformation as
+		//! Returns a pointer to a child node, which has the same transformation as
 		//! the corresponding joint, if the mesh in this scene node is a ms3d mesh.
 		//! Otherwise 0 is returned. With this method it is possible to
 		//! attach scene nodes to joints more easily. In this way, it is
@@ -122,7 +122,7 @@ namespace scene
 		//! ms3d mesh or the name of the joint could not be found.
 		virtual ISceneNode* getXJointNode(const c8* jointName) = 0;
 
-		//! Returns a pointer to a child node, wich has the same transformation as
+		//! Returns a pointer to a child node, which has the same transformation as
 		//! the corresponding joint, if the mesh in this scene node is a b3d mesh.
 		//! Otherwise 0 is returned. With this method it is possible to
 		//! attach scene nodes to joints more easily. In this way, it is

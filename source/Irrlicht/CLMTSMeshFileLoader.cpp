@@ -74,12 +74,12 @@ Version 1.0 - 29 July 2004
 */
 //////////////////////////////////////////////////////////////////////
 
-#include <SMeshBufferLightMap.h>
-#include <SAnimatedMesh.h>
-#include <SMeshBuffer.h>
-#include <irrString.h>
-#include <IAttributes.h>
-#include <IrrlichtDevice.h>
+#include "SMeshBufferLightMap.h"
+#include "SAnimatedMesh.h"
+#include "SMeshBuffer.h"
+#include "irrString.h"
+#include "IAttributes.h"
+#include "ISceneManager.h"
 #include "CLMTSMeshFileLoader.h"
 #if LMTS_INTEGRATED_IN_IRRLICHT
 #include "os.h"

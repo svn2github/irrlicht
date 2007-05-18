@@ -242,6 +242,13 @@ void CGUIScrollBar::setPos(s32 pos)
 }
 
 
+//! gets the small step value
+s32 CGUIScrollBar::getSmallStep()
+{
+	return SmallStep;
+}
+
+
 //! sets the small step value
 void CGUIScrollBar::setSmallStep(s32 step)
 {
@@ -253,7 +260,14 @@ void CGUIScrollBar::setSmallStep(s32 step)
 }
 
 
-//! sets the maximum value of the scrollbar. must be > 0
+//! gets the maximum value of the scrollbar.
+s32 CGUIScrollBar::getMax()
+{
+	return Max;
+}
+
+
+//! sets the maximum value of the scrollbar.
 void CGUIScrollBar::setMax(s32 max)
 {
 	if (max > 0)
@@ -268,12 +282,12 @@ void CGUIScrollBar::setMax(s32 max)
 }
 
 
-
 //! gets the current position of the scrollbar
 s32 CGUIScrollBar::getPos()
 {
 	return Pos;
 }
+
 
 //! refreshes the position and text on child buttons
 void CGUIScrollBar::refreshControls()

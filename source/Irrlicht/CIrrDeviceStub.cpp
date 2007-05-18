@@ -3,8 +3,9 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
 #include "CIrrDeviceStub.h"
+#include "ISceneManager.h"
 #include "IEventReceiver.h"
-#include "irrList.h"
+#include "IGUIEnvironment.h"
 #include "os.h"
 #include "IrrCompileConfig.h"
 #include "CTimer.h"

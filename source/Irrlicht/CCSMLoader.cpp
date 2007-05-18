@@ -592,7 +592,7 @@ namespace scene
 	{
 		flags = 0;
 		lightMapId = 0;
-		textureName = 0;
+		textureName = "";
 		uvOffset.set(0.0f,0.0f);
 		uvScale.set(0.0f,0.0f);
 		uvRotation = 0.0f;

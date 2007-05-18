@@ -12,7 +12,6 @@
 #include "CIrrDeviceStub.h"
 #include "IrrlichtDevice.h"
 #include "IImagePresenter.h"
-#include "IGUIEnvironment.h"
 #include "ICursorControl.h"
 
 #ifdef _IRR_COMPILE_WITH_X11_

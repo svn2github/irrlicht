@@ -237,8 +237,8 @@ bool CD3D8Driver::initDriver(const core::dimension2d<s32>& screenSize, HWND hwnd
 		DWORD qualityLevels = 0;
 
 		if (!FAILED(pID3D->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT,
-		           devtype , present.BackBufferFormat, !fullScreen,
-		           D3DMULTISAMPLE_2_SAMPLES)))
+				devtype , present.BackBufferFormat, !fullScreen,
+				D3DMULTISAMPLE_2_SAMPLES)))
 		{
 			// enable multi sampling
 			present.SwapEffect      = D3DSWAPEFFECT_DISCARD;
@@ -661,7 +661,7 @@ void CD3D8Driver::setTextureCreationFlag(E_TEXTURE_CREATION_FLAG flag, bool enab
 
 //! sets a render target
 bool CD3D8Driver::setRenderTarget(video::ITexture* texture, bool clearBackBuffer,
-								 bool clearZBuffer, SColor color)
+				bool clearZBuffer, SColor color)
 {
 	// check for right driver type
 
@@ -873,9 +873,9 @@ void CD3D8Driver::drawVertexPrimitiveList(const void* vertices, u32 vertexCount,
 
 //! draws an 2d image, using a color (if color is other then Color(255,255,255,255)) and the alpha channel of the texture if wanted.
 void CD3D8Driver::draw2DImage(video::ITexture* texture, const core::position2d<s32>& pos,
-				 const core::rect<s32>& sourceRect,
-				 const core::rect<s32>* clipRect, SColor color,
-				 bool useAlphaChannelOfTexture)
+				const core::rect<s32>& sourceRect,
+				const core::rect<s32>* clipRect, SColor color,
+				bool useAlphaChannelOfTexture)
 {
 	if (!texture)
 		return;
@@ -1004,8 +1004,8 @@ void CD3D8Driver::draw2DImage(video::ITexture* texture, const core::rect<s32>& d
 			const core::rect<s32>& sourceRect, const core::rect<s32>* clipRect,
 			video::SColor* colors, bool useAlphaChannelOfTexture)
 {
-   if(!texture)
-   	return;
+	if(!texture)
+		return;
 
 	const core::dimension2d<s32>& ss = texture->getOriginalSize();
 	core::rect<f32> tcoords;
@@ -1021,7 +1021,7 @@ void CD3D8Driver::draw2DImage(video::ITexture* texture, const core::rect<s32>& d
 	npos.UpperLeftCorner.X = ( destRect.UpperLeftCorner.X * xFact ) - 1.0f;
 	npos.UpperLeftCorner.Y = 1.0f - ( destRect.UpperLeftCorner.Y * yFact );
 	npos.LowerRightCorner.X = ( destRect.LowerRightCorner.X * xFact ) - 1.0f;
-	npos.LowerRightCorner.Y = 1.0f - ( destRect.LowerRightCorner.Y * yFact ); 
+	npos.LowerRightCorner.Y = 1.0f - ( destRect.LowerRightCorner.Y * yFact );
 
 	video::SColor temp[4] =
 	{
@@ -2074,16 +2074,16 @@ namespace video
 #ifdef _IRR_WINDOWS_API_
 //! creates a video driver
 IVideoDriver* createDirectX8Driver(const core::dimension2d<s32>& screenSize, HWND window,
-				   u32 bits, bool fullscreen, bool stencilbuffer,
-				   io::IFileSystem* io, bool pureSoftware, bool highPrecisionFPU,
-				   bool vsync, bool antiAlias)
+				u32 bits, bool fullscreen, bool stencilbuffer,
+				io::IFileSystem* io, bool pureSoftware, bool highPrecisionFPU,
+				bool vsync, bool antiAlias)
 {
 	#ifdef _IRR_COMPILE_WITH_DIRECT3D_8_
 	CD3D8Driver* dx8 =  new CD3D8Driver(screenSize, window, fullscreen,
-		                                stencilbuffer, io, pureSoftware);
+					stencilbuffer, io, pureSoftware);
 
 	if (!dx8->initDriver(screenSize, window, bits, fullscreen,
-		                 pureSoftware, highPrecisionFPU, vsync, antiAlias))
+			pureSoftware, highPrecisionFPU, vsync, antiAlias))
 	{
 		dx8->drop();
 		dx8 = 0;

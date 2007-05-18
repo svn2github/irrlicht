@@ -11,7 +11,6 @@
 #include "CIrrDeviceStub.h"
 #include "IrrlichtDevice.h"
 #include "IImagePresenter.h"
-#include "IGUIEnvironment.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>

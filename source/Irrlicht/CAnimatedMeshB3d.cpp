@@ -7,6 +7,7 @@
 #include "CAnimatedMeshB3d.h"
 #include "os.h"
 #include "IVideoDriver.h"
+#include "ISceneNode.h"
 
 namespace irr
 {
