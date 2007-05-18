@@ -133,7 +133,9 @@ namespace irr
 
 			~CCursorControl()
 			{
+#ifdef _IRR_COMPILE_WITH_X11_
 				XFreeGC(Device->display, gc);
+#endif
 				Device->drop();
 			}
 
