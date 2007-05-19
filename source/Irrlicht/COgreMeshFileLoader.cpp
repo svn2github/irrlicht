@@ -7,6 +7,7 @@
 #include "os.h"
 #include "SMeshBuffer.h"
 #include "SAnimatedMesh.h"
+#include "IReadFile.h"
 #include "fast_atof.h"
 #include "coreutil.h"
 

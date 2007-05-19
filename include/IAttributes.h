@@ -12,7 +12,6 @@
 #include "line2d.h"
 #include "line3d.h"
 #include "triangle3d.h"
-#include "quaternion.h"
 #include "position2d.h"
 #include "rect.h"
 #include "matrix4.h"

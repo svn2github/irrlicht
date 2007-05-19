@@ -7,9 +7,10 @@
 
 #include "IUnknown.h"
 #include "vector3d.h"
-#include "IMeshBuffer.h"
 #include "aabbox3d.h"
+#include "matrix4.h"
 #include "IAnimatedMesh.h"
+#include "SColor.h"
 
 namespace irr
 {
@@ -17,7 +18,7 @@ namespace scene
 {
 
 	class IMesh;
-	class IAnimatedMesh;
+	class IMeshBuffer;
 	struct SMesh;
 
 	//! An interface for easily manipulate meshes.

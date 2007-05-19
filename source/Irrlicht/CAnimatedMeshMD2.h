@@ -7,6 +7,7 @@
 
 #include "IAnimatedMeshMD2.h"
 #include "IMesh.h"
+#include "IMeshBuffer.h"
 #include "IReadFile.h"
 #include "S3DVertex.h"
 #include "irrArray.h"

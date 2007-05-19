@@ -8,11 +8,10 @@
 #include "IVideoDriver.h"
 #include "IFileSystem.h"
 #include "IImagePresenter.h"
+#include "IGPUProgrammingServices.h"
 #include "irrArray.h"
 #include "irrString.h"
 #include "IAttributes.h"
-#include "IImageLoader.h"
-#include "IImageWriter.h"
 #include "IMeshBuffer.h"
 #include "CFPSCounter.h"
 #include "S3DVertex.h"
@@ -21,8 +20,16 @@
 
 namespace irr
 {
+namespace io
+{
+	class IWriteFile;
+	class IReadFile;
+} // end namespace io
 namespace video
 {
+	class IImageLoader;
+	class IImageWriter;
+
 	class CNullDriver : public IVideoDriver, public IGPUProgrammingServices
 	{
 	public:

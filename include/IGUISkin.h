@@ -7,7 +7,6 @@
 
 #include "IAttributeExchangingObject.h"
 #include "SColor.h"
-#include "IGUISkin.h"
 #include "rect.h"
 
 namespace irr

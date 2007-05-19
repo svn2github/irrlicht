@@ -6,7 +6,6 @@
 #define __S_MATERIAL_H_INCLUDED__
 
 #include "SColor.h"
-#include "ITexture.h"
 #include "matrix4.h"
 #include "irrArray.h"
 
@@ -14,6 +13,8 @@ namespace irr
 {
 namespace video
 {
+	class ITexture;
+
 	//! Abstracted and easy to use fixed function/programmable pipeline material modes.
 	enum E_MATERIAL_TYPE
 	{

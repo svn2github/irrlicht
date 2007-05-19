@@ -55,7 +55,7 @@ COpenGLDriver::COpenGLDriver(const core::dimension2d<s32>& screenSize, HWND wind
 	pGlStencilFuncSeparateATI(0), pGlStencilOpSeparateATI(0),
 	#ifdef PFNGLCOMPRESSEDTEXIMAGE2DPROC
 		pGlCompressedTexImage2D(0),
-	#endif // PFNGLCOMPRESSEDTEXIMAGE2DPROC
+	#endif
 #endif // _IRR_OPENGL_USE_EXTPOINTER_
 	wglSwapIntervalEXT(0),
 	pGlBindFramebufferEXT(0), pGlDeleteFramebuffersEXT(0), pGlGenFramebuffersEXT(0),
@@ -256,7 +256,7 @@ COpenGLDriver::COpenGLDriver(const core::dimension2d<s32>& screenSize, bool full
 	pGlDeleteProgramsARB(0), pGlProgramLocalParameter4fvARB(0)
 		#ifdef PFNGLCOMPRESSEDTEXIMAGE2DPROC
 			,pGlCompressedTexImage2D(0)
-		#endif // PFNGLCOMPRESSEDTEXIMAGE2DPROC
+		#endif
 #ifdef GLX_SGI_swap_control
 	,glxSwapIntervalSGI(0)
 #endif
@@ -318,7 +318,7 @@ COpenGLDriver::COpenGLDriver(const core::dimension2d<s32>& screenSize, bool full
 	pGlDeleteProgramsARB(0), pGlProgramLocalParameter4fvARB(0)
 		#ifdef PFNGLCOMPRESSEDTEXIMAGE2DPROC
 			,pGlCompressedTexImage2D(0)
-		#endif // PFNGLCOMPRESSEDTEXIMAGE2DPROC
+		#endif
     ,pGlBindFramebufferEXT(0), pGlDeleteFramebuffersEXT(0), pGlGenFramebuffersEXT(0),
     pGlCheckFramebufferStatusEXT(0), pGlFramebufferTexture2DEXT(0),
     pGlBindRenderbufferEXT(0), pGlDeleteRenderbuffersEXT(0), pGlGenRenderbuffersEXT(0),
@@ -593,7 +593,7 @@ void COpenGLDriver::loadExtensions()
 
 		#ifdef PFNGLCOMPRESSEDTEXIMAGE2DPROC
 		pGlCompressedTexImage2D = (PFNGLCOMPRESSEDTEXIMAGE2DPROC) wglGetProcAddress("glCompressedTexImage2D");
-		#endif // PFNGLCOMPRESSEDTEXIMAGE2DPROC
+		#endif
 
         // FrameBufferObjects
         pGlBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXTPROC) wglGetProcAddress("glBindFramebufferEXT");
@@ -744,7 +744,7 @@ void COpenGLDriver::loadExtensions()
 			#ifdef PFNGLCOMPRESSEDTEXIMAGE2DPROC
 			pGlCompressedTexImage2D = (PFNGLCOMPRESSEDTEXIMAGE2DPROC)
 				IRR_OGL_LOAD_EXTENSION(reinterpret_cast<const GLubyte*>("glCompressedTexImage2D"));
-			#endif // PFNGLCOMPRESSEDTEXIMAGE2DPROC
+			#endif
 
 #if defined(GLX_SGI_swap_control) && !defined(_IRR_USE_SDL_DEVICE_)
 			// get vsync extension
@@ -2710,7 +2710,7 @@ void COpenGLDriver::extGlCompressedTexImage2D (GLenum target, GLint level, GLenu
 	#ifdef PFNGLCOMPRESSEDTEXIMAGE2DPROC
 		if (pGlCompressedTexImage2D)
 			pGlCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
-	#endif // PFNGLCOMPRESSEDTEXIMAGE2DPROC
+	#endif
 #else
 	glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
 #endif

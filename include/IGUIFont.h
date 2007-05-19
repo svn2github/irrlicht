@@ -6,11 +6,8 @@
 #define __I_GUI_FONT_H_INCLUDED__
 
 #include "IUnknown.h"
-#include "rect.h"
-#include "irrTypes.h"
 #include "SColor.h"
-#include "irrArray.h"
-#include "ITexture.h"
+#include "rect.h"
 
 namespace irr
 {

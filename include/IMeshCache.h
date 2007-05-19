@@ -5,7 +5,6 @@
 #ifndef __I_MESH_CACHE_H_INCLUDED__
 #define __I_MESH_CACHE_H_INCLUDED__
 
-#include "irrTypes.h"
 #include "IUnknown.h"
 
 namespace irr

@@ -5,6 +5,7 @@
 #include "COBJMeshFileLoader.h"
 #include "SMeshBuffer.h"
 #include "SAnimatedMesh.h"
+#include "IReadFile.h"
 #include "fast_atof.h"
 #include "irrString.h"
 #include "coreutil.h"

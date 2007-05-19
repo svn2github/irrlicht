@@ -6,10 +6,13 @@
 #define __I_GUI_IMAGE_H_INCLUDED__
 
 #include "IGUIElement.h"
-#include "ITexture.h"
 
 namespace irr
 {
+namespace video
+{
+	class ITexture;
+}
 namespace gui
 {
 

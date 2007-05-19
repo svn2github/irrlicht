@@ -5,6 +5,7 @@
 #include "CQuake3ShaderSceneNode.h"
 #include "IVideoDriver.h"
 #include "ICameraSceneNode.h"
+#include "SViewFrustum.h"
 
 namespace irr
 {

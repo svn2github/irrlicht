@@ -6,7 +6,6 @@
 #define __I_GUI_LIST_BOX_BAR_H_INCLUDED__
 
 #include "IGUIElement.h"
-#include "irrTypes.h"
 
 namespace irr
 {

@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
 #include "CSceneNodeAnimatorTexture.h"
+#include "ITexture.h"
 
 namespace irr
 {

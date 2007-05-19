@@ -6,12 +6,12 @@
 #define __I_GUI_FONT_BITMAP_H_INCLUDED__
 
 #include "IGUIFont.h"
-#include "IGUISpriteBank.h"
 
 namespace irr
 {
 namespace gui
 {
+	class IGUISpriteBank;
 
 //! Font interface.
 class IGUIFontBitmap : public IGUIFont

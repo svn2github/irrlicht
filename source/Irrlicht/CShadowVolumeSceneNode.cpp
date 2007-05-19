@@ -4,6 +4,7 @@
 
 #include "CShadowVolumeSceneNode.h"
 #include "ISceneManager.h"
+#include "IMesh.h"
 #include "IVideoDriver.h"
 #include "SLight.h"
 

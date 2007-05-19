@@ -6,11 +6,14 @@
 #define __I_ANIMATED_MESH_B3D_H_INCLUDED__
 
 #include "IAnimatedMesh.h"
-#include "matrix4.h"
 #include "irrArray.h"
 
 namespace irr
 {
+namespace core
+{
+	class matrix4;
+} // end namespace core
 namespace scene
 {
 	class ISceneNode;

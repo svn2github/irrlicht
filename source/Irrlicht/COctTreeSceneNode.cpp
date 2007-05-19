@@ -9,6 +9,7 @@
 #include "ICameraSceneNode.h"
 #include "IMeshCache.h"
 #include "IAnimatedMesh.h"
+#include "IMaterialRenderer.h"
 
 #include "os.h"
 

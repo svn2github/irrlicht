@@ -4,6 +4,7 @@
 
 #include "CTriangleSelector.h"
 #include "ISceneNode.h"
+#include "IMeshBuffer.h"
 
 namespace irr
 {

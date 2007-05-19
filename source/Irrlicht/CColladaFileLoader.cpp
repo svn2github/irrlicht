@@ -12,6 +12,7 @@
 #include "ILightSceneNode.h"
 #include "ICameraSceneNode.h"
 #include "IMeshManipulator.h"
+#include "IReadFile.h"
 #include "IAttributes.h"
 #include "IMeshCache.h"
 #include "IMeshSceneNode.h"

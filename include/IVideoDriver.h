@@ -12,21 +12,17 @@
 #include "matrix4.h"
 #include "dimension2d.h"
 #include "position2d.h"
-#include "IReadFile.h"
 #include "SMaterial.h"
-#include "IImageLoader.h"
-#include "IImageWriter.h"
 #include "IMeshBuffer.h"
 #include "triangle3d.h"
-#include "IMaterialRenderer.h"
 #include "EDriverTypes.h"
-#include "IGPUProgrammingServices.h"
 
 namespace irr
 {
 namespace io
 {
 	class IAttributes;
+	class IReadFile;
 } // end namespace io
 namespace scene
 {
@@ -40,6 +36,10 @@ namespace video
 	struct S3DVertexTangents;
 	struct SLight;
 	struct SExposedVideoData;
+	class IImageLoader;
+	class IImageWriter;
+	class IMaterialRenderer;
+	class IGPUProgrammingServices;
 
 	//! enumeration for querying features of the video driver.
 	enum E_VIDEO_DRIVER_FEATURE

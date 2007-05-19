@@ -14,6 +14,7 @@
 #include "IAnimatedMeshB3d.h"
 #include "IDummyTransformationSceneNode.h"
 #include "IMaterialRenderer.h"
+#include "IMesh.h"
 #include "IMeshCache.h"
 #include "IAnimatedMesh.h"
 #include "quaternion.h"

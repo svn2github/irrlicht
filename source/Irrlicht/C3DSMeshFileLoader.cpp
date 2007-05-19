@@ -6,6 +6,7 @@
 #include "os.h"
 #include "SMeshBuffer.h"
 #include "SAnimatedMesh.h"
+#include "IReadFile.h"
 
 namespace irr
 {

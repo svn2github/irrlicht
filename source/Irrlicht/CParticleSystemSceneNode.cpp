@@ -12,6 +12,7 @@
 #include "CParticleBoxEmitter.h"
 #include "CParticleFadeOutAffector.h"
 #include "CParticleGravityAffector.h"
+#include "SViewFrustum.h"
 
 namespace irr
 {

@@ -5,12 +5,10 @@
 #ifndef __I_GUI_ENVIRONMENT_H_INCLUDED__
 #define __I_GUI_ENVIRONMENT_H_INCLUDED__
 
-#include "rect.h"
 #include "IUnknown.h"
-#include "irrTypes.h"
 #include "IGUIWindow.h"
 #include "IGUISkin.h"
-#include "IFileSystem.h"
+#include "rect.h"
 
 namespace irr
 {
@@ -22,6 +20,7 @@ namespace irr
 		class IXMLWriter;
 		class IReadFile;
 		class IWriteFile;
+		class IFileSystem;
 	} // end namespace io
 	namespace video
 	{

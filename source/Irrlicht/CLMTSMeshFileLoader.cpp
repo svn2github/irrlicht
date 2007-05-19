@@ -78,6 +78,7 @@ Version 1.0 - 29 July 2004
 #include "SAnimatedMesh.h"
 #include "SMeshBuffer.h"
 #include "irrString.h"
+#include "IReadFile.h"
 #include "IAttributes.h"
 #include "ISceneManager.h"
 #include "CLMTSMeshFileLoader.h"

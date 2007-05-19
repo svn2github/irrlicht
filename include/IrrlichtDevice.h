@@ -5,10 +5,8 @@
 #ifndef __I_IRRLICHT_DEVICE_H_INCLUDED__
 #define __I_IRRLICHT_DEVICE_H_INCLUDED__
 
-#include "irrTypes.h"
 #include "IUnknown.h"
 #include "dimension2d.h"
-#include "IFileSystem.h"
 #include "IVideoDriver.h"
 #include "EDriverTypes.h"
 #include "IEventReceiver.h"
@@ -22,13 +20,17 @@ namespace irr
 	class ILogger;
 	class IEventReceiver;
 
+	namespace io {
+		class IFileSystem;
+	} // end namespace io
+
 	namespace gui {
 		class IGUIEnvironment;
-	}
+	} // end namespace gui
 
 	namespace scene {
 		class ISceneManager;
-	}
+	} // end namespace scene
 
 	//! The Irrlicht device. You can create it with createDevice() or createDeviceEx(). 
 	/** This is the most important class of the Irrlicht Engine. You can access everything

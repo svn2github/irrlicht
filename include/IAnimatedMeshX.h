@@ -7,10 +7,13 @@
 
 #include "IAnimatedMesh.h"
 #include "irrArray.h"
-#include "matrix4.h"
 
 namespace irr
 {
+namespace core
+{
+	class matrix4;
+} // end namespace core
 namespace scene
 {
 	//! Interface for using some special functions of X meshes

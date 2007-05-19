@@ -5,14 +5,13 @@
 #ifndef __I_GUI_ELEMENT_H_INCLUDED__
 #define __I_GUI_ELEMENT_H_INCLUDED__
 
-#include "IUnknown.h"
+#include "IAttributeExchangingObject.h"
 #include "irrList.h"
 #include "rect.h"
 #include "irrString.h"
 #include "IEventReceiver.h"
 #include "EGUIElementTypes.h"
 #include "IAttributes.h"
-#include "IAttributeExchangingObject.h"
 
 namespace irr
 {
@@ -104,9 +103,9 @@ public:
 	{
 		if (Parent)
 		{
-			core::rect<s32> r2(Parent->getAbsolutePosition());
-		
-			core::dimension2df d((f32)r2.getSize().Width, (f32)r2.getSize().Height);
+			const core::rect<s32>& r2(Parent->getAbsolutePosition());
+
+			core::dimension2df d((f32)(r2.getSize().Width), (f32)(r2.getSize().Height));
 
 			if (AlignLeft   == EGUIA_SCALE)
 				ScaleRect.UpperLeftCorner.X = (f32)r.UpperLeftCorner.X / d.Width;
@@ -128,9 +127,7 @@ public:
 		if (!Parent)
 			return;
 		
-		core::rect<s32> r2(Parent->getAbsolutePosition());
-		
-		core::dimension2di d(r2.getSize());
+		const core::dimension2di& d(Parent->getAbsolutePosition().getSize());
 		
 		DesiredRect = core::rect<s32>( 
 						(s32)((f32)d.Width  * r.UpperLeftCorner.X),

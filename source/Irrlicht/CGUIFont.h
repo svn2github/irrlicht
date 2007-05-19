@@ -10,6 +10,7 @@
 #include "irrMap.h"
 #include "IXMLReader.h"
 #include "IReadFile.h"
+#include "irrArray.h"
 
 namespace irr
 {
@@ -17,6 +18,7 @@ namespace irr
 namespace video
 {
 	class IVideoDriver;
+	class IImage;
 }
 
 namespace gui

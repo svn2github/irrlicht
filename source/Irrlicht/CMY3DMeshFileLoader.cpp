@@ -12,6 +12,7 @@
 
 #include "SAnimatedMesh.h"
 #include "SMeshBuffer.h"
+#include "IReadFile.h"
 #include "IAttributes.h"
 
 

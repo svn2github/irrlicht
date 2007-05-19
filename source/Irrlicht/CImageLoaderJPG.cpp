@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
 #include "CImageLoaderJPG.h"
+#include "IReadFile.h"
 #include "CImage.h"
 #include "os.h"
 #include "irrString.h"

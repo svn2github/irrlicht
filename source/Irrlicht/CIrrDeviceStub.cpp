@@ -5,6 +5,7 @@
 #include "CIrrDeviceStub.h"
 #include "ISceneManager.h"
 #include "IEventReceiver.h"
+#include "IFileSystem.h"
 #include "IGUIEnvironment.h"
 #include "os.h"
 #include "IrrCompileConfig.h"
