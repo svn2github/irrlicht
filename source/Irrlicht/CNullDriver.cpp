@@ -420,8 +420,11 @@ ITexture* CNullDriver::addTexture(const c8* name, IImage* image)
 		return 0;
 
 	ITexture* t = createDeviceDependentTexture(image, name);
-	addTexture(t);
-	t->drop();
+	if (t)
+	{
+		addTexture(t);
+		t->drop();
+	}
 	return t;
 }
 
