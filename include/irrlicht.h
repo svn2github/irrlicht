@@ -55,6 +55,7 @@
 #include "IEventReceiver.h"
 #include "IFileList.h"
 #include "IFileSystem.h"
+#include "IGPUProgrammingServices.h"
 #include "IGUIButton.h"
 #include "IGUICheckBox.h"
 #include "IGUIContextMenu.h"
