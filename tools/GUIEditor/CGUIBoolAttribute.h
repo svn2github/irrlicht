@@ -13,8 +13,8 @@ namespace gui
 	{
 	public:
 		//
-		CGUIBoolAttribute(IGUIEnvironment* environment, IGUIElement *parent) :
-		  	CGUIAttribute(environment, parent), AttribCheckBox(0)
+		CGUIBoolAttribute(IGUIEnvironment* environment, IGUIElement *parent, s32 myParentID) :
+		  	CGUIAttribute(environment, parent, myParentID), AttribCheckBox(0)
 		{
 
 			core::rect<s32> r = getAbsolutePosition();
@@ -43,6 +43,9 @@ namespace gui
 		// save the attribute and possibly post the event to its parent
 		virtual bool updateAttrib(bool sendEvent=true)
 		{
+			if (!Attribs)
+				return true;
+
 			Attribs->setAttribute(Index, AttribCheckBox->isChecked());
 
 			return CGUIAttribute::updateAttrib(sendEvent);

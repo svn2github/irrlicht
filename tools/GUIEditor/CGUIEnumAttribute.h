@@ -14,8 +14,9 @@ namespace gui
 	{
 	public:
 		//
-		CGUIEnumAttribute(IGUIEnvironment* environment, IGUIElement *parent) :
-			CGUIAttribute(environment, parent),	AttribComboBox(0), AttribEditBox(0)
+		CGUIEnumAttribute(IGUIEnvironment* environment, IGUIElement *parent, s32 myParentID) :
+			CGUIAttribute(environment, parent, myParentID),	
+			AttribComboBox(0), AttribEditBox(0)
 		{
 
 		}
@@ -83,6 +84,9 @@ namespace gui
 		//! save the attribute and possibly post the event to its parent
 		virtual bool updateAttrib(bool sendEvent=true)
 		{
+			if (!Attribs)
+				return true;
+
 			if (AttribComboBox)
 				Attribs->setAttribute(Index, AttribComboBox->getText());
 			else if (AttribEditBox)

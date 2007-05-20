@@ -13,8 +13,8 @@ namespace gui
 	{
 	public:
 		//
-		CGUIStringAttribute(IGUIEnvironment* environment, IGUIElement *parent) :
-			CGUIAttribute(environment, parent),
+		CGUIStringAttribute(IGUIEnvironment* environment, IGUIElement *parent, s32 myParentID) :
+			CGUIAttribute(environment, parent, myParentID),
 			AttribEditBox(0)
 		{
 			core::rect<s32> r = getAbsolutePosition();
@@ -44,11 +44,11 @@ namespace gui
 		//! save the attribute and possibly post the event to its parent
 		virtual bool updateAttrib(bool sendEvent=true)
 		{
-			if (Attribs)
-			{
-				Attribs->setAttribute(Index, AttribEditBox->getText());
-				AttribEditBox->setText(Attribs->getAttributeAsStringW(Index).c_str());
-			}
+			if (!Attribs)
+				return true;
+			
+			Attribs->setAttribute(Index, AttribEditBox->getText());
+			AttribEditBox->setText(Attribs->getAttributeAsStringW(Index).c_str());
 
 			return CGUIAttribute::updateAttrib(sendEvent);
 		}

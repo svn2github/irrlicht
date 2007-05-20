@@ -13,8 +13,8 @@ namespace gui
 	{
 	public:
 		//
-		CGUIColorAttribute(IGUIEnvironment* environment, IGUIElement *parent) :
-		  	CGUIAttribute(environment, parent),
+		CGUIColorAttribute(IGUIEnvironment* environment, IGUIElement *parent, s32 myParentID) :
+		  	CGUIAttribute(environment, parent, myParentID),
 			AttribEditBox(0), AttribSliderA(0), AttribSliderR(0), AttribSliderG(0), AttribSliderB(0)
 		{
 
@@ -130,6 +130,9 @@ namespace gui
 		// save the attribute and possibly post the event to its parent
 		virtual bool updateAttrib(bool sendEvent=true)
 		{
+			if (!Attribs)
+				return true;
+
 			Attribs->setAttribute(Index, AttribEditBox->getText());
 			AttribEditBox->setText(Attribs->getAttributeAsStringW(Index).c_str());
 			return CGUIAttribute::updateAttrib(sendEvent);

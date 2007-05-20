@@ -19,6 +19,7 @@ namespace io
 namespace scene
 {
 	class ISceneNode;
+	class ISceneManager;
 
 	//! Animates a scene node. Can animate position, rotation, material, and so on.
 	/** A scene node animator is able to animate a scene node in a very simple way. It may

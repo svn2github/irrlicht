@@ -118,25 +118,22 @@ IGUIElement* CGUIEditWorkspace::getEditableElementFromPoint(IGUIElement *start, 
 
 	core::list<IGUIElement*>::Iterator it = start->getChildren().getLast();
 	s32 count=0;
-	if (!start->isSubElement())
+	while(it != start->getChildren().end())
 	{
-		while(it != start->getChildren().end())
+		target = getEditableElementFromPoint((*it),point);
+		if (target)
 		{
-			target = getEditableElementFromPoint((*it),point);
-			if (target)
+			if (!target->isSubElement() && !isMyChild(target) && target != this)
 			{
-				if (!target->isSubElement() && !isMyChild(target) && target != this)
-				{
-					if (index == count)
-						return target;
-					else
-						count++;
-				}
+				if (index == count)
+					return target;
 				else
-					target = 0;
+					count++;
 			}
-			--it;
+			else
+				target = 0;
 		}
+		--it;
 	}
 
 	if (start->getAbsolutePosition().isPointInside(point))

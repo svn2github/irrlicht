@@ -15,8 +15,8 @@ namespace gui
 	{
 	public:
 		//
-		CGUITextureAttribute(IGUIEnvironment* environment, IGUIElement *parent) :
-			CGUIAttribute(environment, parent),
+		CGUITextureAttribute(IGUIEnvironment* environment, IGUIElement *parent, s32 myParentID) :
+			CGUIAttribute(environment, parent, myParentID),
 			AttribEditBox(0), AttribImage(0), AttribButton(0)
 		{
 			IGUISkin* skin = Environment->getSkin();
@@ -26,7 +26,7 @@ namespace gui
 			s32 h = skin->getFont()->getDimension(L"A").Height + 5;
 
 			AttribImage = environment->addImage(0, core::position2di(0, topy), false, this);
-			AttribImage->setRelativePosition( core::rect<s32>(0,topy, r.getWidth()-5, 100+topy));
+			AttribImage->setRelativePosition( core::rect<s32>(0,topy, r.getWidth() - 5, 100+topy));
 			AttribImage->grab();
 			AttribImage->setSubElement(true);
 			AttribImage->setScaleImage(true);
@@ -35,20 +35,20 @@ namespace gui
 			topy += 105;
 
 			core::rect<s32> r2(0, topy, r.getWidth() - 15 - skin->getSize(EGDS_CHECK_BOX_WIDTH), topy + h);
-			core::rect<s32> br(r.getWidth() - 10 - skin->getSize(EGDS_CHECK_BOX_WIDTH), topy, r.getWidth() - 5, topy + h);
+			core::rect<s32> br(r.getWidth() - 10 - skin->getSize(EGDS_CHECK_BOX_WIDTH), topy, r.getWidth(), topy + h);
 
 			AttribEditBox = environment->addEditBox(0, r2, true, this, -1);
 			AttribEditBox->grab();
 			AttribEditBox->setSubElement(true);
 			AttribEditBox->setAlignment(EGUIA_UPPERLEFT, EGUIA_LOWERRIGHT, EGUIA_UPPERLEFT, EGUIA_UPPERLEFT);
 
-			AttribButton = environment->addButton(br, this, -1, L"");
+			AttribButton = environment->addButton(br, this, -1, L"...");
 			AttribButton->grab();
 			AttribButton->setSubElement(true);
 			AttribButton->setAlignment(EGUIA_LOWERRIGHT, EGUIA_LOWERRIGHT, EGUIA_UPPERLEFT, EGUIA_UPPERLEFT);
-			AttribButton->setSpriteBank(skin->getSpriteBank());
-			AttribButton->setSprite(EGBS_BUTTON_UP, skin->getIcon(EGDI_FILE), skin->getColor(EGDC_WINDOW_SYMBOL));
-			AttribButton->setSprite(EGBS_BUTTON_DOWN, skin->getIcon(EGDI_FILE), skin->getColor(EGDC_WINDOW_SYMBOL), true);
+			//AttribButton->setSpriteBank(skin->getSpriteBank());
+			//AttribButton->setSprite(EGBS_BUTTON_UP, skin->getIcon(EGDI_FILE), skin->getColor(EGDC_WINDOW_SYMBOL));
+			//AttribButton->setSprite(EGBS_BUTTON_DOWN, skin->getIcon(EGDI_FILE), skin->getColor(EGDC_WINDOW_SYMBOL), true);
 		}
 
 		virtual ~CGUITextureAttribute()
@@ -75,7 +75,7 @@ namespace gui
 						// button click: open file dialog
 						if (e.GUIEvent.Caller == AttribButton)
 						{
-							Environment->addFileOpenDialog(L"Select Texture", true, this, -1);
+							//Environment->addGUIElement("textureBrowser", Environment->getRootGUIElement());
 							return true;
 						}
 						break;
@@ -106,6 +106,9 @@ namespace gui
 		//! save the attribute and possibly post the event to its parent
 		virtual bool updateAttrib(bool sendEvent=true)
 		{
+			if (!Attribs)
+				return true;
+
 			Attribs->setAttribute(Index, AttribEditBox->getText());
 			core::stringw tmp = Attribs->getAttributeAsStringW(Index);
 			AttribEditBox->setText(Attribs->getAttributeAsStringW(Index).c_str());

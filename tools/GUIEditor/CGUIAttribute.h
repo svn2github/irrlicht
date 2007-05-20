@@ -28,9 +28,9 @@ namespace gui
 	{
 	public:
 		//! constructor
-		CGUIAttribute(IGUIEnvironment* environment, IGUIElement *parent) :
+		CGUIAttribute(IGUIEnvironment* environment, IGUIElement *parent, s32 myParentID) :
 			IGUIElement(EGUIET_ELEMENT, environment, parent, -1, core::rect<s32>(0, 0, 100, 100) ),
-			Attribs(0), Index(0), AttribName(0)
+			Attribs(0), Index(0), AttribName(0), MyParentID(myParentID)
 		{
 
 			#ifdef _DEBUG
@@ -39,8 +39,7 @@ namespace gui
 
 			AttribName = environment->addStaticText(0,
 				core::rect<s32>(0, 0, 
-					100 - 5,
-					Environment->getSkin()->getFont()->getDimension(L"A").Height),
+					100, Environment->getSkin()->getFont()->getDimension(L"A").Height),
 					false, false, this, -1, false);
 			AttribName->grab();
 			AttribName->setSubElement(true);
@@ -68,6 +67,9 @@ namespace gui
 						if (Parent)
 							Parent->bringToFront(this);
 						break;
+					case EGET_ELEMENT_HOVERED:
+					case EGET_ELEMENT_LEFT:
+						return true;
 					default:
 						return updateAttrib();
 					}
@@ -115,16 +117,22 @@ namespace gui
 			updateAttrib(false);
 		}
 
+		//! sets the parent ID, for identifying where events came from
+		void setParentID(s32 parentID)
+		{
+			MyParentID = parentID;
+		}
+
 		//! save the attribute and possibly post the event to its parent
 		virtual bool updateAttrib(bool sendEvent=true)
 		{
-			if (IsEnabled && sendEvent)
+			if (Attribs && IsEnabled && sendEvent)
 			{
 				// build event and pass to parent
 				SEvent event;
 				event.EventType = EET_USER_EVENT;
 				event.UserEvent.UserData1 = ATTRIBEDIT_ATTRIB_CHANGED;
-				event.UserEvent.UserData2 = Parent->getID();
+				event.UserEvent.UserData2 = MyParentID;
 				event.UserEvent.UserData3 = (f32)Index;
 				return Parent->OnEvent(event);
 			}
@@ -148,6 +156,7 @@ namespace gui
 		IGUIStaticText*		AttribName;
 		io::IAttributes*	Attribs;
 		u32					Index;
+		s32					MyParentID;
 	};
 
 } // namespace gui
