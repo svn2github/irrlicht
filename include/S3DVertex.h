@@ -121,6 +121,7 @@ struct S3DVertex2TCoords
 	//! Second set of texture coordinates
 	core::vector2d<f32> TCoords2;
 
+	//! Equality operator
 	bool operator == (const S3DVertex2TCoords& other) const
 	{
 		return (Pos == other.Pos && Normal == other.Normal &&
@@ -128,6 +129,7 @@ struct S3DVertex2TCoords
 			TCoords2 == other.TCoords2);
 	}
 
+	//! Inequality operator
 	bool operator != (const S3DVertex2TCoords& other) const
 	{
 		return (Pos != other.Pos || Normal != other.Normal ||

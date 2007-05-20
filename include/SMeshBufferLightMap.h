@@ -114,9 +114,13 @@ namespace scene
 		}
 
 
-		video::SMaterial Material; //! material for this meshBuffer.
-		core::array<video::S3DVertex2TCoords> Vertices; //! Array of vertices
-		core::array<u16> Indices; //! Array of the Indices.
+		//! Material for this meshbuffer.
+		video::SMaterial Material;
+		//! Vertices of this buffer.
+		core::array<video::S3DVertex2TCoords> Vertices;
+		//! Indices into the vertices of this buffer.
+		core::array<u16> Indices;
+		//! Bounding box of this meshbuffer.
 		core::aabbox3d<f32> BoundingBox;
 	};
 
